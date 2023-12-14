@@ -177,7 +177,7 @@ public class RedAutoThree extends LinearOpMode {
                 .resetConstraints()
                 .UNSTABLE_addTemporalMarkerOffset(0.3,()->{Intake.intakeArmServo.setPosition(0.7);Intake.intakeWristServo.setPosition(0.65);}) //0.0
                 .UNSTABLE_addTemporalMarkerOffset(0.65,()->{Intake.intakeArmServo.setPosition(0.4);}) //0.35
-                .UNSTABLE_addTemporalMarkerOffset(0.80,()->{Intake.intakeWristServo.setPosition(0.2515);Intake.intakeArmServo.setPosition(0.633);})//0.633-0.2515//arm->0.64 //0.50
+                .UNSTABLE_addTemporalMarkerOffset(0.80,()->{Intake.intakeWristServo.setPosition(0.2615);Intake.intakeArmServo.setPosition(0.633);})//0.633-0.2515//arm->0.64 //0.50
                 .UNSTABLE_addTemporalMarkerOffset(0.5,()->{Arm.armServo.setPosition(0.15);Arm.wristServo.setPosition(0.73);}) //0.2
                 .setReversed(false)
 
@@ -202,7 +202,7 @@ public class RedAutoThree extends LinearOpMode {
                 .waitSeconds(0.1)
                 .addTemporalMarker(()->{Intake.IntakePixel(0.75);})
                 .waitSeconds(0.2) //0.3
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.645);Intake.intakeWristServo.setPosition(0.2595);})
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.645);Intake.intakeWristServo.setPosition(0.2695);})
                 .waitSeconds(0.05)
                 .setReversed(true)
 
