@@ -349,7 +349,7 @@ public class MonelBot3 extends LinearOpMode {
                     outputState = OuttakeState.OUTTAKE_START;
             }
 
-            if(currentGamepad1.y && !previousGamepad1.y && (inputState!=IntakeState.INTAKE_START || outputState!=OuttakeState.OUTTAKE_START)){
+            if(currentGamepad1.y && !previousGamepad1.y || (inputState!=IntakeState.INTAKE_START || outputState!=OuttakeState.OUTTAKE_START)){
                 inputState = IntakeState.INTAKE_START;
                 outputState = OuttakeState.OUTTAKE_START;
                 TrajectorySequence ResetRobot = drive.trajectorySequenceBuilder(startPose)
