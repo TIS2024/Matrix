@@ -194,7 +194,7 @@ public class MonelBot4 extends LinearOpMode {
                     }
                     break;
                 case INTAKE_EXTEND:
-                    Intake.CrankPosition(0.6);
+                    Intake.CrankPosition(0.5);
                     if (inputTimer.milliseconds() >= 200){
                         inputState = IntakeState.INTAKE_GRIP;
                         inputTimer.reset();
@@ -215,22 +215,22 @@ public class MonelBot4 extends LinearOpMode {
                             inputState = IntakeState.INTAKE_RETRACT;
                         }
                     }
-//                    if (beamBreaker.getState() && inputTimer.milliseconds()>=12000){
-//                        TrajectorySequence CancelIntakePixel = drive.trajectorySequenceBuilder(startPose)
-//                                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5); Intake.intakeWristServo.setPosition(0.65);})
-//                                .waitSeconds(0.2)
-//                                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
-//                                .waitSeconds(0.3)
-//                                .addTemporalMarker(()->{Arm.armServo.setPosition(0.15);Arm.wristServo.setPosition(0.735);})
-//                                .waitSeconds(0.3)
-//                                .build();
-//                        drive.followTrajectorySequence(CancelIntakePixel);
-//                        drive.update();
-//                        intakeCounter = 0;
-//                        if (inputTimer.milliseconds()>13000){
-//                            inputState = IntakeState.INTAKE_START;
-//                        }
-//                    }
+                    if (beamBreaker.getState() && inputTimer.milliseconds()>=7000){
+                        TrajectorySequence CancelIntakePixel = drive.trajectorySequenceBuilder(startPose)
+                                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5); Intake.intakeWristServo.setPosition(0.65);})
+                                .waitSeconds(0.2)
+                                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+                                .waitSeconds(0.3)
+                                .addTemporalMarker(()->{Arm.armServo.setPosition(0.15);Arm.wristServo.setPosition(0.735);})
+                                .waitSeconds(0.3)
+                                .build();
+                        drive.followTrajectorySequence(CancelIntakePixel);
+                        drive.update();
+                        intakeCounter = 0;
+                        if (inputTimer.milliseconds()>8000){
+                            inputState = IntakeState.INTAKE_START;
+                        }
+                    }
                     break;
                 case INTAKE_RETRACT:
                     Intake.CrankPosition(0.69);
@@ -279,7 +279,6 @@ public class MonelBot4 extends LinearOpMode {
                             }
                         }
                     }
-                    intakeCounter = 0;
                     break;
                 default:
                     inputState = IntakeState.INTAKE_START;
@@ -348,6 +347,7 @@ public class MonelBot4 extends LinearOpMode {
                     Intake.intakeWristServo.setPosition(0.65);
                     if (outputTimer.milliseconds()>=100){
                         outputTimer.reset();
+                        intakeCounter = 0;
                         outputState = OuttakeState.OUTTAKE_START;
                     }
                     break;
@@ -358,7 +358,9 @@ public class MonelBot4 extends LinearOpMode {
             if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 1) && (Intake.intakeArmServo.getPosition() == 1)){
                 intakeCounter = 0;
                 TrajectorySequence ResetIntake = drive.trajectorySequenceBuilder(startPose)
-                        .addTemporalMarker(()->{Intake.IntakePixel(1);Arm.DropPixel(1);})
+                        .addTemporalMarker(()->{Intake.IntakePixel(1);})
+                        .waitSeconds(0.1)
+                        .addTemporalMarker(()->{Arm.DropPixel(0.75);})
                         .addTemporalMarker(()->{Arm.armServo.setPosition(0.3);Arm.wristServo.setPosition(0.735);})
                         .waitSeconds(0.3)
                         .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.7);Intake.intakeWristServo.setPosition(0.50);})
@@ -367,12 +369,13 @@ public class MonelBot4 extends LinearOpMode {
                         .waitSeconds(0.2)
                         .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.65);})
                         .waitSeconds(0.2)
+                        .addTemporalMarker(()->{Arm.armServo.setPosition(0.15);Arm.wristServo.setPosition(0.735);})
                         .build();
                 drive.followTrajectorySequenceAsync(ResetIntake);
                 drive.update();
             }
 
-            if(currentGamepad1.y && !previousGamepad1.y || (inputState!=IntakeState.INTAKE_START || outputState!=OuttakeState.OUTTAKE_START)){
+            if(currentGamepad1.y && !previousGamepad1.y && (inputState!=IntakeState.INTAKE_START || outputState!=OuttakeState.OUTTAKE_START)){
                 inputState = IntakeState.INTAKE_START;
                 outputState = OuttakeState.OUTTAKE_START;
                 TrajectorySequence ResetRobot = drive.trajectorySequenceBuilder(startPose)

@@ -62,7 +62,7 @@ public class RedAutoThree extends LinearOpMode {
                 .addTemporalMarker(this::telem)
                 .splineToConstantHeading(new Vector2d(-34,-10), -Math.PI)
                 .addTemporalMarker(this::telem)
-                .UNSTABLE_addTemporalMarkerOffset(-0.7, ()->{Intake.intakeArmServo.setPosition(0.636);Intake.intakeWristServo.setPosition(0.252);}) //0.633-0.2515 //arm->0.64
+                .UNSTABLE_addTemporalMarkerOffset(-0.7, ()->{Intake.intakeArmServo.setPosition(0.636);Intake.intakeWristServo.setPosition(0.262);}) //0.633-0.2515 //arm->0.64
                 .UNSTABLE_addTemporalMarkerOffset(-0.2, ()->{Intake.CrankPosition(0.5);})
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
                 .splineToConstantHeading(new Vector2d(-51.7,-12.5), -Math.PI)
@@ -72,7 +72,7 @@ public class RedAutoThree extends LinearOpMode {
                 .waitSeconds(0.1)
                 .addTemporalMarker(()->{Intake.IntakePixel(0.75);})
                 .waitSeconds(0.1)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.645);Intake.intakeWristServo.setPosition(0.265);}) //0.645-0.2595
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.645);Intake.intakeWristServo.setPosition(0.269);}) //0.645-0.2595
                 .waitSeconds(0.2)
 
                 // intake pixel into bot
