@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @TeleOp(group = "Robot Main")
 @Config
-public class MonelBot3 extends LinearOpMode {
+public class MonelBot4 extends LinearOpMode {
     SampleMecanumDrive drive = null;
     Slider slider = null;
     Arm arm = null;
@@ -47,6 +47,7 @@ public class MonelBot3 extends LinearOpMode {
             gripperServoPos, intakeArmServoPos, intakeWristServoPos, crankServoPos;
     boolean
             armToggle = false, deliveryToggleOne = false, deliveryToggleTwo = false, intakeToggle = false, crankToggle = false, driveToggle = false;
+    public static int intakeCounter;
     public static double
             lifter_posL = 0, lifter_posR = 0, error_lifter, error_diff, error_int, error_lifterR, error_diffR, error_intR, errorprev, errorprevR, output_lifter, output_lifterR, output_power, target;
     public static double kp = 3.5, ki, kd = 1;
@@ -128,6 +129,7 @@ public class MonelBot3 extends LinearOpMode {
             Intake.gripperServo.setPosition(1);
             inputTimer.reset();
             outputTimer.reset();
+            intakeCounter = 0;
         }
 
         waitForStart();
@@ -182,7 +184,7 @@ public class MonelBot3 extends LinearOpMode {
             switch (inputState){
                 case INTAKE_START:
                     //waiting for input
-                    if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper){
+                    if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 0)){
                         Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.5);
                         Intake.IntakePixel(1);
                         Arm.armServo.setPosition(0.3);Arm.wristServo.setPosition(0.735);
@@ -192,7 +194,7 @@ public class MonelBot3 extends LinearOpMode {
                     }
                     break;
                 case INTAKE_EXTEND:
-                    Intake.CrankPosition(0.5);
+                    Intake.CrankPosition(0.6);
                     if (inputTimer.milliseconds() >= 200){
                         inputState = IntakeState.INTAKE_GRIP;
                         inputTimer.reset();
@@ -213,6 +215,22 @@ public class MonelBot3 extends LinearOpMode {
                             inputState = IntakeState.INTAKE_RETRACT;
                         }
                     }
+//                    if (beamBreaker.getState() && inputTimer.milliseconds()>=12000){
+//                        TrajectorySequence CancelIntakePixel = drive.trajectorySequenceBuilder(startPose)
+//                                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5); Intake.intakeWristServo.setPosition(0.65);})
+//                                .waitSeconds(0.2)
+//                                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+//                                .waitSeconds(0.3)
+//                                .addTemporalMarker(()->{Arm.armServo.setPosition(0.15);Arm.wristServo.setPosition(0.735);})
+//                                .waitSeconds(0.3)
+//                                .build();
+//                        drive.followTrajectorySequence(CancelIntakePixel);
+//                        drive.update();
+//                        intakeCounter = 0;
+//                        if (inputTimer.milliseconds()>13000){
+//                            inputState = IntakeState.INTAKE_START;
+//                        }
+//                    }
                     break;
                 case INTAKE_RETRACT:
                     Intake.CrankPosition(0.69);
@@ -256,13 +274,16 @@ public class MonelBot3 extends LinearOpMode {
                                 }
                                 slider.extendTo(0, output_power);
                                 Arm.armServo.setPosition(0.15);
+                                intakeCounter = 1;
                                 inputState = IntakeState.INTAKE_START;
                             }
                         }
                     }
+                    intakeCounter = 0;
                     break;
                 default:
                     inputState = IntakeState.INTAKE_START;
+                    intakeCounter = 0;
             }
 
             switch (outputState){
@@ -334,9 +355,46 @@ public class MonelBot3 extends LinearOpMode {
                     outputState = OuttakeState.OUTTAKE_START;
             }
 
-            if(currentGamepad1.y && !previousGamepad1.y && (inputState!=IntakeState.INTAKE_START || outputState!=OuttakeState.OUTTAKE_START)){
+            if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 1) && (Intake.intakeArmServo.getPosition() == 1)){
+                intakeCounter = 0;
+                TrajectorySequence ResetIntake = drive.trajectorySequenceBuilder(startPose)
+                        .addTemporalMarker(()->{Intake.IntakePixel(1);Arm.DropPixel(1);})
+                        .addTemporalMarker(()->{Arm.armServo.setPosition(0.3);Arm.wristServo.setPosition(0.735);})
+                        .waitSeconds(0.3)
+                        .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.7);Intake.intakeWristServo.setPosition(0.50);})
+                        .waitSeconds(0.3)
+                        .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.65);})
+                        .waitSeconds(0.2)
+                        .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.65);})
+                        .waitSeconds(0.2)
+                        .build();
+                drive.followTrajectorySequenceAsync(ResetIntake);
+                drive.update();
+            }
+
+            if(currentGamepad1.y && !previousGamepad1.y || (inputState!=IntakeState.INTAKE_START || outputState!=OuttakeState.OUTTAKE_START)){
                 inputState = IntakeState.INTAKE_START;
                 outputState = OuttakeState.OUTTAKE_START;
+                TrajectorySequence ResetRobot = drive.trajectorySequenceBuilder(startPose)
+                        .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
+                        .waitSeconds(0.3)
+                        .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.65); Intake.intakeArmServo.setPosition(0.5);})
+                        .waitSeconds(0.1)
+                        .addTemporalMarker(()->{Intake.IntakePixel(1);})
+                        .addTemporalMarker(()->{Arm.wristServo.setPosition(0.73);Arm.armServo.setPosition(0.15);})
+                        .waitSeconds(0.2)
+                        .addTemporalMarker(()->{Arm.DropPixel(1);})
+                        .waitSeconds(0.5)
+                        .addTemporalMarker(()->{})
+                        .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.65); Intake.intakeArmServo.setPosition(0.5);})
+                        .addTemporalMarker(()->{Intake.IntakePixel(1);})
+                        .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+                        .waitSeconds(0.1)
+                        .addTemporalMarker(()->{Arm.armServo.setPosition(0.15);Arm.wristServo.setPosition(0.73);})
+                        .waitSeconds(0.5)
+                        .build();
+                drive.followTrajectorySequenceAsync(ResetRobot);
+                drive.update();
             }
 
             if(currentGamepad1.b && !previousGamepad1.b){
@@ -439,9 +497,10 @@ public class MonelBot3 extends LinearOpMode {
                 Intake.SetArmPosition(intakeArmServoPos, intakeWristServoPos);
             }
             if(currentGamepad2.y && previousGamepad2.y){
-                Arm.wristServo.setPosition(wristServoPos);
+                Arm.SetArmPosition(armServoPos, wristServoPos);
             }
 
+            telemetry.addData("IntakeCounter", intakeCounter);
             telemetry.addData("Bot Heading", botHeading);
             telemetry.addData("ParallelEnc Counts", twtl.parallelEncoder.getCurrentPosition());
             telemetry.addData("AXON Position", axonPosition);
