@@ -192,7 +192,7 @@ public class MonelBot3 extends LinearOpMode {
                     }
                     break;
                 case INTAKE_EXTEND:
-                    Intake.CrankPosition(0.42);
+                    Intake.CrankPosition(0.5);
                     if (inputTimer.milliseconds() >= 200){
                         inputState = IntakeState.INTAKE_GRIP;
                         inputTimer.reset();
@@ -211,6 +211,21 @@ public class MonelBot3 extends LinearOpMode {
                         if (inputTimer.milliseconds() >= 800){
                             inputTimer.reset();
                             inputState = IntakeState.INTAKE_RETRACT;
+                        }
+                    }
+                    if (beamBreaker.getState() && inputTimer.milliseconds()>=12000){
+                        TrajectorySequence CancelIntakePixel = drive.trajectorySequenceBuilder(startPose)
+                                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5); Intake.intakeWristServo.setPosition(0.65);})
+                                .waitSeconds(0.2)
+                                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+                                .waitSeconds(0.3)
+                                .addTemporalMarker(()->{Arm.armServo.setPosition(0.15);Arm.wristServo.setPosition(0.735);})
+                                .waitSeconds(0.3)
+                                .build();
+                        drive.followTrajectorySequence(CancelIntakePixel);
+                        drive.update();
+                        if (inputTimer.milliseconds()>13000){
+                            inputState = IntakeState.INTAKE_START;
                         }
                     }
                     break;
@@ -337,9 +352,29 @@ public class MonelBot3 extends LinearOpMode {
             if(currentGamepad1.y && !previousGamepad1.y && (inputState!=IntakeState.INTAKE_START || outputState!=OuttakeState.OUTTAKE_START)){
                 inputState = IntakeState.INTAKE_START;
                 outputState = OuttakeState.OUTTAKE_START;
+                TrajectorySequence ResetRobot = drive.trajectorySequenceBuilder(startPose)
+                        .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
+                        .waitSeconds(0.3)
+                        .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.65); Intake.intakeArmServo.setPosition(0.5);})
+                        .waitSeconds(0.1)
+                        .addTemporalMarker(()->{Intake.IntakePixel(1);})
+                        .addTemporalMarker(()->{Arm.wristServo.setPosition(0.73);Arm.armServo.setPosition(0.15);})
+                        .waitSeconds(0.2)
+                        .addTemporalMarker(()->{Arm.DropPixel(1);})
+                        .waitSeconds(0.5)
+                        .addTemporalMarker(()->{})
+                        .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.65); Intake.intakeArmServo.setPosition(0.5);})
+                        .addTemporalMarker(()->{Intake.IntakePixel(1);})
+                        .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+                        .waitSeconds(0.1)
+                        .addTemporalMarker(()->{Arm.armServo.setPosition(0.15);Arm.wristServo.setPosition(0.73);})
+                        .waitSeconds(0.5)
+                        .build();
+                drive.followTrajectorySequenceAsync(ResetRobot);
+                drive.update();
             }
 
-            if((currentGamepad1.left_trigger > 0.1) && !(previousGamepad1.left_trigger>0.1)){
+            if(currentGamepad1.b && !previousGamepad1.b){
                 //drop 1st pixel
                 deliveryServoPos = 0.75;
                 Arm.DropPixel(deliveryServoPos);
@@ -353,7 +388,7 @@ public class MonelBot3 extends LinearOpMode {
                 drive.followTrajectorySequenceAsync(DropPixelOne);
                 drive.update();
             }
-            if((currentGamepad1.right_trigger>0.1) && !(previousGamepad1.right_trigger>0.1)){
+            if(currentGamepad1.a && !previousGamepad1.a){
                 //drop 2nd pixel
                 output_power = lifter_pid(kp, ki, kd, levelZero);
                 if (output_power > 0.9) {
