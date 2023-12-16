@@ -96,6 +96,11 @@ public class MonelBot4 extends LinearOpMode {
         rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
 
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -210,7 +215,7 @@ public class MonelBot4 extends LinearOpMode {
                                 .build();
                         drive.followTrajectorySequence(IntakePixel);
                         drive.update();
-                        if (inputTimer.milliseconds() >= 300){ //800
+                        if (inputTimer.milliseconds() >= 500){ //800
                             inputTimer.reset();
                             inputState = IntakeState.INTAKE_RETRACT;
                         }
