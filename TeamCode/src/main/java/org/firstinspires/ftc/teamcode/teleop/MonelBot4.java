@@ -493,6 +493,12 @@ public class MonelBot4 extends LinearOpMode {
             if(currentGamepad2.dpad_down && !previousGamepad2.dpad_down){
                 levelOne -= 50;
             }
+            if (currentGamepad2.dpad_left && !previousGamepad2.dpad_left){
+                Arm.DropPixel(0.75);
+            }
+            if(currentGamepad2.dpad_right && !previousGamepad2.dpad_right){
+                Arm.DropPixel(1);
+            }
             if(currentGamepad2.a && !previousGamepad2.a){
                 armServoPos = 0.6;
                 wristServoPos = 0.15;
