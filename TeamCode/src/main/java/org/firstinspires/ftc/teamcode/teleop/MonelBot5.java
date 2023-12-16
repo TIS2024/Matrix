@@ -178,8 +178,6 @@ public class MonelBot5 extends LinearOpMode {
 //            double frontRightPower = (rotY - rotX - rx) / denominator;
 //            double backRightPower = (rotY + rotX - rx) / denominator;
 //
-//
-//
 //            leftFront.setPower(frontLeftPower);
 //            leftRear.setPower(backLeftPower);
 //            rightFront.setPower(frontRightPower);
