@@ -165,8 +165,6 @@ public class MonelBot4 extends LinearOpMode {
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
 
-
-
             leftFront.setPower(frontLeftPower);
             leftRear.setPower(backLeftPower);
             rightFront.setPower(frontRightPower);
@@ -212,7 +210,7 @@ public class MonelBot4 extends LinearOpMode {
                                 .build();
                         drive.followTrajectorySequence(IntakePixel);
                         drive.update();
-                        if (inputTimer.milliseconds() >= 800){
+                        if (inputTimer.milliseconds() >= 300){ //800
                             inputTimer.reset();
                             inputState = IntakeState.INTAKE_RETRACT;
                         }
@@ -236,7 +234,7 @@ public class MonelBot4 extends LinearOpMode {
                     break;
                 case INTAKE_RETRACT:
                     Intake.CrankPosition(0.69);
-                    if (inputTimer.milliseconds() >= 800){
+                    if (inputTimer.milliseconds() >= 200){ //800
                         inputState = IntakeState.INTAKE_INPUT;
                         inputTimer.reset();
                     }
@@ -244,7 +242,7 @@ public class MonelBot4 extends LinearOpMode {
                 case INTAKE_INPUT:
                     if (inputTimer.milliseconds() >= 200){
                         Intake.intakeWristServo.setPosition(0.66);Intake.intakeArmServo.setPosition(0.4);
-                        if(inputTimer.milliseconds() >= 600){
+                        if(inputTimer.milliseconds() >= 500){ //600
                             Intake.intakeArmServo.setPosition(0.79);
                             if(axonPosition <= 130){ //inputTimer.milliseconds() >= 900 &&
                                 Intake.intakeWristServo.setPosition(0.45);Intake.intakeArmServo.setPosition(1);Intake.crankServo.setPosition(0.7);
@@ -267,7 +265,7 @@ public class MonelBot4 extends LinearOpMode {
                                 output_power = 0;
                             }
                             slider.extendTo(-10, output_power);
-                            if (inputTimer.milliseconds() >= 600){
+                            if (inputTimer.milliseconds() >= 500){ //600
                                 output_power = lifter_pid(kp, ki, kd, 0);
                                 if (output_power > 0.9) {
                                     output_power = 1;
@@ -337,7 +335,7 @@ public class MonelBot4 extends LinearOpMode {
                     }
                     break;
                 case OUTTAKE_OUTPUT:
-                    Arm.armServo.setPosition(0.5);Arm.wristServo.setPosition(0.2);
+                    Arm.armServo.setPosition(0.5);Arm.wristServo.setPosition(0.175);
                     if (outputTimer.milliseconds() >= 200){
                         outputTimer.reset();
                         outputState = OuttakeState.OUTTAKE_FINAL;
@@ -490,6 +488,16 @@ public class MonelBot4 extends LinearOpMode {
             if(currentGamepad2.dpad_down && !previousGamepad2.dpad_down){
                 levelOne -= 50;
             }
+            if(currentGamepad2.a && !previousGamepad2.a){
+                armServoPos = 0.6;
+                wristServoPos = 0.15;
+                Arm.SetArmPosition(armServoPos, wristServoPos);
+            }
+            if(currentGamepad2.b && !previousGamepad2.b){
+                armServoPos = 0.5;
+                wristServoPos = 0.175;
+                Arm.SetArmPosition(armServoPos, wristServoPos);
+            }
             if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper){
                 gripperServoPos = 0.75;
                 Intake.IntakePixel(gripperServoPos);
@@ -523,10 +531,18 @@ public class MonelBot4 extends LinearOpMode {
             telemetry.addData("armServo", Arm.armServo.getPosition());
             telemetry.addData("wristServo", Arm.wristServo.getPosition());
             telemetry.addData("deliveryServo", Arm.deliveryServo.getPosition());
-            telemetry.addData("LeftFrontCurrent", drive.getMotorCurrent().get(0));
-            telemetry.addData("RightFrontCurrent", drive.getMotorCurrent().get(1));
-            telemetry.addData("LeftRearCurrent", drive.getMotorCurrent().get(2));
-            telemetry.addData("RightRearCurrent", drive.getMotorCurrent().get(3));
+//            telemetry.addData("LeftFrontCurrent", drive.getMotorCurrent().get(0));
+//            telemetry.addData("RightFrontCurrent", drive.getMotorCurrent().get(1));
+//            telemetry.addData("LeftRearCurrent", drive.getMotorCurrent().get(2));
+//            telemetry.addData("RightRearCurrent", drive.getMotorCurrent().get(3));
+            telemetry.addData("LeftFrontVelocity", leftFront.getVelocity());
+            telemetry.addData("RightFrontVelocity", rightFront.getVelocity());
+            telemetry.addData("LeftRearVelocity", leftRear.getVelocity());
+            telemetry.addData("RightRearVelocity", rightRear.getVelocity());
+            telemetry.addData("LeftFrontCurrent", leftFront.getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("RightFrontCurrent", rightFront.getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("LeftRearCurrent", leftRear.getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("RightRearCurrent", rightRear.getCurrent(CurrentUnit.AMPS));
             telemetry.update();
             drive.update();
         }

@@ -40,10 +40,6 @@ public class MonelBot5 extends LinearOpMode {
     TwoWheelTrackingLocalizer twtl = null;
     ElapsedTime inputTimer, outputTimer;
 
-    public SlewRateLimiter frd, strafe;
-
-    public static double frd_r = 4, strafe_r = 4;
-
     public DcMotorEx leftFront, leftRear, rightFront, rightRear;
 
     public static double THROTTLE = 1, HEADING = 1, TURN = 1;
@@ -58,7 +54,6 @@ public class MonelBot5 extends LinearOpMode {
     public static double
             lifter_posL = 0, lifter_posR = 0, error_lifter, error_diff, error_int, error_lifterR, error_diffR, error_intR, errorprev, errorprevR, output_lifter, output_lifterR, output_power, target;
     public static double kp = 3.5, ki, kd = 1;
-    Pose2d poseDrive;
 
     public enum IntakeState {
         INTAKE_START,
@@ -95,11 +90,6 @@ public class MonelBot5 extends LinearOpMode {
 
         inputTimer = new ElapsedTime();
         outputTimer = new ElapsedTime();
-
-        frd = new SlewRateLimiter(frd_r);
-        strafe = new SlewRateLimiter(strafe_r);
-
-        poseDrive = new Pose2d(frd.calculate(poseDrive.getX()), strafe.calculate(poseDrive.getY()), poseDrive.getHeading());
 
         Pose2d startPose = new Pose2d(0, 0, Math.toRadians(180));
         drive.setPoseEstimate(startPose);
@@ -187,7 +177,9 @@ public class MonelBot5 extends LinearOpMode {
             Vector2d input = new Vector2d(Math.pow(Range.clip(gamepad1.left_stick_y, -1, 1), 3),
                     Math.pow(Range.clip(gamepad1.left_stick_x, -1, 1), 3)).rotated(-poseEstimate.getHeading());
 
-            drive.setWeightedDrivePower(new Pose2d(frd.calculate(poseDrive.getX() * THROTTLE), poseDrive.getY() * TURN, poseDrive.getHeading() * HEADING) );
+            drive.setWeightedDrivePower(
+                    new Pose2d(input.getX() * THROTTLE, input.getY() * TURN, -gamepad1.right_stick_x * HEADING)
+            );
             telemetry.addData("heading", poseEstimate.getHeading());
             drive.update();
             //--------------------------------------------------------------------------------------
