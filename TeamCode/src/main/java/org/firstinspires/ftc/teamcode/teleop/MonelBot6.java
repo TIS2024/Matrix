@@ -486,15 +486,15 @@ public class MonelBot6 extends LinearOpMode {
                 double power = PIDControl(referenceAngle_intake,botHeading,1,0,0,0);
                 leftFront.setPower(power);
                 leftRear.setPower(power);
-                rightFront.setPower(power);
-                rightRear.setPower(power);
+                rightFront.setPower(-power);
+                rightRear.setPower(-power);
             }
             if(currentGamepad1.right_trigger>0){
                 double power = PIDControl(referenceAngle_outtake,botHeading,1,0,0,0);
                 leftFront.setPower(power);
                 leftRear.setPower(power);
-                rightFront.setPower(power);
-                rightRear.setPower(power);
+                rightFront.setPower(-power);
+                rightRear.setPower(-power);
             }
 //            if(currentGamepad1.right_trigger>0.3){
 //                THROTTLE = 0.3;
