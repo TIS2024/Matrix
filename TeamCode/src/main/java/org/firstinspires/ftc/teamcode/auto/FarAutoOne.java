@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Slider;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous(name="RedAuto3")
+@Autonomous(name="FarAutoOne")
 @Config
 public class FarAutoOne extends LinearOpMode {
     SampleMecanumDrive drive = null;
