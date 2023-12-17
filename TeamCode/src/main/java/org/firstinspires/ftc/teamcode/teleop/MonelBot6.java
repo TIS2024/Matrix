@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -15,6 +16,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -185,7 +187,7 @@ public class MonelBot6 extends LinearOpMode {
 
 //            Pose2d poseEstimate = drive.getPoseEstimate();
 //            Vector2d input = new Vector2d(Math.pow(Range.clip(gamepad1.left_stick_y, -1, 1), 3),
-//                    Math.pow(Range.clip(gamepad1.left_stick_x, -1, 1), 3)).rotated(-poseEstimate.getHeading());
+//                    Math.pow(Range.clip(gamepad1.left_stick_x, -1, 1), 3));
 //
 //            drive.setWeightedDrivePower(
 //                    new Pose2d(input.getX() * THROTTLE, input.getY() * TURN, -gamepad1.right_stick_x * HEADING)
@@ -532,37 +534,18 @@ public class MonelBot6 extends LinearOpMode {
                 Arm.SetArmPosition(armServoPos, wristServoPos);
             }
             if(currentGamepad1.left_trigger>0.1 && !(previousGamepad1.left_trigger>0.1)) {
-
-                if (botHeading<referenceAngle_intake) {
-                    double power = PIDControl(referenceAngle_intake, botHeading, kp_heading, ki_heading, kd_heading, 0);
-                    leftFront.setPower(power);
-                    leftRear.setPower(power);
-                    rightFront.setPower(-power);
-                    rightRear.setPower(-power);
-                }
-                else
-                {
-                    leftFront.setPower(frontLeftPower);
-                    leftRear.setPower(backLeftPower);
-                    rightFront.setPower(frontRightPower);
-                    rightRear.setPower(backRightPower);
-                }
+                double power = PIDControl(referenceAngle_intake, botHeading, kp_heading, ki_heading, kd_heading, 0);
+                leftFront.setPower(power);
+                leftRear.setPower(power);
+                rightFront.setPower(-power);
+                rightRear.setPower(-power);
             }
             if(currentGamepad1.right_trigger>0.1 && !(previousGamepad1.right_trigger>0.1)) {
-
-                if(botHeading<referenceAngle_outtake) {
-                    double power = PIDControl(referenceAngle_outtake, botHeading, kp_heading2, ki_heading2, kd_heading2, 0);
-                    leftFront.setPower(power);
-                    leftRear.setPower(power);
-                    rightFront.setPower(-power);
-                    rightRear.setPower(-power);
-                }
-                else {
-                    leftFront.setPower(frontLeftPower);
-                    leftRear.setPower(backLeftPower);
-                    rightFront.setPower(frontRightPower);
-                    rightRear.setPower(backRightPower);
-                }
+                double power = PIDControl(referenceAngle_outtake, botHeading, kp_heading2, ki_heading2, kd_heading2, 0);
+                leftFront.setPower(power);
+                leftRear.setPower(power);
+                rightFront.setPower(-power);
+                rightRear.setPower(-power);
             }
 
 
