@@ -191,7 +191,7 @@ public class MonelBot4 extends LinearOpMode {
                     //waiting for input
                     if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 0)){
                         Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.5);
-                        Intake.IntakePixel(1);
+                        Intake.IntakePixel(0.9);
                         Arm.armServo.setPosition(0.3);Arm.wristServo.setPosition(0.735);
                         Arm.DropPixel(1);
                         inputTimer.reset();
@@ -207,7 +207,7 @@ public class MonelBot4 extends LinearOpMode {
                     break;
                 case INTAKE_GRIP:
                     if (!beamBreaker.getState()){
-                        Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.47);
+                        Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.5);
                         TrajectorySequence IntakePixel = drive.trajectorySequenceBuilder(startPose)
                                 .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
                                 .UNSTABLE_addTemporalMarkerOffset(-0.2, ()->{Intake.IntakePixel(0.75);})
@@ -238,8 +238,10 @@ public class MonelBot4 extends LinearOpMode {
                     }
                     break;
                 case INTAKE_RETRACT:
+                    Intake.intakeArmServo.setPosition(0.5);
+                    Intake.intakeWristServo.setPosition(0.5);
                     Intake.CrankPosition(0.69);
-                    if (inputTimer.milliseconds() >= 200){ //800
+                    if (inputTimer.milliseconds() >= 500){ //800
                         inputState = IntakeState.INTAKE_INPUT;
                         inputTimer.reset();
                     }
@@ -522,6 +524,12 @@ public class MonelBot4 extends LinearOpMode {
             }
             if(currentGamepad2.y && previousGamepad2.y){
                 Arm.SetArmPosition(armServoPos, wristServoPos);
+            }
+            if (currentGamepad2.left_trigger>0.1 && !(previousGamepad2.left_trigger >0.1)){
+                Intake.crankServo.setPosition(0.38);
+            }
+            if (currentGamepad2.right_trigger>0.1 && !(previousGamepad2.right_trigger >0.1)){
+                Intake.crankServo.setPosition(0.69);
             }
 
             telemetry.addData("IntakeCounter", intakeCounter);

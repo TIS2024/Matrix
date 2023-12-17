@@ -49,12 +49,13 @@ public class MonelBot6 extends LinearOpMode {
     public static double
             gripperServoPos, intakeArmServoPos, intakeWristServoPos, crankServoPos;
     boolean
-            armToggle = false, deliveryToggleOne = false, deliveryToggleTwo = false, intakeToggle = false, crankToggle = false, driveToggle = false;
+            armToggle = false, deliveryToggleOne = false, deliveryToggleTwo = false, intakeToggle = false, crankToggle = false, driveToggle = false,headingFlag = false,headingFlag2 = false;
     public static int intakeCounter;
     public static double
             lifter_posL = 0, lifter_posR = 0, error_lifter, error_diff, error_int, error_lifterR, error_diffR, error_intR, errorprev, errorprevR, output_lifter, output_lifterR, output_power, target;
     public static double kp = 3.5, ki, kd = 1;
-//    public static double kp_heading, ki_heading, kd_heading;
+    public static double kp_heading, ki_heading, kd_heading;
+    public static double kp_heading2, ki_heading2, kd_heading2;
 
     public enum IntakeState {
         INTAKE_START,
@@ -118,7 +119,7 @@ public class MonelBot6 extends LinearOpMode {
         leftRear.setDirection(DcMotorEx.Direction.FORWARD);
 
         // Retrieve the IMU from the hardware map
-        IMU imu = (IMU) hardwareMap.get(BNO055IMU.class, "imu");
+        IMU imu =  hardwareMap.get(BHI260IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
@@ -128,7 +129,7 @@ public class MonelBot6 extends LinearOpMode {
 
         DigitalChannel beamBreaker = hardwareMap.get(DigitalChannel.class, "beamBreaker");
         beamBreaker.setMode(DigitalChannel.Mode.INPUT);
-        double referenceAngle_intake = Math.toRadians(0);
+        double referenceAngle_intake = Math.toRadians(180);
         double referenceAngle_outtake = Math.toRadians(90);
 
         while (opModeInInit()){
@@ -482,20 +483,6 @@ public class MonelBot6 extends LinearOpMode {
             if (currentGamepad1.dpad_left){
                 Hanger.PutDownRobot();
             }
-            if(currentGamepad1.left_trigger>0){
-                double power = PIDControl(referenceAngle_intake,botHeading,1,0,0,0);
-                leftFront.setPower(power);
-                leftRear.setPower(power);
-                rightFront.setPower(-power);
-                rightRear.setPower(-power);
-            }
-            if(currentGamepad1.right_trigger>0){
-                double power = PIDControl(referenceAngle_outtake,botHeading,1,0,0,0);
-                leftFront.setPower(power);
-                leftRear.setPower(power);
-                rightFront.setPower(-power);
-                rightRear.setPower(-power);
-            }
 //            if(currentGamepad1.right_trigger>0.3){
 //                THROTTLE = 0.3;
 //                HEADING = 0.3;
@@ -538,15 +525,51 @@ public class MonelBot6 extends LinearOpMode {
                 gripperServoPos = 1;
                 Intake.IntakePixel(gripperServoPos);
             }
-            if(currentGamepad2.x && previousGamepad2.x){
+            if(currentGamepad2.x && !previousGamepad2.x){
                 Intake.SetArmPosition(intakeArmServoPos, intakeWristServoPos);
             }
-            if(currentGamepad2.y && previousGamepad2.y){
+            if(currentGamepad2.y && !previousGamepad2.y){
                 Arm.SetArmPosition(armServoPos, wristServoPos);
             }
+            if(currentGamepad1.left_trigger>0.1 && !(previousGamepad1.left_trigger>0.1)) {
+
+                if (botHeading<referenceAngle_intake) {
+                    double power = PIDControl(referenceAngle_intake, botHeading, kp_heading, ki_heading, kd_heading, 0);
+                    leftFront.setPower(power);
+                    leftRear.setPower(power);
+                    rightFront.setPower(-power);
+                    rightRear.setPower(-power);
+                }
+                else
+                {
+                    leftFront.setPower(frontLeftPower);
+                    leftRear.setPower(backLeftPower);
+                    rightFront.setPower(frontRightPower);
+                    rightRear.setPower(backRightPower);
+                }
+            }
+            if(currentGamepad1.right_trigger>0.1 && !(previousGamepad1.right_trigger>0.1)) {
+
+                if(botHeading<referenceAngle_outtake) {
+                    double power = PIDControl(referenceAngle_outtake, botHeading, kp_heading2, ki_heading2, kd_heading2, 0);
+                    leftFront.setPower(power);
+                    leftRear.setPower(power);
+                    rightFront.setPower(-power);
+                    rightRear.setPower(-power);
+                }
+                else {
+                    leftFront.setPower(frontLeftPower);
+                    leftRear.setPower(backLeftPower);
+                    rightFront.setPower(frontRightPower);
+                    rightRear.setPower(backRightPower);
+                }
+            }
+
 
             telemetry.addData("IntakeCounter", intakeCounter);
             telemetry.addData("Bot Heading", botHeading);
+            telemetry.addData("Heading Flag", headingFlag);
+            telemetry.addData("Heading Flag2", headingFlag2);
             telemetry.addData("ParallelEnc Counts", twtl.parallelEncoder.getCurrentPosition());
             telemetry.addData("AXON Position", axonPosition);
             telemetry.addData("Beam Breaker State:", beamBreaker.getState());
