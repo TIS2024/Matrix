@@ -17,7 +17,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.angle_pid.Drivetrain;
+import org.firstinspires.ftc.teamcode.angle_pid.PIDConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.SlewRateLimiter;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
@@ -31,6 +35,21 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 @TeleOp(group = "Robot Main")
 @Config
 public class MonelBot5 extends LinearOpMode {
+
+    double integralSum = 0;
+    double Kp = PIDConstants.Kp;
+    double Ki = PIDConstants.Ki;
+    double Kd = PIDConstants.Kd;
+
+    double refrenceAngle = Math.toRadians(90);
+    double refrenceAngle2 = Math.toRadians(180);
+
+    Drivetrain drivetrain = new Drivetrain();
+
+    ElapsedTime timer = new ElapsedTime();
+    private double lastError = 0;
+
+    private BHI260IMU imu;
     SampleMecanumDrive drive = null;
     Slider slider = null;
     Arm arm = null;
@@ -81,6 +100,7 @@ public class MonelBot5 extends LinearOpMode {
         Gamepad previousGamepad2 = new Gamepad();
 
         drive = new SampleMecanumDrive(hardwareMap);
+//        drivetrain.init(hardwareMap);
         slider = new Slider(hardwareMap, telemetry);
         arm = new Arm(hardwareMap, telemetry);
         hanger = new Hanger(hardwareMap, telemetry);
@@ -508,17 +528,25 @@ public class MonelBot5 extends LinearOpMode {
             }
             if (currentGamepad1.left_trigger>0.1 && !(previousGamepad1.left_trigger >0.1)){
 //                Intake.crankServo.setPosition(0.38);
-                TrajectorySequence TurnRobotIntake = drive.trajectorySequenceBuilder(startPose)
-                        .turn(180)
-                        .build();
-                drive.followTrajectorySequenceAsync(TurnRobotIntake);
+//                TrajectorySequence TurnRobotIntake = drive.trajectorySequenceBuilder(startPose)
+//                        .turn(180)
+//                        .build();
+//                drive.followTrajectorySequenceAsync(TurnRobotIntake);
+
+                double power = PIDControl(refrenceAngle, imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
+                drivetrain.power(power);
+
             }
             if (currentGamepad1.right_trigger>0.1 && !(previousGamepad1.right_trigger >0.1)){
 //                Intake.crankServo.setPosition(0.69);
-                TrajectorySequence TurnRobotOuttake = drive.trajectorySequenceBuilder(startPose)
-                        .turn(90)
-                        .build();
-                drive.followTrajectorySequenceAsync(TurnRobotOuttake);
+//                TrajectorySequence TurnRobotOuttake = drive.trajectorySequenceBuilder(startPose)
+//                        .turn(90)
+//                        .build();
+//                drive.followTrajectorySequenceAsync(TurnRobotOuttake);
+
+                double power = PIDControl(refrenceAngle2, imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
+                drivetrain.power(power);
+
             }
 //            if(currentGamepad1.right_trigger>0.3){
 //                THROTTLE = 0.3;
@@ -627,5 +655,25 @@ public class MonelBot5 extends LinearOpMode {
         errorprev = error_lifter;
         errorprevR = error_lifterR;
         return Math.abs(output_lifter);
+    }
+
+    public double PIDControl(double refrence, double state) {
+        double error = angleWrap(refrence - state);
+        telemetry.addData("Error: ", error);
+        integralSum += error * timer.seconds();
+        double derivative = (error - lastError) / (timer.seconds());
+        lastError = error;
+        timer.reset();
+        double output = (error * Kp) + (derivative * Kd) + (integralSum * Ki);
+        return output;
+    }
+    public double angleWrap(double radians){
+        while(radians > Math.PI){
+            radians -= 2 * Math.PI;
+        }
+        while(radians < -Math.PI){
+            radians += 2 * Math.PI;
+        }
+        return radians;
     }
 }
