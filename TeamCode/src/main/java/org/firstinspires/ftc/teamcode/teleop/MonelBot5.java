@@ -205,8 +205,24 @@ public class MonelBot5 extends LinearOpMode {
                     }
                     break;
                 case INTAKE_GRIP:
-                    if (!beamBreaker.getState()){
-                        Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.47);
+                    if(!intakeToggle){
+                        if (!beamBreaker.getState()){
+                            Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.45);
+                            TrajectorySequence IntakePixel = drive.trajectorySequenceBuilder(startPose)
+                                    .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
+                                    .UNSTABLE_addTemporalMarkerOffset(-0.2, ()->{Intake.IntakePixel(0.75);})
+                                    .waitSeconds(0.3)
+                                    .build();
+                            drive.followTrajectorySequence(IntakePixel);
+                            drive.update();
+                            if (inputTimer.milliseconds() >= 800){
+                                inputTimer.reset();
+                                inputState = IntakeState.INTAKE_RETRACT;
+                            }
+                        }
+                    }
+                    if(intakeToggle){
+                        Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.45);
                         TrajectorySequence IntakePixel = drive.trajectorySequenceBuilder(startPose)
                                 .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
                                 .UNSTABLE_addTemporalMarkerOffset(-0.2, ()->{Intake.IntakePixel(0.75);})
@@ -214,7 +230,7 @@ public class MonelBot5 extends LinearOpMode {
                                 .build();
                         drive.followTrajectorySequence(IntakePixel);
                         drive.update();
-                        if (inputTimer.milliseconds() >= 800){
+                        if (inputTimer.milliseconds() >= 800 &&  Intake.gripperServo.getPosition() == 0.75){
                             inputTimer.reset();
                             inputState = IntakeState.INTAKE_RETRACT;
                         }
@@ -565,6 +581,9 @@ public class MonelBot5 extends LinearOpMode {
 //                        .turn(90)
 //                        .build();
 //                drive.followTrajectorySequenceAsync(TurnRobotOuttake);
+            }
+            if (currentGamepad2.start && !previousGamepad2.start){
+                intakeToggle = !intakeToggle;
             }
 
             telemetry.addData("IntakeCounter", intakeCounter);

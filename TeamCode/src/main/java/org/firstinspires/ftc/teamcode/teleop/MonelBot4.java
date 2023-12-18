@@ -130,7 +130,8 @@ public class MonelBot4 extends LinearOpMode {
             Intake.intakeArmServo.setPosition(0.5);
             Intake.intakeWristServo.setPosition(0.65);
             Drone.initialPos();
-            Hanger.hangerServo.setPosition(0.3);
+            Hanger.hangerServoOne.setPosition(0.5);
+            Hanger.hangerServoTwo.setPosition(0.5);
             Intake.gripperServo.setPosition(1);
             inputTimer.reset();
             outputTimer.reset();
@@ -471,22 +472,23 @@ public class MonelBot4 extends LinearOpMode {
                 slider.extendTo(levelZero, output_power);
             }
             if (currentGamepad1.x && !previousGamepad1.x){
-                TrajectorySequence endGame = drive.trajectorySequenceBuilder(startPose)
-                        .addTemporalMarker(()->{Drone.droneServo.setPosition(0.3);})
-                        .waitSeconds(0.1)
-                        .addTemporalMarker(()->{Hanger.hangerServo.setPosition(0.1);})
-                        .waitSeconds(0.5)
-                        .addTemporalMarker(()->{Hanger.hangerServo.setPosition(0.0);})
-                        .waitSeconds(0.3)
-                        .build();
-                drive.followTrajectorySequenceAsync(endGame);
-                drive.update();
+//                TrajectorySequence endGame = drive.trajectorySequenceBuilder(startPose)
+//                        .addTemporalMarker(()->{Drone.droneServo.setPosition(0.3);})
+//                        .waitSeconds(0.5)
+//                        .addTemporalMarker(Hanger::ExtendHanger)
+//                        .build();
+//                drive.followTrajectorySequenceAsync(endGame);
+//                drive.update();
+                Drone.shootDrone();
             }
             if (currentGamepad1.dpad_right){
                 Hanger.LiftRobot();
             }
             if (currentGamepad1.dpad_left){
                 Hanger.PutDownRobot();
+            }
+            if(currentGamepad1.back && !previousGamepad1.back){
+                Hanger.ExtendHanger();
             }
 //            if(currentGamepad1.right_trigger>0.3){
 //                THROTTLE = 0.3;
