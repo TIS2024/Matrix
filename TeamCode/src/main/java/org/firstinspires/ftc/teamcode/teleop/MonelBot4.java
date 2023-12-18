@@ -295,7 +295,7 @@ public class MonelBot4 extends LinearOpMode {
             switch (outputState){
                 case OUTTAKE_START:
                     //waiting for input
-                    if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper){
+                    if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper && (Intake.intakeArmServo.getPosition() > 0.75)){
                         outputState = OuttakeState.OUTTAKE_PUSH;
                         outputTimer.reset();
                     }
@@ -379,6 +379,17 @@ public class MonelBot4 extends LinearOpMode {
                         .addTemporalMarker(()->{Arm.armServo.setPosition(0.15);Arm.wristServo.setPosition(0.735);})
                         .build();
                 drive.followTrajectorySequenceAsync(ResetIntake);
+                drive.update();
+            }
+
+            if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper && (Intake.intakeArmServo.getPosition() < 0.75)){
+                TrajectorySequence OuttakeArm = drive.trajectorySequenceBuilder(startPose)
+                        .addTemporalMarker(()->{Arm.DropPixel(0.45);})
+                        .addTemporalMarker(()->{Arm.armServo.setPosition(0.15);Arm.wristServo.setPosition(0.735);})
+                        .waitSeconds(0.2)
+                        .addTemporalMarker(()->{Arm.armServo.setPosition(0.5);Arm.wristServo.setPosition(0.175);})
+                        .build();
+                drive.followTrajectorySequenceAsync(OuttakeArm);
                 drive.update();
             }
 

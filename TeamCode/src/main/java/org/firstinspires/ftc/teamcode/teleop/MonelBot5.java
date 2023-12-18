@@ -490,6 +490,20 @@ public class MonelBot5 extends LinearOpMode {
             if (currentGamepad1.dpad_left){
                 Hanger.PutDownRobot();
             }
+            if (currentGamepad1.left_trigger>0.1 && !(previousGamepad1.left_trigger >0.1)){
+//                Intake.crankServo.setPosition(0.38);
+                TrajectorySequence TurnRobotIntake = drive.trajectorySequenceBuilder(startPose)
+                        .turn(180)
+                        .build();
+                drive.followTrajectorySequenceAsync(TurnRobotIntake);
+            }
+            if (currentGamepad1.right_trigger>0.1 && !(previousGamepad1.right_trigger >0.1)){
+//                Intake.crankServo.setPosition(0.69);
+                TrajectorySequence TurnRobotOuttake = drive.trajectorySequenceBuilder(startPose)
+                        .turn(90)
+                        .build();
+                drive.followTrajectorySequenceAsync(TurnRobotOuttake);
+            }
 //            if(currentGamepad1.right_trigger>0.3){
 //                THROTTLE = 0.3;
 //                HEADING = 0.3;
@@ -540,9 +554,17 @@ public class MonelBot5 extends LinearOpMode {
             }
             if (currentGamepad2.left_trigger>0.1 && !(previousGamepad2.left_trigger >0.1)){
                 Intake.crankServo.setPosition(0.38);
+//                TrajectorySequence TurnRobotIntake = drive.trajectorySequenceBuilder(startPose)
+//                        .turn(180)
+//                        .build();
+//                drive.followTrajectorySequenceAsync(TurnRobotIntake);
             }
             if (currentGamepad2.right_trigger>0.1 && !(previousGamepad2.right_trigger >0.1)){
                 Intake.crankServo.setPosition(0.69);
+//                TrajectorySequence TurnRobotOuttake = drive.trajectorySequenceBuilder(startPose)
+//                        .turn(90)
+//                        .build();
+//                drive.followTrajectorySequenceAsync(TurnRobotOuttake);
             }
 
             telemetry.addData("IntakeCounter", intakeCounter);
