@@ -190,7 +190,7 @@ public class MonelBot4 extends LinearOpMode {
                 case INTAKE_START:
                     //waiting for input
                     if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 0)){
-                        Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.5);
+                        Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.485);
                         Intake.IntakePixel(0.9);
                         Arm.armServo.setPosition(0.3);Arm.wristServo.setPosition(0.735);
                         Arm.DropPixel(1);
@@ -207,7 +207,7 @@ public class MonelBot4 extends LinearOpMode {
                     break;
                 case INTAKE_GRIP:
                     if (!beamBreaker.getState()){
-                        Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.5);
+                        Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.45);
                         TrajectorySequence IntakePixel = drive.trajectorySequenceBuilder(startPose)
                                 .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
                                 .UNSTABLE_addTemporalMarkerOffset(-0.2, ()->{Intake.IntakePixel(0.75);})
@@ -238,7 +238,7 @@ public class MonelBot4 extends LinearOpMode {
                     }
                     break;
                 case INTAKE_RETRACT:
-                    Intake.intakeArmServo.setPosition(0.5);
+                    Intake.intakeArmServo.setPosition(0.4);
                     Intake.intakeWristServo.setPosition(0.5);
                     Intake.CrankPosition(0.69);
                     if (inputTimer.milliseconds() >= 500){ //800

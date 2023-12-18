@@ -190,7 +190,7 @@ public class MonelBot5 extends LinearOpMode {
                     //waiting for input
                     if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 0)){
                         Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.5);
-                        Intake.IntakePixel(1);
+                        Intake.IntakePixel(0.9);
                         Arm.armServo.setPosition(0.3);Arm.wristServo.setPosition(0.735);
                         Arm.DropPixel(1);
                         inputTimer.reset();
@@ -237,6 +237,8 @@ public class MonelBot5 extends LinearOpMode {
                     }
                     break;
                 case INTAKE_RETRACT:
+                    Intake.intakeArmServo.setPosition(0.4);
+                    Intake.intakeWristServo.setPosition(0.5);
                     Intake.CrankPosition(0.69);
                     if (inputTimer.milliseconds() >= 800){
                         inputState = IntakeState.INTAKE_INPUT;
@@ -340,7 +342,7 @@ public class MonelBot5 extends LinearOpMode {
                     }
                     break;
                 case OUTTAKE_OUTPUT:
-                    Arm.armServo.setPosition(0.5);Arm.wristServo.setPosition(0.2);
+                    Arm.armServo.setPosition(0.5);Arm.wristServo.setPosition(0.175);
                     if (outputTimer.milliseconds() >= 200){
                         outputTimer.reset();
                         outputState = OuttakeState.OUTTAKE_FINAL;
@@ -506,6 +508,22 @@ public class MonelBot5 extends LinearOpMode {
             if(currentGamepad2.dpad_down && !previousGamepad2.dpad_down){
                 levelOne -= 50;
             }
+            if (currentGamepad2.dpad_left && !previousGamepad2.dpad_left){
+                Arm.DropPixel(0.75);
+            }
+            if(currentGamepad2.dpad_right && !previousGamepad2.dpad_right){
+                Arm.DropPixel(1);
+            }
+            if(currentGamepad2.a && !previousGamepad2.a){
+                armServoPos = 0.6;
+                wristServoPos = 0.15;
+                Arm.SetArmPosition(armServoPos, wristServoPos);
+            }
+            if(currentGamepad2.b && !previousGamepad2.b){
+                armServoPos = 0.5;
+                wristServoPos = 0.175;
+                Arm.SetArmPosition(armServoPos, wristServoPos);
+            }
             if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper){
                 gripperServoPos = 0.75;
                 Intake.IntakePixel(gripperServoPos);
@@ -519,6 +537,12 @@ public class MonelBot5 extends LinearOpMode {
             }
             if(currentGamepad2.y && previousGamepad2.y){
                 Arm.SetArmPosition(armServoPos, wristServoPos);
+            }
+            if (currentGamepad2.left_trigger>0.1 && !(previousGamepad2.left_trigger >0.1)){
+                Intake.crankServo.setPosition(0.38);
+            }
+            if (currentGamepad2.right_trigger>0.1 && !(previousGamepad2.right_trigger >0.1)){
+                Intake.crankServo.setPosition(0.69);
             }
 
             telemetry.addData("IntakeCounter", intakeCounter);
