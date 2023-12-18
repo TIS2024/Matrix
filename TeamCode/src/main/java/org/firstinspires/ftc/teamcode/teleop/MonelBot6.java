@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.hardware.bosch.BHI260IMU;
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -19,8 +17,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.angle_pid.Drivetrain;
+import org.firstinspires.ftc.teamcode.angle_pid.PIDConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.SlewRateLimiter;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Drone;
@@ -28,7 +31,6 @@ import org.firstinspires.ftc.teamcode.subsystems.Hanger;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Slider;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.util.AxisDirection;
 
 @TeleOp(group = "Robot Main")
 @Config
@@ -40,7 +42,7 @@ public class MonelBot6 extends LinearOpMode {
     Intake intake = null;
     Drone drone = null;
     TwoWheelTrackingLocalizer twtl = null;
-    ElapsedTime inputTimer, outputTimer,headingTimer;
+    ElapsedTime inputTimer, outputTimer;
 
     public DcMotorEx leftFront, leftRear, rightFront, rightRear;
 
@@ -51,13 +53,11 @@ public class MonelBot6 extends LinearOpMode {
     public static double
             gripperServoPos, intakeArmServoPos, intakeWristServoPos, crankServoPos;
     boolean
-            armToggle = false, deliveryToggleOne = false, deliveryToggleTwo = false, intakeToggle = false, crankToggle = false, driveToggle = false,headingFlag = false,headingFlag2 = false;
-    public static int intakeCounter;
+            armToggle = false, deliveryToggleOne = false, deliveryToggleTwo = false, intakeToggle = false, crankToggle = false, driveToggle = false, angleToggle1 = false, angleToggle2=false;
+    public static int intakeCounter, outtakeCounter;
     public static double
             lifter_posL = 0, lifter_posR = 0, error_lifter, error_diff, error_int, error_lifterR, error_diffR, error_intR, errorprev, errorprevR, output_lifter, output_lifterR, output_power, target;
     public static double kp = 3.5, ki, kd = 1;
-    public static double kp_heading, ki_heading, kd_heading;
-    public static double kp_heading2, ki_heading2, kd_heading2;
 
     public enum IntakeState {
         INTAKE_START,
@@ -76,6 +76,16 @@ public class MonelBot6 extends LinearOpMode {
     };
     IntakeState inputState = IntakeState.INTAKE_START;
     OuttakeState outputState = OuttakeState.OUTTAKE_START;
+    double integralSum = 0;
+    double Kp = PIDConstants.Kp;
+    double Ki = PIDConstants.Ki;
+    double Kd = PIDConstants.Kd;
+    double refrenceAngle = Math.toRadians(90);
+    double refrenceAngle2 = Math.toRadians(180);
+    Drivetrain drivetrain = new Drivetrain();
+    ElapsedTime timer = new ElapsedTime();
+    private double lastError = 0;
+    private BHI260IMU imu;
     @Override
     public void runOpMode() throws InterruptedException {
         Gamepad currentGamepad1 = new Gamepad();
@@ -85,6 +95,7 @@ public class MonelBot6 extends LinearOpMode {
         Gamepad previousGamepad2 = new Gamepad();
 
         drive = new SampleMecanumDrive(hardwareMap);
+//        drivetrain.init(hardwareMap);
         slider = new Slider(hardwareMap, telemetry);
         arm = new Arm(hardwareMap, telemetry);
         hanger = new Hanger(hardwareMap, telemetry);
@@ -94,7 +105,7 @@ public class MonelBot6 extends LinearOpMode {
 
         inputTimer = new ElapsedTime();
         outputTimer = new ElapsedTime();
-        headingTimer = new ElapsedTime();
+        timer = new ElapsedTime();
 
         Pose2d startPose = new Pose2d(0, 0, Math.toRadians(180));
         drive.setPoseEstimate(startPose);
@@ -103,11 +114,6 @@ public class MonelBot6 extends LinearOpMode {
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
         rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
-
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -121,7 +127,7 @@ public class MonelBot6 extends LinearOpMode {
         leftRear.setDirection(DcMotorEx.Direction.FORWARD);
 
         // Retrieve the IMU from the hardware map
-        IMU imu =  hardwareMap.get(BHI260IMU.class, "imu");
+        IMU imu = hardwareMap.get(BHI260IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
@@ -131,8 +137,6 @@ public class MonelBot6 extends LinearOpMode {
 
         DigitalChannel beamBreaker = hardwareMap.get(DigitalChannel.class, "beamBreaker");
         beamBreaker.setMode(DigitalChannel.Mode.INPUT);
-        double referenceAngle_intake = Math.toRadians(180);
-        double referenceAngle_outtake = Math.toRadians(90);
 
         while (opModeInInit()){
             Arm.SetArmPosition(0.15,0.73);
@@ -140,7 +144,8 @@ public class MonelBot6 extends LinearOpMode {
             Intake.intakeArmServo.setPosition(0.5);
             Intake.intakeWristServo.setPosition(0.65);
             Drone.initialPos();
-            Hanger.hangerServo.setPosition(0.3);
+            Hanger.hangerServoOne.setPosition(0.5);
+            Hanger.hangerServoTwo.setPosition(0.5);
             Intake.gripperServo.setPosition(1);
             inputTimer.reset();
             outputTimer.reset();
@@ -162,46 +167,53 @@ public class MonelBot6 extends LinearOpMode {
             if (currentGamepad1.start && !previousGamepad1.start) {
                 imu.resetYaw();
             }
-
             double axonPosition = analogInput.getVoltage() / 3.3 * 360;
 
             // Main teleop loop goes here
 
             //drivetrain ---------------------------------------------------------------------------
-            double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-            double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-
-            rotX = rotX * 1.1;
-
-            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-            double frontLeftPower = (rotY + rotX + rx) / denominator;
-            double backLeftPower = (rotY - rotX + rx) / denominator;
-            double frontRightPower = (rotY - rotX - rx) / denominator;
-            double backRightPower = (rotY + rotX - rx) / denominator;
-
-            leftFront.setPower(frontLeftPower);
-            leftRear.setPower(backLeftPower);
-            rightFront.setPower(frontRightPower);
-            rightRear.setPower(backRightPower);
-
-//            Pose2d poseEstimate = drive.getPoseEstimate();
-//            Vector2d input = new Vector2d(Math.pow(Range.clip(gamepad1.left_stick_y, -1, 1), 3),
-//                    Math.pow(Range.clip(gamepad1.left_stick_x, -1, 1), 3));
+//            double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+//            double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 //
-//            drive.setWeightedDrivePower(
-//                    new Pose2d(input.getX() * THROTTLE, input.getY() * TURN, -gamepad1.right_stick_x * HEADING)
-//            );
-//            telemetry.addData("heading", poseEstimate.getHeading());
-//            drive.update();
+//            rotX = rotX * 1.1;
+//
+//            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+//            double frontLeftPower = (rotY + rotX + rx) / denominator;
+//            double backLeftPower = (rotY - rotX + rx) / denominator;
+//            double frontRightPower = (rotY - rotX - rx) / denominator;
+//            double backRightPower = (rotY + rotX - rx) / denominator;
+//
+//            leftFront.setPower(frontLeftPower);
+//            leftRear.setPower(backLeftPower);
+//            rightFront.setPower(frontRightPower);
+//            rightRear.setPower(backRightPower);
+
+            Pose2d poseEstimate = drive.getPoseEstimate();
+            Vector2d input = new Vector2d(Math.pow(Range.clip(gamepad1.left_stick_y, -1, 1), 3),
+                    Math.pow(Range.clip(gamepad1.left_stick_x, -1, 1), 3)).rotated(-poseEstimate.getHeading());
+
+            drive.setWeightedDrivePower(
+                    new Pose2d(input.getX() * THROTTLE, input.getY() * TURN, -gamepad1.right_stick_x * HEADING)
+            );
+            telemetry.addData("heading", poseEstimate.getHeading());
+            drive.update();
+
+            if (currentGamepad1.left_trigger > 0.3 && !(previousGamepad1.left_trigger > 0.3)){
+                drive.turn(Math.toRadians(90));
+            }
+            if (currentGamepad1.right_trigger > 0.3 && !(previousGamepad1.right_trigger > 0.3)){
+                drive.turn(Math.toRadians(180));
+            }
             //--------------------------------------------------------------------------------------
 
+            //Intake Sequence
             switch (inputState){
                 case INTAKE_START:
                     //waiting for input
                     if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 0)){
-                        Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.5);
-                        Intake.IntakePixel(1);
+                        Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.485);
+                        Intake.IntakePixel(0.9);
                         Arm.armServo.setPosition(0.3);Arm.wristServo.setPosition(0.735);
                         Arm.DropPixel(1);
                         inputTimer.reset();
@@ -216,18 +228,36 @@ public class MonelBot6 extends LinearOpMode {
                     }
                     break;
                 case INTAKE_GRIP:
-                    if (!beamBreaker.getState()){
-                        Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.47);
-                        TrajectorySequence IntakePixel = drive.trajectorySequenceBuilder(startPose)
-                                .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
-                                .UNSTABLE_addTemporalMarkerOffset(-0.2, ()->{Intake.IntakePixel(0.75);})
-                                .waitSeconds(0.3)
-                                .build();
-                        drive.followTrajectorySequence(IntakePixel);
-                        drive.update();
-                        if (inputTimer.milliseconds() >= 500){ //800
-                            inputTimer.reset();
-                            inputState = IntakeState.INTAKE_RETRACT;
+                    if(!intakeToggle){
+                        if (!beamBreaker.getState()){
+                            Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.45);
+                            TrajectorySequence IntakePixel = drive.trajectorySequenceBuilder(startPose)
+                                    .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
+                                    .UNSTABLE_addTemporalMarkerOffset(-0.2, ()->{Intake.IntakePixel(0.75);})
+                                    .waitSeconds(0.3)
+                                    .build();
+                            drive.followTrajectorySequence(IntakePixel);
+                            drive.update();
+                            if (inputTimer.milliseconds() >= 500){ //800
+                                inputTimer.reset();
+                                inputState = IntakeState.INTAKE_RETRACT;
+                            }
+                        }
+                    }
+                    if(intakeToggle){
+                        if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper){
+                            Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.45);
+                            TrajectorySequence IntakePixel = drive.trajectorySequenceBuilder(startPose)
+                                    .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
+                                    .UNSTABLE_addTemporalMarkerOffset(-0.2, ()->{Intake.IntakePixel(0.75);})
+                                    .waitSeconds(0.3)
+                                    .build();
+                            drive.followTrajectorySequence(IntakePixel);
+                            drive.update();
+                            if (inputTimer.milliseconds() >= 800 &&  Intake.gripperServo.getPosition() == 0.75){
+                                inputTimer.reset();
+                                inputState = IntakeState.INTAKE_RETRACT;
+                            }
                         }
                     }
                     if (beamBreaker.getState() && inputTimer.milliseconds()>=7000){
@@ -248,8 +278,10 @@ public class MonelBot6 extends LinearOpMode {
                     }
                     break;
                 case INTAKE_RETRACT:
+                    Intake.intakeArmServo.setPosition(0.4);
+                    Intake.intakeWristServo.setPosition(0.5);
                     Intake.CrankPosition(0.69);
-                    if (inputTimer.milliseconds() >= 200){ //800
+                    if (inputTimer.milliseconds() >= 500){ //800
                         inputState = IntakeState.INTAKE_INPUT;
                         inputTimer.reset();
                     }
@@ -299,11 +331,13 @@ public class MonelBot6 extends LinearOpMode {
                     inputState = IntakeState.INTAKE_START;
                     intakeCounter = 0;
             }
+            //--------------------------------------------------------------------------------------
 
+            //Outtake Sequence
             switch (outputState){
                 case OUTTAKE_START:
                     //waiting for input
-                    if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper){
+                    if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper && (Intake.intakeArmServo.getPosition() > 0.75)){
                         outputState = OuttakeState.OUTTAKE_PUSH;
                         outputTimer.reset();
                     }
@@ -369,6 +403,7 @@ public class MonelBot6 extends LinearOpMode {
                 default:
                     outputState = OuttakeState.OUTTAKE_START;
             }
+            //--------------------------------------------------------------------------------------
 
             if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 1) && (Intake.intakeArmServo.getPosition() == 1)){
                 intakeCounter = 0;
@@ -390,7 +425,18 @@ public class MonelBot6 extends LinearOpMode {
                 drive.update();
             }
 
-            if(currentGamepad1.y && !previousGamepad1.y && (inputState!=IntakeState.INTAKE_START || outputState!=OuttakeState.OUTTAKE_START)){
+            if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper && (Intake.intakeArmServo.getPosition() < 0.75)){
+                TrajectorySequence OuttakeArm = drive.trajectorySequenceBuilder(startPose)
+                        .addTemporalMarker(()->{Arm.DropPixel(0.45);})
+                        .addTemporalMarker(()->{Arm.armServo.setPosition(0.15);Arm.wristServo.setPosition(0.735);})
+                        .waitSeconds(0.2)
+                        .addTemporalMarker(()->{Arm.armServo.setPosition(0.5);Arm.wristServo.setPosition(0.175);})
+                        .build();
+                drive.followTrajectorySequenceAsync(OuttakeArm);
+                drive.update();
+            }
+
+            if((currentGamepad1.y && !previousGamepad1.y) && (inputState!=IntakeState.INTAKE_START || outputState!=OuttakeState.OUTTAKE_START)){
                 inputState = IntakeState.INTAKE_START;
                 outputState = OuttakeState.OUTTAKE_START;
                 TrajectorySequence ResetRobot = drive.trajectorySequenceBuilder(startPose)
@@ -422,7 +468,7 @@ public class MonelBot6 extends LinearOpMode {
                 TrajectorySequence DropPixelOne = drive.trajectorySequenceBuilder(startPose)
                         .addTemporalMarker(()->{Arm.DropPixel(0.75);})
                         .waitSeconds(0.3)
-                        .addTemporalMarker(()->{Arm.wristServo.setPosition(0.2);Arm.armServo.setPosition(0.48);})
+                        .addTemporalMarker(()->{Arm.wristServo.setPosition(0.2);Arm.armServo.setPosition(0.45);}) //0.48
                         .waitSeconds(0.2)
                         .addTemporalMarker(()->{Arm.wristServo.setPosition(0.2);Arm.armServo.setPosition(0.5);})
                         .build();
@@ -439,7 +485,7 @@ public class MonelBot6 extends LinearOpMode {
                 }
                 TrajectorySequence DropPixelTwo = drive.trajectorySequenceBuilder(startPose)
                         .addTemporalMarker(()->{Arm.DropPixel(1);})
-                        .waitSeconds(0.3)
+                        .waitSeconds(0.5) //0.3
                         .addTemporalMarker(()->{Arm.wristServo.setPosition(0.5);})
                         .waitSeconds(0.1)
                         .addTemporalMarker(()->{Arm.wristServo.setPosition(0.73);Arm.armServo.setPosition(0.15);})
@@ -468,16 +514,7 @@ public class MonelBot6 extends LinearOpMode {
                 slider.extendTo(levelZero, output_power);
             }
             if (currentGamepad1.x && !previousGamepad1.x){
-                TrajectorySequence endGame = drive.trajectorySequenceBuilder(startPose)
-                        .addTemporalMarker(()->{Drone.droneServo.setPosition(0.3);})
-                        .waitSeconds(0.1)
-                        .addTemporalMarker(()->{Hanger.hangerServo.setPosition(0.1);})
-                        .waitSeconds(0.5)
-                        .addTemporalMarker(()->{Hanger.hangerServo.setPosition(0.0);})
-                        .waitSeconds(0.3)
-                        .build();
-                drive.followTrajectorySequenceAsync(endGame);
-                drive.update();
+                Drone.shootDrone();
             }
             if (currentGamepad1.dpad_right){
                 Hanger.LiftRobot();
@@ -485,23 +522,14 @@ public class MonelBot6 extends LinearOpMode {
             if (currentGamepad1.dpad_left){
                 Hanger.PutDownRobot();
             }
-//            if(currentGamepad1.right_trigger>0.3){
-//                THROTTLE = 0.3;
-//                HEADING = 0.3;
-//                TURN = 0.3;
-////                driveToggle = !driveToggle;
-//            }
-//            else {
-//                THROTTLE = 1;
-//                HEADING = 1;
-//                TURN = 1;
-//            }
-
+            if(currentGamepad1.back && !previousGamepad1.back){
+                Hanger.ExtendHanger();
+            }
             if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up){
-                levelOne += 50;
+                levelOne += 75; //50
             }
             if(currentGamepad2.dpad_down && !previousGamepad2.dpad_down){
-                levelOne -= 50;
+                levelOne -= 75; //50
             }
             if (currentGamepad2.dpad_left && !previousGamepad2.dpad_left){
                 Arm.DropPixel(0.75);
@@ -511,7 +539,7 @@ public class MonelBot6 extends LinearOpMode {
             }
             if(currentGamepad2.a && !previousGamepad2.a){
                 armServoPos = 0.6;
-                wristServoPos = 0.15;
+                wristServoPos = 0.1; // 0.15
                 Arm.SetArmPosition(armServoPos, wristServoPos);
             }
             if(currentGamepad2.b && !previousGamepad2.b){
@@ -527,33 +555,25 @@ public class MonelBot6 extends LinearOpMode {
                 gripperServoPos = 1;
                 Intake.IntakePixel(gripperServoPos);
             }
-            if(currentGamepad2.x && !previousGamepad2.x){
+            if(currentGamepad2.x && previousGamepad2.x){
                 Intake.SetArmPosition(intakeArmServoPos, intakeWristServoPos);
             }
-            if(currentGamepad2.y && !previousGamepad2.y){
+            if(currentGamepad2.y && previousGamepad2.y){
                 Arm.SetArmPosition(armServoPos, wristServoPos);
             }
-            if(currentGamepad1.left_trigger>0.1 && !(previousGamepad1.left_trigger>0.1)) {
-                double power = PIDControl(referenceAngle_intake, botHeading, kp_heading, ki_heading, kd_heading, 0);
-                leftFront.setPower(power);
-                leftRear.setPower(power);
-                rightFront.setPower(-power);
-                rightRear.setPower(-power);
+            if (currentGamepad2.left_trigger>0.1 && !(previousGamepad2.left_trigger >0.1)){
+                Intake.crankServo.setPosition(0.38);
             }
-            if(currentGamepad1.right_trigger>0.1 && !(previousGamepad1.right_trigger>0.1)) {
-                double power = PIDControl(referenceAngle_outtake, botHeading, kp_heading2, ki_heading2, kd_heading2, 0);
-                leftFront.setPower(power);
-                leftRear.setPower(power);
-                rightFront.setPower(-power);
-                rightRear.setPower(-power);
+            if (currentGamepad2.right_trigger>0.1 && !(previousGamepad2.right_trigger >0.1)){
+                Intake.crankServo.setPosition(0.69);
+            }
+            if (currentGamepad2.start && !previousGamepad2.start){
+                intakeToggle = !intakeToggle;
             }
 
-
+            telemetry.addData("IntakeToggle", intakeToggle);
             telemetry.addData("IntakeCounter", intakeCounter);
-            telemetry.addData("Bot Heading", botHeading);
-            telemetry.addData("Heading Flag", headingFlag);
-            telemetry.addData("Heading Flag2", headingFlag2);
-            telemetry.addData("ParallelEnc Counts", twtl.parallelEncoder.getCurrentPosition());
+//            telemetry.addData("Bot Heading", botHeading);
             telemetry.addData("AXON Position", axonPosition);
             telemetry.addData("Beam Breaker State:", beamBreaker.getState());
             telemetry.addData("SliderMotorOne tick count", Slider.sliderMotorOne.getCurrentPosition());
@@ -569,18 +589,14 @@ public class MonelBot6 extends LinearOpMode {
             telemetry.addData("armServo", Arm.armServo.getPosition());
             telemetry.addData("wristServo", Arm.wristServo.getPosition());
             telemetry.addData("deliveryServo", Arm.deliveryServo.getPosition());
-//            telemetry.addData("LeftFrontCurrent", drive.getMotorCurrent().get(0));
-//            telemetry.addData("RightFrontCurrent", drive.getMotorCurrent().get(1));
-//            telemetry.addData("LeftRearCurrent", drive.getMotorCurrent().get(2));
-//            telemetry.addData("RightRearCurrent", drive.getMotorCurrent().get(3));
-            telemetry.addData("LeftFrontVelocity", leftFront.getVelocity());
-            telemetry.addData("RightFrontVelocity", rightFront.getVelocity());
-            telemetry.addData("LeftRearVelocity", leftRear.getVelocity());
-            telemetry.addData("RightRearVelocity", rightRear.getVelocity());
-            telemetry.addData("LeftFrontCurrent", leftFront.getCurrent(CurrentUnit.AMPS));
-            telemetry.addData("RightFrontCurrent", rightFront.getCurrent(CurrentUnit.AMPS));
-            telemetry.addData("LeftRearCurrent", leftRear.getCurrent(CurrentUnit.AMPS));
-            telemetry.addData("RightRearCurrent", rightRear.getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("LeftFrontCurrent", drive.getMotorCurrent().get(0));
+            telemetry.addData("RightFrontCurrent", drive.getMotorCurrent().get(1));
+            telemetry.addData("LeftRearCurrent", drive.getMotorCurrent().get(2));
+            telemetry.addData("RightRearCurrent", drive.getMotorCurrent().get(3));
+//            telemetry.addData("LeftFrontCurrent", leftFront.getCurrent(CurrentUnit.AMPS));
+//            telemetry.addData("RightFrontCurrent", rightFront.getCurrent(CurrentUnit.AMPS));
+//            telemetry.addData("LeftRearCurrent", leftRear.getCurrent(CurrentUnit.AMPS));
+//            telemetry.addData("RightRearCurrent", rightRear.getCurrent(CurrentUnit.AMPS));
             telemetry.update();
             drive.update();
         }
@@ -601,27 +617,23 @@ public class MonelBot6 extends LinearOpMode {
         errorprevR = error_lifterR;
         return Math.abs(output_lifter);
     }
-    public double PIDControl(double reference,double state,double kp_heading,double ki_heading,double kd_heading,double kf_heading)
-    {
 
-        double last_heading_error=0;
-        double headingerror = angleWrap(reference - state);
-        double integralSum = (headingerror * headingTimer.seconds());
-        double derivative = (headingerror -last_heading_error)/headingTimer.seconds();
-        last_heading_error = headingerror;
-        headingTimer.reset();
-        double output = (kp_heading*headingerror) + (kd_heading * derivative) + (ki_heading * integralSum) + (kf_heading * reference);
+    public double PIDControl(double refrence, double state) {
+        double error = angleWrap(refrence - state);
+        telemetry.addData("Error: ", error);
+        integralSum += error * timer.seconds();
+        double derivative = (error - lastError) / (timer.seconds());
+        lastError = error;
+        timer.reset();
+        double output = (error * Kp) + (derivative * Kd) + (integralSum * Ki);
         return output;
     }
-    public double angleWrap(double radians)
-    {
-        while(radians>Math.PI)
-        {
-            radians -= 2*Math.PI;
+    public double angleWrap(double radians){
+        while(radians > Math.PI){
+            radians -= 2 * Math.PI;
         }
-        while(radians<-Math.PI)
-        {
-            radians += 2*Math.PI;
+        while(radians < -Math.PI){
+            radians += 2 * Math.PI;
         }
         return radians;
     }
