@@ -263,6 +263,12 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         setDrivePower(vel);
     }
+    public void power(double output){
+        leftFront.setPower(-output);
+        leftRear.setPower(-output);
+        rightFront.setPower(output);
+        rightRear.setPower(output);
+    }
 
     @NonNull
     @Override
