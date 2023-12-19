@@ -144,8 +144,8 @@ public class MonelBot5 extends LinearOpMode {
             Intake.intakeArmServo.setPosition(0.5);
             Intake.intakeWristServo.setPosition(0.65);
             Drone.initialPos();
-            Hanger.hangerServoOne.setPosition(0.5);
-            Hanger.hangerServoTwo.setPosition(0.5);
+            Hanger.hangerServoOne.setPosition(0.25);
+            Hanger.hangerServoTwo.setPosition(0.75);
             Intake.gripperServo.setPosition(1);
             inputTimer.reset();
             outputTimer.reset();
@@ -210,6 +210,14 @@ public class MonelBot5 extends LinearOpMode {
                         Intake.IntakePixel(0.9);
                         Arm.armServo.setPosition(0.3);Arm.wristServo.setPosition(0.735);
                         Arm.DropPixel(1);
+                        inputTimer.reset();
+                        inputState = IntakeState.INTAKE_EXTEND;
+                    }
+                    if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 1)){
+                        Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.485);
+                        Intake.IntakePixel(0.9);
+                        Arm.armServo.setPosition(0.3);Arm.wristServo.setPosition(0.735);
+                        Arm.DropPixel(0.45);
                         inputTimer.reset();
                         inputState = IntakeState.INTAKE_EXTEND;
                     }
@@ -404,7 +412,7 @@ public class MonelBot5 extends LinearOpMode {
                 TrajectorySequence ResetIntake = drive.trajectorySequenceBuilder(startPose)
                         .addTemporalMarker(()->{Intake.IntakePixel(1);})
                         .waitSeconds(0.1)
-                        .addTemporalMarker(()->{Arm.DropPixel(0.75);})
+                        .addTemporalMarker(()->{Arm.DropPixel(0.45);})
                         .addTemporalMarker(()->{Arm.armServo.setPosition(0.3);Arm.wristServo.setPosition(0.735);})
                         .waitSeconds(0.3)
                         .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.7);Intake.intakeWristServo.setPosition(0.50);})

@@ -27,6 +27,10 @@ public class Hanger {
         hangerServoOne.setPosition(1 - extendPosition);
         hangerServoTwo.setPosition(extendPosition);
     }
+    public static void ExtendToHanger(double hangerPos){
+        hangerServoOne.setPosition(1 - hangerPos);
+        hangerServoTwo.setPosition(hangerPos);
+    }
     public static void LiftRobot(){
         hangerMotor.setTargetPosition(hangerMotor.getCurrentPosition() + 4000 );
         hangerMotor.setPower(motorPower);

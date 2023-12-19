@@ -44,7 +44,7 @@ public class MonelBot4 extends LinearOpMode {
             armServoPos, wristServoPos, deliveryServoPos;
     public static int levelZero = 0, levelOne = 250;
     public static double
-            gripperServoPos, intakeArmServoPos, intakeWristServoPos, crankServoPos;
+            gripperServoPos, intakeArmServoPos, intakeWristServoPos, hangerPos = 0.5;
     boolean
             armToggle = false, deliveryToggleOne = false, deliveryToggleTwo = false, intakeToggle = false, crankToggle = false, driveToggle = false;
     public static int intakeCounter;
@@ -130,8 +130,8 @@ public class MonelBot4 extends LinearOpMode {
             Intake.intakeArmServo.setPosition(0.5);
             Intake.intakeWristServo.setPosition(0.65);
             Drone.initialPos();
-            Hanger.hangerServoOne.setPosition(0.5);
-            Hanger.hangerServoTwo.setPosition(0.5);
+            Hanger.hangerServoOne.setPosition(0.25);
+            Hanger.hangerServoTwo.setPosition(0.75);
             Intake.gripperServo.setPosition(1);
             inputTimer.reset();
             outputTimer.reset();
@@ -515,9 +515,7 @@ public class MonelBot4 extends LinearOpMode {
                 Arm.DropPixel(1);
             }
             if(currentGamepad2.a && !previousGamepad2.a){
-                armServoPos = 0.6;
-                wristServoPos = 0.15;
-                Arm.SetArmPosition(armServoPos, wristServoPos);
+                Hanger.ExtendToHanger(hangerPos);
             }
             if(currentGamepad2.b && !previousGamepad2.b){
                 armServoPos = 0.5;
