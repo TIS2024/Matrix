@@ -278,10 +278,17 @@ public class MonelBot6 extends LinearOpMode {
                     }
                     break;
                 case INTAKE_RETRACT:
+//                    Intake.intakeArmServo.setPosition(0.4);
+//                    Intake.intakeWristServo.setPosition(0.5);
+//                    Intake.CrankPosition(0.69);
+//                    if (inputTimer.milliseconds() >= 500){ //800
+//                        inputState = IntakeState.INTAKE_INPUT;
+//                        inputTimer.reset();
+//                    }
                     Intake.intakeArmServo.setPosition(0.4);
                     Intake.intakeWristServo.setPosition(0.5);
                     Intake.CrankPosition(0.69);
-                    if (inputTimer.milliseconds() >= 500){ //800
+                    if (Intake.crankServo.getPosition() > 0.6){
                         inputState = IntakeState.INTAKE_INPUT;
                         inputTimer.reset();
                     }
@@ -289,7 +296,7 @@ public class MonelBot6 extends LinearOpMode {
                 case INTAKE_INPUT:
                     if (inputTimer.milliseconds() >= 200){
                         Intake.intakeWristServo.setPosition(0.66);Intake.intakeArmServo.setPosition(0.4);
-                        if(inputTimer.milliseconds() >= 500){ //600
+                        if(Intake.intakeWristServo.getPosition() >= 0.65){ //600
                             Intake.intakeArmServo.setPosition(0.79);
                             if(axonPosition <= 130){ //inputTimer.milliseconds() >= 900 &&
                                 Intake.intakeWristServo.setPosition(0.45);Intake.intakeArmServo.setPosition(1);Intake.crankServo.setPosition(0.7);
@@ -298,6 +305,17 @@ public class MonelBot6 extends LinearOpMode {
                             }
                         }
                     }
+//                    if (inputTimer.milliseconds() >= 200){
+//                        Intake.intakeWristServo.setPosition(0.66);Intake.intakeArmServo.setPosition(0.4);
+//                        if(inputTimer.milliseconds() >= 500){ //600
+//                            Intake.intakeArmServo.setPosition(0.79);
+//                            if(axonPosition <= 130){ //inputTimer.milliseconds() >= 900 &&
+//                                Intake.intakeWristServo.setPosition(0.45);Intake.intakeArmServo.setPosition(1);Intake.crankServo.setPosition(0.7);
+//                                inputState = IntakeState.INTAKE_FINAL;
+//                                inputTimer.reset();
+//                            }
+//                        }
+//                    }
                     break;
                 case INTAKE_FINAL:
                     if (inputTimer.milliseconds() >= 200){
