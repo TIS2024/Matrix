@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.hardware.bosch.BHI260IMU;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -32,9 +33,11 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Slider;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+import java.util.List;
+
 @TeleOp(group = "Robot Main")
 @Config
-public class MonelBot7 extends LinearOpMode {
+public class MonelBot8 extends LinearOpMode {
     SampleMecanumDrive drive = null;
     Slider slider = null;
     Arm arm = null;
@@ -110,6 +113,12 @@ public class MonelBot7 extends LinearOpMode {
 
         Pose2d startPose = new Pose2d(0, 0, Math.toRadians(180));
         drive.setPoseEstimate(startPose);
+
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
 
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
@@ -414,43 +423,43 @@ public class MonelBot7 extends LinearOpMode {
                     }
                     break;
                 case OUTTAKE_SLIDER:
-                Arm.armServo.setPosition(0.5);Arm.wristServo.setPosition(0.175);
-                if (outputTimer.milliseconds() >= 400){
+                    Arm.armServo.setPosition(0.5);Arm.wristServo.setPosition(0.175);
+                    if (outputTimer.milliseconds() >= 400){
 
-                   if (sliderCounter == 1) {
-                       output_power = lifter_pid(kp, ki, kd, levelOne);
-                       if (output_power > 0.9) {
-                           output_power = 1;
-                       } else if (output_power < 0.2) {
-                           output_power = 0;
-                       }
-                       slider.extendTo(levelOne, output_power);
-                       sliderCounter = 0;
-                   }
-                    if (sliderCounter == 2) {
-                        output_power = lifter_pid(kp, ki, kd, levelTwo);
-                        if (output_power > 0.9) {
-                            output_power = 1;
-                        } else if (output_power < 0.2) {
-                            output_power = 0;
+                        if (sliderCounter == 1) {
+                            output_power = lifter_pid(kp, ki, kd, levelOne);
+                            if (output_power > 0.9) {
+                                output_power = 1;
+                            } else if (output_power < 0.2) {
+                                output_power = 0;
+                            }
+                            slider.extendTo(levelOne, output_power);
+                            sliderCounter = 0;
                         }
-                        slider.extendTo(levelTwo, output_power);
-                        sliderCounter = 0;
-                    }
-                    if (sliderCounter == 3) {
-                        output_power = lifter_pid(kp, ki, kd, levelThree);
-                        if (output_power > 0.9) {
-                            output_power = 1;
-                        } else if (output_power < 0.2) {
-                            output_power = 0;
+                        if (sliderCounter == 2) {
+                            output_power = lifter_pid(kp, ki, kd, levelTwo);
+                            if (output_power > 0.9) {
+                                output_power = 1;
+                            } else if (output_power < 0.2) {
+                                output_power = 0;
+                            }
+                            slider.extendTo(levelTwo, output_power);
+                            sliderCounter = 0;
                         }
-                        slider.extendTo(levelThree, output_power);
-                        sliderCounter = 0;
+                        if (sliderCounter == 3) {
+                            output_power = lifter_pid(kp, ki, kd, levelThree);
+                            if (output_power > 0.9) {
+                                output_power = 1;
+                            } else if (output_power < 0.2) {
+                                output_power = 0;
+                            }
+                            slider.extendTo(levelThree, output_power);
+                            sliderCounter = 0;
+                        }
+                        outputTimer.reset();
+                        outputState = OuttakeState.OUTTAKE_FINAL;
                     }
-                    outputTimer.reset();
-                    outputState = OuttakeState.OUTTAKE_FINAL;
-                }
-                break;
+                    break;
                 case OUTTAKE_FINAL:
                     Intake.crankServo.setPosition(0.7);
                     Intake.intakeArmServo.setPosition(0.5);
@@ -606,7 +615,7 @@ public class MonelBot7 extends LinearOpMode {
                 sliderCounter = 2;
             }
             if(currentGamepad2.dpad_down && !previousGamepad2.dpad_down){
-             sliderCounter = 3;
+                sliderCounter = 3;
             }
             if (currentGamepad2.dpad_left && !previousGamepad2.dpad_left){
 
