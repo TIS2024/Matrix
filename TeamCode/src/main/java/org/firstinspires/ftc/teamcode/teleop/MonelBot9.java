@@ -18,15 +18,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.angle_pid.Drivetrain;
 import org.firstinspires.ftc.teamcode.angle_pid.PIDConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.SlewRateLimiter;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
-import org.firstinspires.ftc.teamcode.subsystems.Arm;
+import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 import org.firstinspires.ftc.teamcode.subsystems.ArmV2;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.Drone;
@@ -47,7 +43,7 @@ public class MonelBot9 extends LinearOpMode {
     Hanger hanger = null;
     Intake intake = null;
     Drone drone = null;
-    ElapsedTime inputTimer, outputTimer;
+    ElapsedTime inputTimer, outputTimer, angle_timer;
     public static double
             armServoOnePos, armServoTwoPos, wristServoPos, deliveryServoPos, armSliderServoPos;
     public static double
@@ -61,7 +57,6 @@ public class MonelBot9 extends LinearOpMode {
 
     public static double kp = 3.5, ki, kd = 1;
     double Kp = PIDConstants.Kp, Ki = PIDConstants.Ki, Kd = PIDConstants.Kd;
-    ElapsedTime timer = new ElapsedTime();
     private double lastError = 0, integralSum = 0;;
     private BHI260IMU imu;
     public enum IntakeState {
@@ -101,7 +96,7 @@ public class MonelBot9 extends LinearOpMode {
 
         inputTimer = new ElapsedTime();
         outputTimer = new ElapsedTime();
-        timer = new ElapsedTime();
+        angle_timer = new ElapsedTime();
 
         Pose2d startPose = new Pose2d(0, 0, Math.toRadians(180));
         drive.setPoseEstimate(startPose);
@@ -118,13 +113,21 @@ public class MonelBot9 extends LinearOpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
         imu.initialize(parameters);
 
-        AnalogInput analogInput = hardwareMap.get(AnalogInput.class, "analogInput");
+        AnalogInput intakeArmAnalogInput = hardwareMap.get(AnalogInput.class, "intakeArmAnalogInput");
+        AnalogInput intakeWristAnalogInput = hardwareMap.get(AnalogInput.class, "intakeWristAnalogInput");
+        AnalogInput crankAnalogInput = hardwareMap.get(AnalogInput.class, "crankAnalogInput");
+        AnalogInput wristAnalogInput = hardwareMap.get(AnalogInput.class, "wristAnalogInput");
+        AnalogInput armOneAnalogInput = hardwareMap.get(AnalogInput.class, "armOneAnalogInput");
+        AnalogInput armTwoAnalogInput = hardwareMap.get(AnalogInput.class, "armTwoAnalogInput");
 
         DigitalChannel beamBreaker = hardwareMap.get(DigitalChannel.class, "beamBreaker");
         beamBreaker.setMode(DigitalChannel.Mode.INPUT);
 
+        TwoWheelTrackingLocalizer myLocalizer = new TwoWheelTrackingLocalizer(hardwareMap, drive);
+        myLocalizer.setPoseEstimate(PoseStorage.currentPose);
+
         while (opModeInInit()){
-            Arm.SetArmPosition(0.15,0.73);
+            ArmV2.SetArmPosition(0.15,0.73);
             Intake.crankServo.setPosition(0.7);
             Intake.intakeArmServo.setPosition(0.5);
             Intake.intakeWristServo.setPosition(0.65);
@@ -146,13 +149,20 @@ public class MonelBot9 extends LinearOpMode {
             currentGamepad1.copy(gamepad1);
             currentGamepad2.copy(gamepad2);
 
+            double intakeArmPosition = intakeArmAnalogInput.getVoltage() / 3.3 * 360;
+            double intakeWristPosition = intakeWristAnalogInput.getVoltage() / 3.3 * 360;
+            double crankPosition = crankAnalogInput.getVoltage() / 3.3 * 360;
+            double wristPosition = wristAnalogInput.getVoltage() / 3.3 * 360;
+            double armOnePosition = armOneAnalogInput.getVoltage() / 3.3 * 360;
+            double armTwoPosition = armTwoAnalogInput.getVoltage() / 3.3 * 360;
+
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
             double x = gamepad1.left_stick_x;
             double rx = gamepad1.right_stick_x;
+
             if (currentGamepad1.start && !previousGamepad1.start) {
                 imu.resetYaw();
             }
-            double axonPosition = analogInput.getVoltage() / 3.3 * 360;
 
             // Main teleop loop goes here
 
@@ -170,6 +180,10 @@ public class MonelBot9 extends LinearOpMode {
             double backRightPower = (rotY + rotX - rx) / denominator;
 
             DriveTrain.setPower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
+            myLocalizer.update();
+
+            // Retrieve your pose
+            Pose2d myPose = myLocalizer.getPoseEstimate();
 
             double turn90 = angleWrap(Math.toRadians(90) - botHeading);
             double turn180 = angleWrap(Math.toRadians(180) - botHeading);
@@ -179,13 +193,23 @@ public class MonelBot9 extends LinearOpMode {
             if (currentGamepad1.right_trigger > 0.3 && !(previousGamepad1.right_trigger > 0.3)){
                 drive.turn(turn180);
             }
+            //--------------------------------------------------------------------------------------
+
+            //Intake Sequence
+            //--------------------------------------------------------------------------------------
+
+            //Outtake Sequence
+            //--------------------------------------------------------------------------------------
+
             drive.update();
-            telemetry.addData("Bot heading", Math.toDegrees(botHeading));
+            telemetry.addData("x", myPose.getX());
+            telemetry.addData("y", myPose.getY());
+            telemetry.addData("heading", myPose.getHeading());
+            telemetry.addData("Bot heading", botHeading);
             telemetry.addData("IntakeToggle", intakeToggle);
             telemetry.addData("sliderCounter", sliderCounter);
             telemetry.addData("stackFlag", stackFlag);
             telemetry.addData("IntakeCounter", intakeCounter);
-            telemetry.addData("AXON Position", axonPosition);
             telemetry.addData("Beam Breaker State:", beamBreaker.getState());
             telemetry.addData("SliderMotorOne tick count", Slider.sliderMotorOne.getCurrentPosition());
             telemetry.addData("SliderMotorTwo tick count", Slider.sliderMotorTwo.getCurrentPosition());
@@ -193,6 +217,14 @@ public class MonelBot9 extends LinearOpMode {
             telemetry.addData("SliderMotorTwo Current", Slider.sliderMotorTwo.getCurrent(CurrentUnit.AMPS));
             telemetry.addData("HangerMotor tick count", Hanger.hangerMotor.getCurrentPosition());
             telemetry.addData("Hanger Current", Hanger.hangerMotor.getCurrent(CurrentUnit.AMPS));
+
+
+            telemetry.addData("armTwoPosition", armTwoPosition);
+            telemetry.addData("wristPosition", wristPosition);
+            telemetry.addData("intakeWristPosition", intakeWristPosition);
+            telemetry.addData("armOnePosition", armOnePosition);
+            telemetry.addData("crankPosition", crankPosition);
+            telemetry.addData("intakeArm Position", intakeArmPosition);
             telemetry.addData("gripperServo", Intake.gripperServo.getPosition());
             telemetry.addData("intakeWristServo", Intake.intakeWristServo.getPosition());
             telemetry.addData("intakeArmServo", Intake.intakeArmServo.getPosition());
@@ -202,6 +234,7 @@ public class MonelBot9 extends LinearOpMode {
             telemetry.addData("wristServo", ArmV2.wristServo.getPosition());
             telemetry.addData("armSlider", ArmV2.armSliderServo.getPosition());
             telemetry.addData("deliveryServo", ArmV2.deliveryServo.getPosition());
+
             telemetry.addData("LeftFrontCurrent", DriveTrain.leftFront.getCurrent(CurrentUnit.AMPS));
             telemetry.addData("RightFrontCurrent", DriveTrain.rightFront.getCurrent(CurrentUnit.AMPS));
             telemetry.addData("LeftRearCurrent", DriveTrain.leftRear.getCurrent(CurrentUnit.AMPS));
@@ -229,10 +262,10 @@ public class MonelBot9 extends LinearOpMode {
     public double PIDControl(double refrence, double state) {
         double error = angleWrap(refrence - state);
         telemetry.addData("Error: ", error);
-        integralSum += error * timer.seconds();
-        double derivative = (error - lastError) / (timer.seconds());
+        integralSum += error * angle_timer.seconds();
+        double derivative = (error - lastError) / (angle_timer.seconds());
         lastError = error;
-        timer.reset();
+        angle_timer.reset();
         double output = (error * Kp) + (derivative * Kd) + (integralSum * Ki);
         return output;
     }
