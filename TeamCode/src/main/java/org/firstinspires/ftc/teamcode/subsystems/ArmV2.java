@@ -22,10 +22,9 @@ public class ArmV2 {
     }
     public static void SetArmPosition(double armServoOnePos, double wristServoPos) throws InterruptedException {
         wristServo.setPosition(wristServoPos);
-        if(wristServo.getPosition() == wristServoPos){
-            armServoOne.setPosition(1-armServoOnePos);
-            armServoTwo.setPosition(armServoOnePos);
-        }
+        armServoOne.setPosition(1-armServoOnePos);
+        armServoTwo.setPosition(armServoOnePos);
+
     }
     public void setArmPos(double armServoOnePos, double wristServoPos) {
         wristServo.setPosition(wristServoPos);
@@ -41,4 +40,9 @@ public class ArmV2 {
         armSliderServo.setPosition(armSliderServoPos);
     }
     public static void SetPower(double ServoPower){}
+    public static void SetArm(double armServoOnePos) throws InterruptedException {
+            armServoOne.setPosition(1-armServoOnePos);
+            armServoTwo.setPosition(armServoOnePos);
+    }
+
 }

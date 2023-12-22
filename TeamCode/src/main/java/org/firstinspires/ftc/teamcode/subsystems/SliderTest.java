@@ -13,7 +13,7 @@ public class SliderTest extends LinearOpMode {
     public static DcMotorEx
             sliderMotorOne = null, sliderMotorTwo = null;
     public static double motorPowerUP = 0.8, motorPowerDOWN = 0.8;
-    public static int levelOne = 300, levelZero = 0, levelNeg = -10;
+    public static int levelOne = 200, levelZero = 0, levelNeg = -10;
     public static double
             lifter_posL = 0, lifter_posR = 0, error_lifter, error_diff, error_int, error_lifterR, error_diffR, error_intR, errorprev, errorprevR, output_lifter, output_lifterR, output_power, target;
     public static double kp = 3.5, ki, kd = 1;
