@@ -19,8 +19,16 @@ public class AxonCouple extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (gamepad1.a){
-                servo1.setPosition(0.5);
-                servo2.setPosition(0.5);
+                servo1.setPosition(0.45);
+                servo2.setPosition(0.4);
+            }
+            if (gamepad1.x){
+                servo1.setPosition(1);
+                servo2.setPosition(1);
+            }
+            if (gamepad1.y){
+                servo1.setPosition(0);
+                servo2.setPosition(0);
             }
             if (gamepad1.b){
                 servo1.setPosition(1-servoPos);
