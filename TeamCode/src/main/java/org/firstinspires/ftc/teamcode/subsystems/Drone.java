@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Drone {
     public static Servo droneServo;
-    public static double shootPosition = 0.3, initialPosition = 0.0;
+    public static double shootPosition = 0.3, initialPosition = 0.05;
     public Drone(HardwareMap hardwareMap, Telemetry telemetry) {
         droneServo = hardwareMap.get(Servo.class, "droneServo");
     }

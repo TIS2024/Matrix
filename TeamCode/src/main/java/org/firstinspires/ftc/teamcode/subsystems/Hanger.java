@@ -11,7 +11,7 @@ public class Hanger {
     public static DcMotorEx hangerMotor;
     public static Servo hangerServoOne, hangerServoTwo, hangerServo;
     public static double motorPower = 0.8;
-    public static double extendPosition = 0.0;
+    public static double extendPosition = 1.0;
     public Hanger(HardwareMap hardwareMap, Telemetry telemetry) {
 
         hangerServoOne = hardwareMap.get(Servo.class, "hangerServoOne");

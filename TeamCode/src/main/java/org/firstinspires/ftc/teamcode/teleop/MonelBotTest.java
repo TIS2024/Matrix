@@ -29,7 +29,7 @@ public class MonelBotTest extends LinearOpMode {
     Intake intake = null;
     Drone drone = null;
     public static double THROTTLE = 1, HEADING = 1, TURN = 1;
-    public static double armServoPos,armServoPos2, wristServoPos, deliveryServoPos, intakeArmServoPos, intakeWristServoPos, gripperServoPos, crankServoPos, armSliderServoPos;
+    public static double armServoPos,armServoPos2, wristServoPos, deliveryServoPos, intakeArmServoPos, intakeWristServoPos, gripperServoPos, crankServoPos, armSliderServoPos, hangerServoPos1,hangerServoPos2,droneServoPos;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -87,7 +87,7 @@ public class MonelBotTest extends LinearOpMode {
 
             //Slider
             if (currentGamepad1.dpad_up && !previousGamepad1.dpad_up) {
-                Slider.IncreaseExtension(200);
+                Slider.IncreaseExtension(50);
             }
             if (currentGamepad1.dpad_down && !previousGamepad1.dpad_down) {
                 Slider.DecreaseExtension(0);
@@ -122,13 +122,17 @@ public class MonelBotTest extends LinearOpMode {
             }
             //Hanger
             if(currentGamepad1.back && !previousGamepad1.back){
-                Hanger.ExtendHanger();
+                Hanger.hangerServoOne.setPosition(hangerServoPos1);
+                Hanger.hangerServoTwo.setPosition(hangerServoPos2);
             }
-            if (currentGamepad1.dpad_up){
-                Hanger.LiftRobot();
-            }
-            if (currentGamepad1.dpad_down){
-                Hanger.PutDownRobot();
+//            if (currentGamepad1.dpad_up){
+//                Hanger.LiftRobot();
+//            }
+//            if (currentGamepad1.dpad_down){
+//                Hanger.PutDownRobot();
+//            }
+            if (currentGamepad1.dpad_left){
+                Drone.droneServo.setPosition(droneServoPos);
             }
 
             telemetry.addLine("Axon Positions");

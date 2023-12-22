@@ -132,8 +132,8 @@ public class MonelBot9 extends LinearOpMode {
             Intake.intakeArmServo.setPosition(0.5);
             Intake.intakeWristServo.setPosition(0.66);
             Drone.initialPos();
-            Hanger.hangerServoOne.setPosition(0.25);
-            Hanger.hangerServoTwo.setPosition(0.75);
+            Hanger.hangerServoOne.setPosition(0.75);
+            Hanger.hangerServoTwo.setPosition(0.25);
             Intake.gripperServo.setPosition(1);
             ArmV2.SliderLink(1);
             inputTimer.reset();
