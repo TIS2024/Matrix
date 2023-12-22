@@ -49,8 +49,9 @@ public class MonelRedAutoOne extends LinearOpMode {
 
                 //backdrop
                 .lineToConstantHeading(new Vector2d(30 , -36))
-                .UNSTABLE_addTemporalMarkerOffset(-0.60,()->{Intake.IntakePixel(1);})
-                .UNSTABLE_addTemporalMarkerOffset(-0.30,()->{arm.setArmPos(0.55, 0.73);})
+                .UNSTABLE_addTemporalMarkerOffset(-0.60,()->{Intake.IntakePixel(0.95);})
+                .UNSTABLE_addTemporalMarkerOffset(-0.30,()->{arm.setArmPos(0.55, 0.22);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{arm.setArmPos(0.55, 0.73);})
                 .addTemporalMarker(this::telem)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
                 .splineToConstantHeading(new Vector2d(47.5,-30), 0)
@@ -61,10 +62,12 @@ public class MonelRedAutoOne extends LinearOpMode {
                 .setReversed(false)
 
                 //pixel intake // round 1
+                .UNSTABLE_addTemporalMarkerOffset(-0.3,()->{arm.setArmPos(0.2, 0.22);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.2,()->{arm.setArmPos(0.15, 0.22);})
-                .splineToConstantHeading(new Vector2d(18,-10), -Math.PI)
+//                .splineToConstantHeading(new Vector2d(18,-8), -Math.PI)
+                .lineToConstantHeading(new Vector2d(18,-8))
                 .addTemporalMarker(this::telem)
-                .splineToConstantHeading(new Vector2d(-34,-10), -Math.PI)
+                .splineToConstantHeading(new Vector2d(-34,-8), -Math.PI)
                 .addTemporalMarker(this::telem)
                 .UNSTABLE_addTemporalMarkerOffset(-0.7, ()->{Intake.intakeArmServo.setPosition(0.636);Intake.intakeWristServo.setPosition(0.262);}) //0.633-0.2515 //arm->0.64
                 .UNSTABLE_addTemporalMarkerOffset(-0.2, ()->{Intake.CrankPosition(0.5);})
