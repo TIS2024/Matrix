@@ -105,7 +105,7 @@ public class MonelBot9 extends LinearOpMode {
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 
         for (LynxModule hub : allHubs) {
-            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
         // Retrieve the IMU from the hardware map
         IMU imu = hardwareMap.get(BHI260IMU.class, "imu");
@@ -315,7 +315,7 @@ public class MonelBot9 extends LinearOpMode {
                     Intake.intakeArmServo.setPosition(0.4);
                     if (inputTimer.milliseconds() >= 400) {//inputTimer.milliseconds() >= 400  // 500 //600
                         Intake.intakeArmServo.setPosition(0.72);
-                        if (inputTimer.milliseconds() >= 1000) { //axonPosition <= 130 //inputTimer.milliseconds() >= 400 &&
+                        if (inputTimer.milliseconds() >= 1200  || intakeArmPosition<=110) { //axonPosition <= 130 //inputTimer.milliseconds() >= 400 &&
                             Intake.intakeWristServo.setPosition(0.45);
                             Intake.intakeArmServo.setPosition(1);
                             Intake.crankServo.setPosition(0.69);
@@ -706,7 +706,7 @@ public class MonelBot9 extends LinearOpMode {
             telemetry.addData("HangerMotor tick count", Hanger.hangerMotor.getCurrentPosition());
             telemetry.addData("Hanger Current", Hanger.hangerMotor.getCurrent(CurrentUnit.AMPS));
 
-
+//
             telemetry.addData("armTwoPosition", armTwoPosition);
             telemetry.addData("wristPosition", wristPosition);
             telemetry.addData("intakeWristPosition", intakeWristPosition);
