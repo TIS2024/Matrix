@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
@@ -27,7 +28,7 @@ public class MonelBotTest extends LinearOpMode {
     Intake intake = null;
     Drone drone = null;
     public static double THROTTLE = 1, HEADING = 1, TURN = 1;
-    double armServoPos, wristServoPos, deliveryServoPos, intakeArmServoPos, intakeWristServoPos, gripperServoPos, crankServoPos, armSliderServoPos;
+    public static double armServoPos, wristServoPos, deliveryServoPos, intakeArmServoPos, intakeWristServoPos, gripperServoPos, crankServoPos, armSliderServoPos;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -44,6 +45,9 @@ public class MonelBotTest extends LinearOpMode {
         intake = new Intake(hardwareMap, telemetry);
         drone =new Drone(hardwareMap, telemetry);
 
+        AnalogInput armOneAnalogInput = hardwareMap.get(AnalogInput.class, "armOneAnalogInput");
+        AnalogInput armTwoAnalogInput = hardwareMap.get(AnalogInput.class, "armTwoAnalogInput");
+
         waitForStart();
 
         while (opModeIsActive()) {
@@ -56,11 +60,11 @@ public class MonelBotTest extends LinearOpMode {
 
             //drivetrain ---------------------------------------------------------------------------
             Pose2d poseEstimate = drive.getPoseEstimate();
-            Vector2d input = new Vector2d(Math.pow(Range.clip(gamepad2.left_stick_y, -1, 1), 3),
-                    Math.pow(Range.clip(gamepad2.left_stick_x, -1, 1), 3)).rotated(-poseEstimate.getHeading());
+            Vector2d input = new Vector2d(Math.pow(Range.clip(-gamepad1.left_stick_y, -1, 1), 3),
+                    Math.pow(Range.clip(-gamepad1.left_stick_x, -1, 1), 3)).rotated(-poseEstimate.getHeading());
 
             drive.setWeightedDrivePower(
-                    new Pose2d(input.getX() * THROTTLE, input.getY() * TURN, -gamepad2.right_stick_x * HEADING)
+                    new Pose2d(input.getX() * THROTTLE, input.getY() * TURN, -gamepad1.right_stick_x * HEADING)
             );
             drive.update();
             telemetry.addData("heading", poseEstimate.getHeading());
@@ -102,7 +106,7 @@ public class MonelBotTest extends LinearOpMode {
             }
             //Delivery
             if(currentGamepad1.a && !previousGamepad1.a){
-                Arm.DropPixel(deliveryServoPos);
+                ArmV2.DropPixel(deliveryServoPos);
             }
             //Hanger
             if(currentGamepad1.back && !previousGamepad1.back){
@@ -114,6 +118,8 @@ public class MonelBotTest extends LinearOpMode {
             if (currentGamepad1.dpad_down){
                 Hanger.PutDownRobot();
             }
+
+            telemetry.update();
         }
     }
 }

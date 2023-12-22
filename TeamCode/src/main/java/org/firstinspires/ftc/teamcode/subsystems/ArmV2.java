@@ -17,13 +17,14 @@ public class ArmV2 {
         armServoTwo = hardwareMap.get(Servo.class, "armServoTwo");
         wristServo = hardwareMap.get(Servo.class, "wristServo");
         deliveryServo = hardwareMap.get(Servo.class, "deliveryServo");
+        armSliderServo = hardwareMap.get(Servo.class, "armSliderServo");
 
     }
     public static void SetArmPosition(double armServoOnePos, double wristServoPos) throws InterruptedException {
         wristServo.setPosition(wristServoPos);
 //        sleep(100);
-        armServoOne.setPosition(armServoOnePos);
-        armServoTwo.setPosition(1 - armServoOnePos);
+        armServoOne.setPosition(1-armServoOnePos);
+        armServoTwo.setPosition(armServoOnePos);
     }
     public static void DropPixel(double deliveryServoPos){
         deliveryServo.setPosition(deliveryServoPos);
