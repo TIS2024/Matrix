@@ -75,8 +75,8 @@ public class MonelBot9 extends LinearOpMode {
         OUTTAKE_SLIDER,
         OUTTAKE_FINAL
     };
-    MonelBot8.IntakeState inputState = MonelBot8.IntakeState.INTAKE_START;
-    MonelBot8.OuttakeState outputState = MonelBot8.OuttakeState.OUTTAKE_START;
+    IntakeState inputState = IntakeState.INTAKE_START;
+    OuttakeState outputState = OuttakeState.OUTTAKE_START;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -127,14 +127,15 @@ public class MonelBot9 extends LinearOpMode {
         myLocalizer.setPoseEstimate(PoseStorage.currentPose);
 
         while (opModeInInit()){
-            ArmV2.SetArmPosition(0.15,0.73);
-            Intake.crankServo.setPosition(0.7);
+            ArmV2.SetArmPosition(0.15,0.22);
+            Intake.crankServo.setPosition(0.69);
             Intake.intakeArmServo.setPosition(0.5);
-            Intake.intakeWristServo.setPosition(0.65);
+            Intake.intakeWristServo.setPosition(0.66);
             Drone.initialPos();
             Hanger.hangerServoOne.setPosition(0.25);
             Hanger.hangerServoTwo.setPosition(0.75);
             Intake.gripperServo.setPosition(1);
+            ArmV2.SliderLink(1);
             inputTimer.reset();
             outputTimer.reset();
             intakeCounter = 0;
@@ -187,20 +188,470 @@ public class MonelBot9 extends LinearOpMode {
 
             double turn90 = angleWrap(Math.toRadians(90) - botHeading);
             double turn180 = angleWrap(Math.toRadians(180) - botHeading);
-            if (currentGamepad1.left_trigger > 0.3 && !(previousGamepad1.left_trigger > 0.3)){
+            if (currentGamepad1.left_trigger > 0.5 && !(previousGamepad1.left_trigger > 0.5)){
                 drive.turn(turn90);
             }
-            if (currentGamepad1.right_trigger > 0.3 && !(previousGamepad1.right_trigger > 0.3)){
+            if (currentGamepad1.right_trigger > 0.5 && !(previousGamepad1.right_trigger > 0.5)){
                 drive.turn(turn180);
             }
             //--------------------------------------------------------------------------------------
 
             //Intake Sequence
+            switch (inputState){
+                case INTAKE_START:
+                    //waiting for input
+                    if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 0)){
+                        Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.495);
+                        Intake.IntakePixel(1);
+                        ArmV2.SetArmPosition(0.15, 0.22);
+                        ArmV2.DropPixel(0.95);
+                        inputTimer.reset();
+                        inputState = IntakeState.INTAKE_EXTEND;
+                    }
+                    if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 2)){
+                        Intake.IntakePixel(1);
+                        ArmV2.SetArmPosition(0.25, 0.22);
+                        ArmV2.DropPixel(0.75);
+                        inputTimer.reset();
+                        inputState = IntakeState.INTAKE_EXTEND;
+                    }
+                    break;
+                case INTAKE_EXTEND:
+                    Intake.CrankPosition(0.4);
+                    if (Intake.crankServo.getPosition() <= 0.4){ //inputTimer.milliseconds() >= 200
+                        inputState = IntakeState.INTAKE_GRIP;
+                        inputTimer.reset();
+                    }
+                    break;
+                case INTAKE_GRIP:
+                    if(!intakeToggle){
+                        if (!beamBreaker.getState()){
+                            Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.45);
+                            TrajectorySequence IntakePixel = drive.trajectorySequenceBuilder(startPose)
+                                    .addTemporalMarker(()->{Intake.CrankPosition(0.35);})
+                                    .UNSTABLE_addTemporalMarkerOffset(-0.2, ()->{Intake.IntakePixel(0.8);})
+                                    .waitSeconds(0.3)
+                                    .build();
+                            drive.followTrajectorySequence(IntakePixel);
+                            drive.update();
+                            if (inputTimer.milliseconds() >= 300){ // 500 //800
+                                inputTimer.reset();
+                                inputState = IntakeState.INTAKE_RETRACT;
+                            }
+                        }
+                    }
+                    if(intakeToggle){
+                        if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper){
+                            Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.45);
+                            TrajectorySequence IntakePixel = drive.trajectorySequenceBuilder(startPose)
+                                    .addTemporalMarker(()->{Intake.CrankPosition(0.35);})
+                                    .UNSTABLE_addTemporalMarkerOffset(-0.2, ()->{Intake.IntakePixel(0.8);})
+                                    .waitSeconds(0.3)
+                                    .build();
+                            drive.followTrajectorySequence(IntakePixel);
+                            drive.update();
+                            if (inputTimer.milliseconds() >= 300){ // 800
+                                inputTimer.reset();
+                                inputState = IntakeState.INTAKE_RETRACT;
+                            }
+                        }
+                    }
+                    if (beamBreaker.getState() && inputTimer.milliseconds()>=7000){
+                        TrajectorySequence CancelIntakePixel = drive.trajectorySequenceBuilder(startPose)
+                                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5); Intake.intakeWristServo.setPosition(0.66);})
+                                .waitSeconds(0.2)
+                                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+                                .waitSeconds(0.3)
+                                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.22);})
+                                .waitSeconds(0.3)
+                                .build();
+                        drive.followTrajectorySequence(CancelIntakePixel);
+                        drive.update();
+                        intakeCounter = 0;
+                        if (inputTimer.milliseconds()>8000){
+                            inputState = IntakeState.INTAKE_START;
+                        }
+                    }
+                    break;
+                case INTAKE_RETRACT:
+                    Intake.intakeArmServo.setPosition(0.4);
+                    Intake.intakeWristServo.setPosition(0.66);
+                    Intake.CrankPosition(0.69);
+                    if (Intake.crankServo.getPosition() >= 0.65){ //inputTimer.milliseconds() >= 300 // 500 //800
+                        inputState = IntakeState.INTAKE_INPUT;
+                        inputTimer.reset();
+                    }
+                    break;
+                case INTAKE_INPUT:
+                    Intake.intakeWristServo.setPosition(0.66);Intake.intakeArmServo.setPosition(0.4);
+                    if(Intake.intakeWristServo.getPosition() >= 65){//inputTimer.milliseconds() >= 400  // 500 //600
+                        Intake.intakeArmServo.setPosition(0.72);
+                        if(Intake.intakeArmServo.getPosition() >= 0.70){ //axonPosition <= 130 //inputTimer.milliseconds() >= 900 &&
+                            Intake.intakeWristServo.setPosition(0.45);Intake.intakeArmServo.setPosition(1);Intake.crankServo.setPosition(0.7);
+                            inputState = IntakeState.INTAKE_FINAL;
+                            inputTimer.reset();
+                        }
+                    }
+//                    if (inputTimer.milliseconds() >= 200){
+//                        Intake.intakeWristServo.setPosition(0.66);Intake.intakeArmServo.setPosition(0.4);
+//                        if(inputTimer.milliseconds() >= 400){  // 500 //600
+//                            Intake.intakeArmServo.setPosition(0.79);
+//                            if(axonPosition <= 130){ //inputTimer.milliseconds() >= 900 &&
+//                                Intake.intakeWristServo.setPosition(0.45);Intake.intakeArmServo.setPosition(1);Intake.crankServo.setPosition(0.7);
+//                                inputState = MonelBot8.IntakeState.INTAKE_FINAL;
+//                                inputTimer.reset();
+//                            }
+//                        }
+//                    }
+                    break;
+                case INTAKE_FINAL:
+                    if (Intake.intakeArmServo.getPosition() == 1 && Intake.intakeWristServo.getPosition() == 0.45){
+                        ArmV2.SetArmPosition(0.15, 0.22);
+                        if (inputTimer.milliseconds() >= 200){ // 400
+                            ArmV2.DropPixel(0.5);
+                            ArmV2.SetArmPosition(0.1, 0.22);
+                            output_power = lifter_pid(kp, ki, kd, -10);
+                            if (output_power > 0.9) {
+                                output_power = 1;
+                            } else if (output_power < 0.2) {
+                                output_power = 0;
+                            }
+                            slider.extendTo(-10, output_power);
+                            if (inputTimer.milliseconds() >= 300){ //500 //600
+                                output_power = lifter_pid(kp, ki, kd, 0);
+                                if (output_power > 0.9) {
+                                    output_power = 1;
+                                } else if (output_power < 0.2) {
+                                    output_power = 0;
+                                }
+                                slider.extendTo(0, output_power);
+                                ArmV2.SetArmPosition(0.15, 0.22);
+                                if (stackFlag)
+                                {
+                                    intakeCounter = 2;
+                                    stackFlag = false;
+                                }
+                                else {
+                                    intakeCounter = 1;
+                                }
+                                inputState = IntakeState.INTAKE_START;
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    inputState = IntakeState.INTAKE_START;
+                    intakeCounter = 0;
+            }
             //--------------------------------------------------------------------------------------
 
             //Outtake Sequence
+            switch (outputState){
+                case OUTTAKE_START:
+                    //waiting for input
+                    if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper && (Intake.intakeArmServo.getPosition() > 0.75)){
+                        outputState = OuttakeState.OUTTAKE_PUSH;
+                        outputTimer.reset();
+                    }
+                    break;
+                case OUTTAKE_PUSH:
+                    Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);Intake.crankServo.setPosition(0.7);
+                    ArmV2.SetArmPosition(0.15, 0.22);
+                    if (outputTimer.milliseconds() >= 200){
+                        ArmV2.DropPixel(0.5);
+                        ArmV2.SetArmPosition(0.1, 0.22);
+                        output_power = lifter_pid(kp, ki, kd, -10);
+                        if (output_power > 0.9) {
+                            output_power = 1;
+                        } else if (output_power < 0.2) {
+                            output_power = 0;
+                        }
+                        slider.extendTo(-10, output_power);
+                        if (outputTimer.milliseconds() >= 300){
+                            output_power = lifter_pid(kp, ki, kd, 0);
+                            if (output_power > 0.9) {
+                                output_power = 1;
+                            } else if (output_power < 0.2) {
+                                output_power = 0;
+                            }
+                            slider.extendTo(0, output_power);
+                            ArmV2.SetArmPosition(0.15, 0.22);
+                            outputTimer.reset();
+                            outputState = OuttakeState.OUTTAKE_OPEN;
+                        }
+                    }
+                    break;
+                case OUTTAKE_OPEN:
+                    Intake.IntakePixel(1);
+                    Intake.intakeArmServo.setPosition(0.95);Intake.intakeWristServo.setPosition(0.4);
+                    if(Intake.intakeWristServo.getPosition() == 0.4 && Intake.intakeArmServo.getPosition() == 0.95){//400
+                        Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);
+                        outputTimer.reset();
+                        outputState = OuttakeState.OUTTAKE_OUTPUT;
+                    }
+//                    if (outputTimer.milliseconds() >= 100){
+//                        Intake.intakeArmServo.setPosition(0.7);Intake.intakeWristServo.setPosition(0.50);
+//                        if(outputTimer.milliseconds() >= 200){//400
+//                            Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.65);
+//                            if (outputTimer.milliseconds() >= 400){ //600
+//                                Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.65);
+//                                outputTimer.reset();
+//                                outputState = MonelBot8.OuttakeState.OUTTAKE_OUTPUT;
+//                            }
+//                        }
+//                    }
+                    break;
+                case OUTTAKE_OUTPUT:
+                    ArmV2.SetArmPosition(0.5, 0.22);
+                    if (ArmV2.armServoTwo.getPosition() == 0.5){
+                        ArmV2.SetArmPosition(0.5, 0.73);
+                    }
+                    if (outputTimer.milliseconds() >= 200){
+                        outputTimer.reset();
+                        if (sliderCounter != 0)
+                        {
+                            outputState = OuttakeState.OUTTAKE_SLIDER;
+                        }
+                        else
+                        {
+                            outputState = OuttakeState.OUTTAKE_FINAL;
+                        }
+
+                    }
+                    break;
+                case OUTTAKE_SLIDER:
+                    ArmV2.SetArmPosition(0.5, 0.22);
+                    if (ArmV2.armServoTwo.getPosition() == 0.5){
+                        ArmV2.SetArmPosition(0.5, 0.73);
+                    }
+                    if (outputTimer.milliseconds() >= 200){
+                        if (sliderCounter == 1) {
+                            output_power = lifter_pid(kp, ki, kd, levelOne);
+                            if (output_power > 0.9) {
+                                output_power = 1;
+                            } else if (output_power < 0.2) {
+                                output_power = 0;
+                            }
+                            slider.extendTo(levelOne, output_power);
+                            sliderCounter = 0;
+                        }
+                        if (sliderCounter == 2) {
+                            output_power = lifter_pid(kp, ki, kd, levelTwo);
+                            if (output_power > 0.9) {
+                                output_power = 1;
+                            } else if (output_power < 0.2) {
+                                output_power = 0;
+                            }
+                            slider.extendTo(levelTwo, output_power);
+                            sliderCounter = 0;
+                        }
+                        if (sliderCounter == 3) {
+                            output_power = lifter_pid(kp, ki, kd, levelThree);
+                            if (output_power > 0.9) {
+                                output_power = 1;
+                            } else if (output_power < 0.2) {
+                                output_power = 0;
+                            }
+                            slider.extendTo(levelThree, output_power);
+                            sliderCounter = 0;
+                        }
+                        outputTimer.reset();
+                        outputState = OuttakeState.OUTTAKE_FINAL;
+                    }
+                    break;
+                case OUTTAKE_FINAL:
+                    Intake.crankServo.setPosition(0.69);
+                    Intake.intakeArmServo.setPosition(0.5);
+                    Intake.intakeWristServo.setPosition(0.66);
+                    if (outputTimer.milliseconds()>=100){
+                        outputTimer.reset();
+                        intakeCounter = 0;
+                        outputState = OuttakeState.OUTTAKE_START;
+                    }
+                    break;
+                default:
+                    outputState = OuttakeState.OUTTAKE_START;
+            }
             //--------------------------------------------------------------------------------------
 
+            if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 1) && (Intake.intakeArmServo.getPosition() == 1)){
+                intakeCounter = 0;
+                TrajectorySequence ResetIntake = drive.trajectorySequenceBuilder(startPose)
+                        .addTemporalMarker(()->{Intake.IntakePixel(1);})
+                        .waitSeconds(0.1)
+                        .addTemporalMarker(()->{ArmV2.DropPixel(0.5);})
+                        .addTemporalMarker(()->{arm.setArmPos(0.25, 0.22);})
+                        .waitSeconds(0.3)
+                        .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.95);Intake.intakeWristServo.setPosition(0.4);})
+                        .waitSeconds(0.3)
+                        .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.65);})
+                        .waitSeconds(0.2)
+                        .addTemporalMarker(()->{arm.setArmPos(0.15, 0.22);})
+                        .build();
+                drive.followTrajectorySequenceAsync(ResetIntake);
+                drive.update();
+            }
+
+            if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper && (Intake.intakeArmServo.getPosition() < 0.75)){
+                TrajectorySequence OuttakeArm = drive.trajectorySequenceBuilder(startPose)
+                        .addTemporalMarker(()->{ArmV2.DropPixel(0.5);})
+                        .addTemporalMarker(()->{arm.setArmPos(0.5, 0.22);})
+                        .waitSeconds(0.2)
+                        .addTemporalMarker(()->{arm.setArmPos(0.5, 0.73);})
+                        .build();
+                drive.followTrajectorySequenceAsync(OuttakeArm);
+                drive.update();
+            }
+
+            if((currentGamepad1.y && !previousGamepad1.y) && (inputState!= IntakeState.INTAKE_START || outputState!= OuttakeState.OUTTAKE_START)){
+                inputState = IntakeState.INTAKE_START;
+                outputState = OuttakeState.OUTTAKE_START;
+                TrajectorySequence ResetRobot = drive.trajectorySequenceBuilder(startPose)
+                        .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
+                        .waitSeconds(0.3)
+                        .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.66); Intake.intakeArmServo.setPosition(0.5);})
+                        .waitSeconds(0.1)
+                        .addTemporalMarker(()->{Intake.IntakePixel(1);})
+                        .addTemporalMarker(()->{arm.setArmPos(0.25, 0.22);})
+                        .waitSeconds(0.2)
+                        .addTemporalMarker(()->{ArmV2.DropPixel(0.95);})
+                        .waitSeconds(0.5)
+                        .addTemporalMarker(()->{})
+                        .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.65); Intake.intakeArmServo.setPosition(0.5);})
+                        .addTemporalMarker(()->{Intake.IntakePixel(1);})
+                        .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+                        .waitSeconds(0.1)
+                        .addTemporalMarker(()->{arm.setArmPos(0.15, 0.22);})
+                        .waitSeconds(0.5)
+                        .build();
+                drive.followTrajectorySequenceAsync(ResetRobot);
+                drive.update();
+            }
+
+            if(currentGamepad1.b && !previousGamepad1.b){
+                //drop 1st pixel
+                deliveryServoPos = 0.75;
+                ArmV2.DropPixel(deliveryServoPos);
+                TrajectorySequence DropPixelOne = drive.trajectorySequenceBuilder(startPose)
+                        .addTemporalMarker(()->{ArmV2.DropPixel(0.75);})
+                        .waitSeconds(0.3)
+                        .addTemporalMarker(()->{arm.setArmPos(0.45, 0.73);}) //0.48
+                        .waitSeconds(0.2)
+                        .addTemporalMarker(()->{arm.setArmPos(0.5, 0.73);})
+                        .build();
+                drive.followTrajectorySequenceAsync(DropPixelOne);
+                drive.update();
+            }
+
+            if(currentGamepad1.a && !previousGamepad1.a){
+                //drop 2nd pixel
+                output_power = lifter_pid(kp, ki, kd, levelZero);
+                if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }
+                TrajectorySequence DropPixelTwo = drive.trajectorySequenceBuilder(startPose)
+                        .addTemporalMarker(()->{ArmV2.DropPixel(0.95);})
+                        .waitSeconds(0.5) //0.3
+                        .addTemporalMarker(()->{arm.setArmPos(0.5, 0.22);
+                            if (ArmV2.wristServo.getPosition() == 0.22){arm.setArmPos(0.15, 0.22);}})
+                        .addTemporalMarker(()->{slider.extendTo(levelZero, output_power);})
+                        .waitSeconds(0.2)
+                        .build();
+                drive.followTrajectorySequenceAsync(DropPixelTwo);
+                drive.update();
+            }
+
+            if (currentGamepad1.dpad_up && !previousGamepad1.dpad_up) {
+
+            }
+            if (currentGamepad1.dpad_down && !previousGamepad1.dpad_down) {
+
+            }
+            if (currentGamepad1.x && !previousGamepad1.x){
+                Drone.shootDrone();
+            }
+            if (currentGamepad1.dpad_right){
+                Hanger.LiftRobot();
+            }
+            if (currentGamepad1.dpad_left){
+                Hanger.PutDownRobot();
+            }
+            if(currentGamepad1.back && !previousGamepad1.back){
+                Hanger.ExtendHanger();
+            }
+            if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up){
+                sliderCounter = 1;
+            }
+            if(currentGamepad2.dpad_right && !previousGamepad2.dpad_right){
+                sliderCounter = 2;
+            }
+            if(currentGamepad2.dpad_down && !previousGamepad2.dpad_down){
+                sliderCounter = 3;
+            }
+            if (currentGamepad2.dpad_left && !previousGamepad2.dpad_left){
+
+            }
+            if(currentGamepad2.a && !previousGamepad2.a){
+                stackFlag = true;
+            }
+
+            if (currentGamepad2.right_trigger>0.1 && !(previousGamepad2.right_trigger >0.1)){
+                crankToggle = !crankToggle;
+                if (crankToggle) {
+                    TrajectorySequence openCrank = drive.trajectorySequenceBuilder(startPose)
+                            .addTemporalMarker(()->{arm.setArmPos(0.25, 0.22);})
+                            .waitSeconds(0.2)
+                            .addTemporalMarker(()->{Intake.crankServo.setPosition(0.35);})
+                            .waitSeconds(0.2)
+                            .addTemporalMarker(()->{arm.setArmPos(0.15, 0.22);})
+                            .waitSeconds(0.1)
+                                    .build();
+                    drive.followTrajectorySequenceAsync(openCrank);
+                    drive.update();
+                }
+                else
+                {
+                    TrajectorySequence closeCrank = drive.trajectorySequenceBuilder(startPose)
+                            .addTemporalMarker(()->{arm.setArmPos(0.25, 0.22);})
+                            .waitSeconds(0.2)
+                            .addTemporalMarker(()->{Intake.crankServo.setPosition(0.69);})
+                            .waitSeconds(0.2)
+                            .addTemporalMarker(()->{arm.setArmPos(0.15, 0.22);})
+                            .waitSeconds(0.1)
+                            .build();
+                    drive.followTrajectorySequenceAsync(closeCrank);
+                    drive.update();
+                }
+            }
+
+            if (currentGamepad2.start && !previousGamepad2.start){
+                intakeToggle = !intakeToggle;
+            }
+            if (currentGamepad2.left_trigger>0.1 && !(previousGamepad2.left_trigger >0.1)){
+                DriveTrain.setPower(frontLeftPower/2, backLeftPower/2, frontRightPower/2, backRightPower/2);
+            }
+            else {
+                DriveTrain.setPower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
+            }
+            if(currentGamepad2.b && !previousGamepad2.b){
+//                stackFlag = false;
+            }
+            if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper){
+                gripperServoPos = 0.75;
+                Intake.IntakePixel(gripperServoPos);
+            }
+            if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper){
+                gripperServoPos = 1;
+                Intake.IntakePixel(gripperServoPos);
+            }
+            if(currentGamepad2.x && previousGamepad2.x){
+                Intake.SetArmPosition(intakeArmServoPos, intakeWristServoPos);
+            }
+            if(currentGamepad2.y && previousGamepad2.y){
+                ArmV2.SetArmPosition(armServoOnePos, wristServoPos);
+            }
             drive.update();
             telemetry.addData("x", myPose.getX());
             telemetry.addData("y", myPose.getY());
@@ -230,7 +681,7 @@ public class MonelBot9 extends LinearOpMode {
             telemetry.addData("intakeArmServo", Intake.intakeArmServo.getPosition());
             telemetry.addData("crankServo", Intake.crankServo.getPosition());
             telemetry.addData("armServoOne", ArmV2.armServoOne.getPosition());
-            telemetry.addData("armServoTwo", ArmV2.armServoOne.getPosition());
+            telemetry.addData("armServoTwo", ArmV2.armServoTwo.getPosition());
             telemetry.addData("wristServo", ArmV2.wristServo.getPosition());
             telemetry.addData("armSlider", ArmV2.armSliderServo.getPosition());
             telemetry.addData("deliveryServo", ArmV2.deliveryServo.getPosition());

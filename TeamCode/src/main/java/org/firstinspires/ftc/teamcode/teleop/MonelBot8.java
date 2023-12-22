@@ -519,7 +519,6 @@ public class MonelBot8 extends LinearOpMode {
             }
 
 
-
             if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper && (Intake.intakeArmServo.getPosition() < 0.75)){
                 TrajectorySequence OuttakeArm = drive.trajectorySequenceBuilder(startPose)
                         .addTemporalMarker(()->{Arm.DropPixel(0.45);})
