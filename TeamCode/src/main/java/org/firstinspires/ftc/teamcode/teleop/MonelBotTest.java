@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
@@ -52,6 +53,9 @@ public class MonelBotTest extends LinearOpMode {
         AnalogInput crankAnalogInput = hardwareMap.get(AnalogInput.class, "crankAnalogInput");
         AnalogInput wristAnalogInput = hardwareMap.get(AnalogInput.class, "wristAnalogInput");
 
+        DigitalChannel beamBreaker = hardwareMap.get(DigitalChannel.class, "beamBreaker");
+        beamBreaker.setMode(DigitalChannel.Mode.INPUT);
+
         waitForStart();
 
         while (opModeIsActive()) {
@@ -83,11 +87,9 @@ public class MonelBotTest extends LinearOpMode {
 
             //Slider
             if (currentGamepad1.dpad_up && !previousGamepad1.dpad_up) {
-                telemetry.addLine("DPad_UP_Pressed");
                 Slider.IncreaseExtension(200);
             }
             if (currentGamepad1.dpad_down && !previousGamepad1.dpad_down) {
-                telemetry.addLine("DPad_DOWN_Pressed");
                 Slider.DecreaseExtension(0);
             }
             //--------------------------------------------------------------------------------------
@@ -125,6 +127,9 @@ public class MonelBotTest extends LinearOpMode {
             if (currentGamepad1.dpad_down){
                 Hanger.PutDownRobot();
             }
+
+            telemetry.addLine("Axon Positions");
+            telemetry.addData("beam Breaker State", beamBreaker.getState());
             telemetry.addData("armTwoPosition", armTwoPosition);
             telemetry.addData("armOnePosition", armOnePosition);
             telemetry.addData("wristPosition", wristPosition);
@@ -132,6 +137,7 @@ public class MonelBotTest extends LinearOpMode {
             telemetry.addData("intakeWristPosition", intakeWristPosition);
             telemetry.addData("intakeArm Position", intakeArmPosition);
 
+            telemetry.addLine("Servo Positions");
             telemetry.addData("gripperServo", Intake.gripperServo.getPosition());
             telemetry.addData("intakeWristServo", Intake.intakeWristServo.getPosition());
             telemetry.addData("intakeArmServo", Intake.intakeArmServo.getPosition());
