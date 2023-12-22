@@ -47,6 +47,10 @@ public class MonelBotTest extends LinearOpMode {
 
         AnalogInput armOneAnalogInput = hardwareMap.get(AnalogInput.class, "armOneAnalogInput");
         AnalogInput armTwoAnalogInput = hardwareMap.get(AnalogInput.class, "armTwoAnalogInput");
+        AnalogInput intakeArmAnalogInput = hardwareMap.get(AnalogInput.class, "intakeArmAnalogInput");
+        AnalogInput intakeWristAnalogInput = hardwareMap.get(AnalogInput.class, "intakeWristAnalogInput");
+        AnalogInput crankAnalogInput = hardwareMap.get(AnalogInput.class, "crankAnalogInput");
+        AnalogInput wristAnalogInput = hardwareMap.get(AnalogInput.class, "wristAnalogInput");
 
         waitForStart();
 
@@ -56,6 +60,14 @@ public class MonelBotTest extends LinearOpMode {
 
             currentGamepad1.copy(gamepad1);
             currentGamepad2.copy(gamepad2);
+
+            double intakeArmPosition = intakeArmAnalogInput.getVoltage() / 3.3 * 360;
+            double intakeWristPosition = intakeWristAnalogInput.getVoltage() / 3.3 * 360;
+            double crankPosition = crankAnalogInput.getVoltage() / 3.3 * 360;
+            double wristPosition = wristAnalogInput.getVoltage() / 3.3 * 360;
+            double armOnePosition = armOneAnalogInput.getVoltage() / 3.3 * 360;
+            double armTwoPosition = armTwoAnalogInput.getVoltage() / 3.3 * 360;
+
             // Main teleop loop goes here
 
             //drivetrain ---------------------------------------------------------------------------
@@ -78,11 +90,6 @@ public class MonelBotTest extends LinearOpMode {
                 telemetry.addLine("DPad_DOWN_Pressed");
                 Slider.DecreaseExtension(0);
             }
-
-            telemetry.addData("SliderMotorOne tick count", Slider.sliderMotorOne.getCurrentPosition());
-            telemetry.addData("SliderMotorTwo tick count", Slider.sliderMotorTwo.getCurrentPosition());
-            telemetry.addData("SliderMotorOne Current", Slider.sliderMotorOne.getCurrent(CurrentUnit.AMPS));
-            telemetry.addData("SliderMotorTwo Current", Slider.sliderMotorTwo.getCurrent(CurrentUnit.AMPS));
             //--------------------------------------------------------------------------------------
 
             //Arm
@@ -118,7 +125,25 @@ public class MonelBotTest extends LinearOpMode {
             if (currentGamepad1.dpad_down){
                 Hanger.PutDownRobot();
             }
+            telemetry.addData("armTwoPosition", armTwoPosition);
+            telemetry.addData("armOnePosition", armOnePosition);
+            telemetry.addData("wristPosition", wristPosition);
+            telemetry.addData("crankPosition", crankPosition);
+            telemetry.addData("intakeWristPosition", intakeWristPosition);
+            telemetry.addData("intakeArm Position", intakeArmPosition);
 
+            telemetry.addData("gripperServo", Intake.gripperServo.getPosition());
+            telemetry.addData("intakeWristServo", Intake.intakeWristServo.getPosition());
+            telemetry.addData("intakeArmServo", Intake.intakeArmServo.getPosition());
+            telemetry.addData("crankServo", Intake.crankServo.getPosition());
+            telemetry.addData("armServoOne", ArmV2.armServoOne.getPosition());
+            telemetry.addData("armServoTwo", ArmV2.armServoOne.getPosition());
+            telemetry.addData("wristServo", ArmV2.wristServo.getPosition());
+            telemetry.addData("armSlider", ArmV2.armSliderServo.getPosition());
+            telemetry.addData("deliveryServo", ArmV2.deliveryServo.getPosition());
+            telemetry.addData("Hanger Servo One", Hanger.hangerServoOne.getPosition());
+            telemetry.addData("Hanger Servo Two", Hanger.hangerServoTwo.getPosition());
+            telemetry.addData("Drone Servo", Drone.droneServo.getPosition());
             telemetry.update();
         }
     }
