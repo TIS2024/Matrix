@@ -22,9 +22,17 @@ public class ArmV2 {
     }
     public static void SetArmPosition(double armServoOnePos, double wristServoPos) throws InterruptedException {
         wristServo.setPosition(wristServoPos);
-//        sleep(100);
-        armServoOne.setPosition(1-armServoOnePos);
-        armServoTwo.setPosition(armServoOnePos);
+        if(wristServo.getPosition() == wristServoPos){
+            armServoOne.setPosition(1-armServoOnePos);
+            armServoTwo.setPosition(armServoOnePos);
+        }
+    }
+    public void setArmPos(double armServoOnePos, double wristServoPos) {
+        wristServo.setPosition(wristServoPos);
+        if(wristServo.getPosition() == wristServoPos){
+            armServoOne.setPosition(1-armServoOnePos);
+            armServoTwo.setPosition(armServoOnePos);
+        }
     }
     public static void DropPixel(double deliveryServoPos){
         deliveryServo.setPosition(deliveryServoPos);
