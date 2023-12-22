@@ -29,7 +29,7 @@ public class MonelBotTest extends LinearOpMode {
     Intake intake = null;
     Drone drone = null;
     public static double THROTTLE = 1, HEADING = 1, TURN = 1;
-    public static double armServoPos, wristServoPos, deliveryServoPos, intakeArmServoPos, intakeWristServoPos, gripperServoPos, crankServoPos, armSliderServoPos;
+    public static double armServoPos,armServoPos2, wristServoPos, deliveryServoPos, intakeArmServoPos, intakeWristServoPos, gripperServoPos, crankServoPos, armSliderServoPos;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -97,6 +97,9 @@ public class MonelBotTest extends LinearOpMode {
             //Arm
             if (currentGamepad1.x && !previousGamepad1.x){
                 ArmV2.SetArmPosition(armServoPos,wristServoPos);
+//                ArmV2.armServoOne.setPosition(armServoPos);
+//                ArmV2.armServoTwo.setPosition(armServoPos2);
+//                ArmV2.wristServo.setPosition(wristServoPos);
             }
             if(currentGamepad1.start && !previousGamepad1.start){
                 ArmV2.SliderLink(armSliderServoPos);
@@ -143,7 +146,7 @@ public class MonelBotTest extends LinearOpMode {
             telemetry.addData("intakeArmServo", Intake.intakeArmServo.getPosition());
             telemetry.addData("crankServo", Intake.crankServo.getPosition());
             telemetry.addData("armServoOne", ArmV2.armServoOne.getPosition());
-            telemetry.addData("armServoTwo", ArmV2.armServoOne.getPosition());
+            telemetry.addData("armServoTwo", ArmV2.armServoTwo.getPosition());
             telemetry.addData("wristServo", ArmV2.wristServo.getPosition());
             telemetry.addData("armSlider", ArmV2.armSliderServo.getPosition());
             telemetry.addData("deliveryServo", ArmV2.deliveryServo.getPosition());

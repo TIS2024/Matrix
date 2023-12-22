@@ -9,7 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Config
 public class AxonCouple extends LinearOpMode {
     public Servo servo1 , servo2;
-    public static double servoPos;
+    public static double servoPos = 0.5
+            ;
     @Override
     public void runOpMode() throws InterruptedException {
         servo1 = hardwareMap.get(Servo.class, "servo1");
@@ -22,8 +23,8 @@ public class AxonCouple extends LinearOpMode {
                 servo2.setPosition(0.5);
             }
             if (gamepad1.b){
-                servo1.setPosition(1-0.15);
-                servo2.setPosition(0.15);
+                servo1.setPosition(1-servoPos);
+                servo2.setPosition(servoPos);
             }
             telemetry.addData("ServoPosition", servo1.getPosition());
             telemetry.addData("ServoPosition", servo2.getPosition());
