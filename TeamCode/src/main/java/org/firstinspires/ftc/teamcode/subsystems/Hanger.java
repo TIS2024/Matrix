@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -20,7 +21,7 @@ public class Hanger {
         hangerMotor = hardwareMap.get(DcMotorEx.class, "hangerMotor");
         hangerMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         hangerMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        hangerMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        hangerMotor.setDirection(DcMotorEx.Direction.REVERSE);
         hangerMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
     public static void ExtendHanger(){
