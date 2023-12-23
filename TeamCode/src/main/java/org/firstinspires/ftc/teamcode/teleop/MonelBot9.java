@@ -749,8 +749,8 @@ public class MonelBot9 extends LinearOpMode {
         errorprevR = error_lifterR;
         return Math.abs(output_lifter);
     }
-    public double PIDControl(double refrence, double state) {
-        double error = angleWrap(refrence - state);
+    public double PIDControl(double reference, double state) {
+        double error = angleWrap(reference - state);
         telemetry.addData("Error: ", error);
         integralSum += error * angle_timer.seconds();
         double derivative = (error - lastError) / (angle_timer.seconds());
