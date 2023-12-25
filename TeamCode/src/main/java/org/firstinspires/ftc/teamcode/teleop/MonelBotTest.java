@@ -96,10 +96,10 @@ public class MonelBotTest extends LinearOpMode {
 
             //Arm
             if (currentGamepad1.x && !previousGamepad1.x){
-                ArmV2.SetArmPosition(armServoPos,wristServoPos);
-//                ArmV2.armServoOne.setPosition(armServoPos);
-//                ArmV2.armServoTwo.setPosition(armServoPos2);
-//                ArmV2.wristServo.setPosition(wristServoPos);
+//                ArmV2.SetArmPosition(armServoPos,wristServoPos);
+                ArmV2.armServoOne.setPosition(armServoPos);
+                ArmV2.armServoTwo.setPosition(armServoPos2);
+                ArmV2.wristServo.setPosition(wristServoPos);
             }
             if(currentGamepad1.start && !previousGamepad1.start){
                 ArmV2.SliderLink(armSliderServoPos);

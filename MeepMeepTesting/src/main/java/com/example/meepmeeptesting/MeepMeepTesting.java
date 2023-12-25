@@ -79,38 +79,38 @@ public class MeepMeepTesting {
                 .followTrajectorySequence(drive ->
                                 drive.trajectorySequenceBuilder(new Pose2d(-39, -64, -Math.PI))
                                         // bottom line
-                                        .lineToSplineHeading(new Pose2d(-35,-35, -Math.PI))
+//                                        .lineToSplineHeading(new Pose2d(-42,-32, -Math.PI))
                                         //   towards pixel stack
                                         .lineToSplineHeading(new Pose2d(-51 , -12, -Math.PI))
                                         //   mid line
-                                        //   .lineToSplineHeading(new Pose2d(-51 , -12, -Math.PI))
+//                                           .lineToSplineHeading(new Pose2d(-51 , -12, -Math.PI))
                                         .setReversed(true)
                                         //   towards bakdrop
                                         .splineToConstantHeading(new Vector2d(-34,-12),0)
                                         .splineToConstantHeading(new Vector2d(28,-12),0)
-                                        .splineToConstantHeading(new Vector2d(47,-40),0)
-                                        .lineToConstantHeading(new Vector2d(47.3, -35))
+                                        .splineToConstantHeading(new Vector2d(47,-28),0)
+//                                        .lineToConstantHeading(new Vector2d(47.3, -35))
                                         .setReversed(false)
-                                        //   2nd cycle
-                                        .splineToConstantHeading(new Vector2d(28,-12),-Math.PI)
-                                        .splineToConstantHeading(new Vector2d(-34,-12),-Math.PI)
-                                        .lineToConstantHeading(new Vector2d(-51,-12))
-                                        .setReversed(true)
-                                        //   towards bakdrop
-                                        .splineToConstantHeading(new Vector2d(-34,-12),0)
-                                        .splineToConstantHeading(new Vector2d(28,-12),0)
-                                        .splineToConstantHeading(new Vector2d(47,-35),0)
-                                        .setReversed(false)
-                                        //   2nd cycle
-                                        .splineToConstantHeading(new Vector2d(28,-12),-Math.PI)
-                                        .splineToConstantHeading(new Vector2d(-34,-12),-Math.PI)
-                                        .lineToConstantHeading(new Vector2d(-51,-12))
-                                        .setReversed(true)
-                                        //   towards bakdrop
-                                        .splineToConstantHeading(new Vector2d(-34,-12),0)
-                                        .splineToConstantHeading(new Vector2d(28,-12),0)
-                                        .splineToConstantHeading(new Vector2d(47,-35),0)
-                                        .setReversed(false)
+//                                        //   2nd cycle
+//                                        .splineToConstantHeading(new Vector2d(28,-12),-Math.PI)
+//                                        .splineToConstantHeading(new Vector2d(-34,-12),-Math.PI)
+//                                        .lineToConstantHeading(new Vector2d(-51,-12))
+//                                        .setReversed(true)
+//                                        //   towards bakdrop
+//                                        .splineToConstantHeading(new Vector2d(-34,-12),0)
+//                                        .splineToConstantHeading(new Vector2d(28,-12),0)
+//                                        .splineToConstantHeading(new Vector2d(47,-35),0)
+//                                        .setReversed(false)
+//                                        //   3nd cycle
+//                                        .splineToConstantHeading(new Vector2d(28,-12),-Math.PI)
+//                                        .splineToConstantHeading(new Vector2d(-34,-12),-Math.PI)
+//                                        .lineToConstantHeading(new Vector2d(-51,-12))
+//                                        .setReversed(true)
+//                                        //   towards bakdrop
+//                                        .splineToConstantHeading(new Vector2d(-34,-12),0)
+//                                        .splineToConstantHeading(new Vector2d(28,-12),0)
+//                                        .splineToConstantHeading(new Vector2d(47,-35),0)
+//                                        .setReversed(false)
                                         .build()
                 );
 

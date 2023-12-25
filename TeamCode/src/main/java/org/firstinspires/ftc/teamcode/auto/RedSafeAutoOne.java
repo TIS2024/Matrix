@@ -15,13 +15,18 @@ import org.firstinspires.ftc.teamcode.subsystems.Slider;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
-@Autonomous (name = "MonelRedAutoOne")
-public class MonelRedAutoOne extends LinearOpMode {
+@Autonomous (name = "Monel_RedSafeAutoOne")
+public class RedSafeAutoOne extends LinearOpMode {
     SampleMecanumDrive drive = null;
     Slider slider = null;
     ArmV2 arm = null;
     Hanger hanger = null;
     Intake intake = null;
+
+    public static double
+            lifter_posL = 0, lifter_posR = 0, error_lifter, error_diff, error_int, error_lifterR, error_diffR, error_intR, errorprev, errorprevR, output_lifter, output_lifterR, output_power, target, dropVal;
+
+    public static double kp = 4.5, ki, kd = 1;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -232,6 +237,7 @@ public class MonelRedAutoOne extends LinearOpMode {
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.IntakePixel(0.95);})
+                .waitSeconds(0.2)
 
                 //backdrop
 //                .lineToConstantHeading(new Vector2d(30 , -36))
@@ -247,11 +253,11 @@ public class MonelRedAutoOne extends LinearOpMode {
 //                .splineToConstantHeading(new Vector2d(47.5,-30), 0)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.55, 0.19);})
-                .waitSeconds(0.5)
+                .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.55, 0.73);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.95);})
-                .waitSeconds(0.3)
+                .waitSeconds(0.5)
 
 //                .UNSTABLE_addTemporalMarkerOffset(-0.3,()->{ArmV2.DropPixel(0.95);})
 
@@ -292,9 +298,19 @@ public class MonelRedAutoOne extends LinearOpMode {
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.22);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.19);slider.extendTo(-10, 1);})
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, -10);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.19);slider.extendTo(-10, output_power);})
                 .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.IntakePixel(1);slider.extendTo(0, 1);})
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 0);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{Intake.IntakePixel(1);slider.extendTo(0, output_power);})
                 .resetConstraints()
 
 //                .splineToConstantHeading(new Vector2d(-34,-10),0)
@@ -309,14 +325,24 @@ public class MonelRedAutoOne extends LinearOpMode {
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{arm.setArmPos(0.55, 0.73);})
                 .waitSeconds(0.2)
-                .addTemporalMarker(()->{slider.extendTo(230, 0.8);})
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 230);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{slider.extendTo(230, output_power);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.75);})
-                .waitSeconds(0.2) //0.8
+                .waitSeconds(0.3) //0.8
                 .addTemporalMarker(()->{arm.setArmPos(0.48, 0.73);})
-                .waitSeconds(0.2) //0.4
+                .waitSeconds(0.3) //0.4
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.1)
-                .addTemporalMarker(()->{slider.extendTo(0, 0.8);})
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 0);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{slider.extendTo(0, output_power);})
                 .waitSeconds(0.5)
                 .resetConstraints()
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.95);Intake.intakeWristServo.setPosition(0.38);})
@@ -351,5 +377,21 @@ public class MonelRedAutoOne extends LinearOpMode {
         telemetry.addData("LeftRearCurrent", drive.getMotorCurrent().get(2));
         telemetry.addData("RightRearCurrent", drive.getMotorCurrent().get(3));
         telemetry.update();
+    }
+    public double lifter_pid(double kp_lifter, double ki_lifter, double kd_lifter, int target)
+    {
+        lifter_posL = Slider.sliderMotorOne.getCurrentPosition();
+        lifter_posR = Slider.sliderMotorTwo.getCurrentPosition();
+        error_lifter = target - lifter_posL;
+        error_diff = error_lifter - errorprev;
+        error_int = error_lifter + errorprev;
+        output_lifter = kp_lifter*error_lifter + kd_lifter*error_diff +ki_lifter*error_int;
+        error_lifterR = target - lifter_posR;
+        error_diffR = error_lifterR - errorprevR;
+        error_intR = error_lifterR + errorprevR;
+        output_lifterR = kp_lifter*error_lifterR + kd_lifter*error_diffR +ki_lifter*error_intR;
+        errorprev = error_lifter;
+        errorprevR = error_lifterR;
+        return Math.abs(output_lifter);
     }
 }
