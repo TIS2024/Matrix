@@ -26,6 +26,14 @@ public class ArmV2 {
         armServoTwo.setPosition(armServoOnePos);
 
     }
+    public static void SetWiperPositionRight(){
+        armServoOne.setPosition(armServoOne.getPosition() + 0.1);
+        armServoTwo.setPosition(armServoTwo.getPosition() + 0.1);
+    }
+    public static void SetWiperPositionLeft(){
+        armServoOne.setPosition(armServoOne.getPosition() - 0.1);
+        armServoTwo.setPosition(armServoTwo.getPosition() - 0.1);
+    }
     public void setArmPos(double armServoOnePos, double wristServoPos) {
         wristServo.setPosition(wristServoPos);
         if(wristServo.getPosition() == wristServoPos){

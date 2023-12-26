@@ -57,7 +57,7 @@ public class MonelBot9 extends LinearOpMode {
     public static double
             lifter_posL = 0, lifter_posR = 0, error_lifter, error_diff, error_int, error_lifterR, error_diffR, error_intR, errorprev, errorprevR, output_lifter, output_lifterR, output_power, target, dropVal;
 
-    public static double kp = 4.5, ki, kd = 1;
+    public static double kp = 4, ki, kd = 1.7;
     double Kp = PIDConstants.Kp, Ki = PIDConstants.Ki, Kd = PIDConstants.Kd;
     private double lastError = 0, integralSum = 0;;
     private BHI260IMU imu;
