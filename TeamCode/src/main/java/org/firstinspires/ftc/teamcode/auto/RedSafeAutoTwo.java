@@ -106,6 +106,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 //   towards backdrop
                 .splineToConstantHeading(new Vector2d(-34,-12),0)
                 .splineToConstantHeading(new Vector2d(28,-12),0)
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
                 .splineToConstantHeading(new Vector2d(52,-41),0)
                 .waitSeconds(1)
 
@@ -147,6 +148,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.19);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.19);})
+                .resetConstraints()
                 .setReversed(false)
                 .build();
 
@@ -185,6 +187,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 //   towards backdrop
                 .splineToConstantHeading(new Vector2d(-34,-12),0)
                 .splineToConstantHeading(new Vector2d(28,-12),0)
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
                 .splineToConstantHeading(new Vector2d(52,-34),0)
                 .waitSeconds(1)
 
@@ -226,6 +229,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.19);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.19);})
+                .resetConstraints()
                 .setReversed(false)
                 .build();
 
@@ -265,6 +269,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 //   towards backdrop
                 .splineToConstantHeading(new Vector2d(-34,-12),0)
                 .splineToConstantHeading(new Vector2d(28,-12),0)
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
                 .splineToConstantHeading(new Vector2d(52,-29),0)
                 .waitSeconds(1)
 
@@ -306,6 +311,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.19);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.19);})
+                .resetConstraints()
                 .setReversed(false)
                 .build();
 
