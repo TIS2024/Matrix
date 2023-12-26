@@ -44,6 +44,7 @@ public class MonelBot9 extends LinearOpMode {
     Hanger hanger = null;
     Intake intake = null;
     Drone drone = null;
+    public static DcMotorEx leftFront, leftRear, rightFront, rightRear;
     ElapsedTime inputTimer, outputTimer, angle_timer;
     public static double
             armServoOnePos, armServoTwoPos, wristServoPos, deliveryServoPos, armSliderServoPos;
@@ -81,6 +82,22 @@ public class MonelBot9 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
+        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
+        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
+        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // TODO: reverse any motors using DcMotor.setDirection()
+        leftFront.setDirection(DcMotorEx.Direction.FORWARD);
+        rightRear.setDirection(DcMotorEx.Direction.REVERSE);
+        rightFront.setDirection(DcMotorEx.Direction.REVERSE);
+        leftRear.setDirection(DcMotorEx.Direction.FORWARD);
+
         Gamepad currentGamepad1 = new Gamepad();
         Gamepad currentGamepad2 = new Gamepad();
 
@@ -183,7 +200,12 @@ public class MonelBot9 extends LinearOpMode {
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
 
-            DriveTrain.setPower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
+//            DriveTrain.setPower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
+            leftFront.setPower(frontLeftPower);
+            leftRear.setPower(backLeftPower);
+            rightFront.setPower(frontRightPower);
+            rightRear.setPower(backRightPower);
+
             myLocalizer.update();
 
             // Retrieve your pose
