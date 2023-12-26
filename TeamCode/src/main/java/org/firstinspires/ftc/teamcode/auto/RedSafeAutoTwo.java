@@ -67,15 +67,16 @@ public class RedSafeAutoTwo extends LinearOpMode {
             Intake.IntakePixel(0.95);
             ArmV2.DropPixel(0.5);
             Intake.CrankPosition(0.69);
+            ArmV2.SliderLink(0.95);
         }
 
         TrajectorySequence AutoTrajectoryRight = drive.trajectorySequenceBuilder(startPose)
                 // right line
                 .lineToSplineHeading(new Pose2d(-42,-32, -Math.PI))
 
-                .addTemporalMarker(()->{arm.setArmPos(0.6, 0.19);})
+                .addTemporalMarker(()->{arm.setArmPos(0.59, 0.19);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.6, 0.73);})
+                .addTemporalMarker(()->{arm.setArmPos(0.59, 0.73);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.8);})
                 .waitSeconds(1)
@@ -124,11 +125,34 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(47,-40),0)
                 .waitSeconds(1)
 
+                .addTemporalMarker(()->{arm.setArmPos(0.6, 0.19);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.6, 0.73);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{ArmV2.DropPixel(0.8);})
+                .waitSeconds(1)
+                .addTemporalMarker(()->{ArmV2.DropPixel(0.95);})
+                .waitSeconds(1)
+                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.19);})
+
                 .setReversed(false)
                 .build();
 
         TrajectorySequence AutoTrajectoryCenter = drive.trajectorySequenceBuilder(startPose)
                 // right line & towards pixel stack
+                .lineToSplineHeading(new Pose2d(-42,-32, -Math.PI))
+
+                .addTemporalMarker(()->{arm.setArmPos(0.59, 0.19);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.59, 0.73);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{ArmV2.DropPixel(0.8);})
+                .waitSeconds(1)
+
+                //   towards pixel stack
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.636);Intake.intakeWristServo.setPosition(0.262);})
+
+
                 .lineToSplineHeading(new Pose2d(-51 , -12, -Math.PI))
                 .waitSeconds(1)
                 .setReversed(true)

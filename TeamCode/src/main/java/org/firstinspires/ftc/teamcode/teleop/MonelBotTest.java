@@ -87,7 +87,7 @@ public class MonelBotTest extends LinearOpMode {
 
             //Slider
             if (currentGamepad1.dpad_up && !previousGamepad1.dpad_up) {
-                Slider.IncreaseExtension(50);
+                Slider.IncreaseExtension(70);
             }
             if (currentGamepad1.dpad_down && !previousGamepad1.dpad_down) {
                 Slider.DecreaseExtension(0);
@@ -99,6 +99,18 @@ public class MonelBotTest extends LinearOpMode {
 //                ArmV2.SetArmPosition(armServoPos,wristServoPos);
                 ArmV2.armServoOne.setPosition(armServoPos);
                 ArmV2.armServoTwo.setPosition(armServoPos2);
+                ArmV2.wristServo.setPosition(wristServoPos);
+            }
+            if (currentGamepad1.dpad_left && !previousGamepad1.dpad_left){
+//                ArmV2.SetArmPosition(armServoPos,wristServoPos);
+                ArmV2.armServoOne.setPosition(ArmV2.armServoOne.getPosition() + 0.1);
+                ArmV2.armServoTwo.setPosition(ArmV2.armServoTwo.getPosition() + 0.1);
+                ArmV2.wristServo.setPosition(wristServoPos);
+            }
+            if (currentGamepad1.dpad_right && !previousGamepad1.dpad_right){
+//                ArmV2.SetArmPosition(armServoPos,wristServoPos);
+                ArmV2.armServoOne.setPosition(ArmV2.armServoOne.getPosition() - 0.1);
+                ArmV2.armServoTwo.setPosition(ArmV2.armServoTwo.getPosition() - 0.1);
                 ArmV2.wristServo.setPosition(wristServoPos);
             }
             if(currentGamepad1.start && !previousGamepad1.start){
@@ -125,15 +137,16 @@ public class MonelBotTest extends LinearOpMode {
                 Hanger.hangerServoOne.setPosition(hangerServoPos1);
                 Hanger.hangerServoTwo.setPosition(hangerServoPos2);
             }
+
 //            if (currentGamepad1.dpad_up){
 //                Hanger.LiftRobot();
 //            }
 //            if (currentGamepad1.dpad_down){
 //                Hanger.PutDownRobot();
 //            }
-            if (currentGamepad1.dpad_left){
-                Drone.droneServo.setPosition(droneServoPos);
-            }
+//            if (currentGamepad1.dpad_left){
+//                Drone.droneServo.setPosition(droneServoPos);
+//            }
 
             telemetry.addLine("Axon Positions");
             telemetry.addData("beam Breaker State", beamBreaker.getState());

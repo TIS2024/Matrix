@@ -45,6 +45,7 @@ public class RedSafeAutoOne extends LinearOpMode {
             Intake.SetArmPosition(0.4,0.66);
             Intake.IntakePixel(0.80);
             ArmV2.DropPixel(0.8);
+            ArmV2.SliderLink(0.95);
             Intake.CrankPosition(0.69);
         }
 
