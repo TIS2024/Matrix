@@ -23,8 +23,8 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import java.util.List;
 
 @Config
-@Autonomous(name = "Monel_RedSafeAutoTwo")
-public class RedSafeAutoTwo extends LinearOpMode {
+@Autonomous(name = "Monel_BlueSafeAutoTwo")
+public class BlueSafeAutoTwo extends LinearOpMode {
     SampleMecanumDrive drive = null;
     Slider slider = null;
     ArmV2 arm = null;
@@ -56,7 +56,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
         hanger = new Hanger(hardwareMap, telemetry);
         intake = new Intake(hardwareMap, telemetry);
 
-        Pose2d startPose=new Pose2d(-39, -64, -Math.PI);
+        Pose2d startPose=new Pose2d(-39, 64, -Math.PI);
         drive.setPoseEstimate(startPose);
         initTfod();
 
@@ -72,7 +72,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
 
         TrajectorySequence AutoTrajectoryRight = drive.trajectorySequenceBuilder(startPose)
                 // right line
-                .lineToSplineHeading(new Pose2d(-42,-32, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-42,32, -Math.PI))
 
                 .addTemporalMarker(()->{arm.setArmPos(0.59, 0.19);})
                 .waitSeconds(0.3)
@@ -84,7 +84,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 //   towards pixel stack
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.636);Intake.intakeWristServo.setPosition(0.262);})
 
-                .lineToSplineHeading(new Pose2d(-51 , -12, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-51 , 12, -Math.PI))
 
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.19);})
@@ -120,9 +120,9 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .setReversed(true)
 
                 //   towards backdrop
-                .splineToConstantHeading(new Vector2d(-34,-12),0)
-                .splineToConstantHeading(new Vector2d(28,-12),0)
-                .splineToConstantHeading(new Vector2d(47,-27),0)
+                .splineToConstantHeading(new Vector2d(-34,12),0)
+                .splineToConstantHeading(new Vector2d(28,12),0)
+                .splineToConstantHeading(new Vector2d(47,27),0)
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.6, 0.19);})
@@ -140,7 +140,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
 
         TrajectorySequence AutoTrajectoryCenter = drive.trajectorySequenceBuilder(startPose)
                 // right line & towards pixel stack
-                .lineToSplineHeading(new Pose2d(-49 , -23, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-49 , 23, -Math.PI))
                 .waitSeconds(0.1)
                 .addTemporalMarker(()->{arm.setArmPos(0.59, 0.19);})
                 .waitSeconds(0.3)
@@ -148,7 +148,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.8);})
                 .waitSeconds(1)
-                .lineToSplineHeading(new Pose2d(-51 , -12, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-51 , 12, -Math.PI))
                 .waitSeconds(1)
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.19);})
@@ -184,9 +184,9 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .setReversed(true)
 
                 //   towards backdrop
-                .splineToConstantHeading(new Vector2d(-34,-12),0)
-                .splineToConstantHeading(new Vector2d(28,-12),0)
-                .splineToConstantHeading(new Vector2d(47,-34),0)
+                .splineToConstantHeading(new Vector2d(-34,12),0)
+                .splineToConstantHeading(new Vector2d(28,12),0)
+                .splineToConstantHeading(new Vector2d(47,34),0)
                 .waitSeconds(2)
                 .waitSeconds(1)
 
@@ -206,7 +206,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
 
         TrajectorySequence AutoTrajectoryLeft = drive.trajectorySequenceBuilder(startPose)
                 // right line
-                .lineToSplineHeading(new Pose2d(-60,-32, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-60,32, -Math.PI))
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.59, 0.19);})
@@ -218,7 +218,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
 
 
                 //   towards pixel stack
-                .lineToSplineHeading(new Pose2d(-58 , -12, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-58 , 12, -Math.PI))
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.19);})
                 .waitSeconds(0.8)
@@ -253,9 +253,9 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .setReversed(true)
 
                 //   towards backdrop
-                .splineToConstantHeading(new Vector2d(-34,-12),0)
-                .splineToConstantHeading(new Vector2d(28,-12),0)
-                .splineToConstantHeading(new Vector2d(47,-40),0)
+                .splineToConstantHeading(new Vector2d(-34,12),0)
+                .splineToConstantHeading(new Vector2d(28,12),0)
+                .splineToConstantHeading(new Vector2d(47,40),0)
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.6, 0.19);})

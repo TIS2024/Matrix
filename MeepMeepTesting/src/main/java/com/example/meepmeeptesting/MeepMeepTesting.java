@@ -77,18 +77,18 @@ public class MeepMeepTesting {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 11.71)
                 .followTrajectorySequence(drive ->
-                                drive.trajectorySequenceBuilder(new Pose2d(-39, -64, -Math.PI))
+                                drive.trajectorySequenceBuilder(new Pose2d(-39, 64, -Math.PI))
                                         // bottom line
 //                                        .lineToSplineHeading(new Pose2d(-42,-32, -Math.PI))
                                         //   towards pixel stack
-                                        .lineToSplineHeading(new Pose2d(-51 , -12, -Math.PI))
+                                        .lineToSplineHeading(new Pose2d(-51 , 12, -Math.PI))
                                         //   mid line
 //                                           .lineToSplineHeading(new Pose2d(-51 , -12, -Math.PI))
                                         .setReversed(true)
                                         //   towards bakdrop
-                                        .splineToConstantHeading(new Vector2d(-34,-12),0)
-                                        .splineToConstantHeading(new Vector2d(28,-12),0)
-                                        .splineToConstantHeading(new Vector2d(47,-28),0)
+                                        .splineToConstantHeading(new Vector2d(-34,12),0)
+                                        .splineToConstantHeading(new Vector2d(28,12),0)
+                                        .splineToConstantHeading(new Vector2d(47,34),0)
 //                                        .lineToConstantHeading(new Vector2d(47.3, -35))
                                         .setReversed(false)
 //                                        //   2nd cycle
