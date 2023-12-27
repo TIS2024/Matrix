@@ -33,13 +33,23 @@ public class Hanger {
         hangerServoTwo.setPosition(hangerPos);
     }
     public static void LiftRobot(){
-        hangerMotor.setTargetPosition(hangerMotor.getCurrentPosition() + 4000 );
+        hangerMotor.setTargetPosition(hangerMotor.getCurrentPosition() + 5000 );
         hangerMotor.setPower(motorPower);
         hangerMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
     public static void PutDownRobot(){
-        hangerMotor.setTargetPosition(hangerMotor.getCurrentPosition() - 4000 );
+        hangerMotor.setTargetPosition(hangerMotor.getCurrentPosition() - 5000 );
 //        hangerMotor.setTargetPosition(hangerMotor.getCurrentPosition() - 4000 );
+        hangerMotor.setPower(motorPower);
+        hangerMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+    }
+    public static void HangerINC(){
+        hangerMotor.setTargetPosition(hangerMotor.getCurrentPosition() + 200 );
+        hangerMotor.setPower(motorPower);
+        hangerMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+    }
+    public static void HangerDEC(){
+        hangerMotor.setTargetPosition(hangerMotor.getCurrentPosition() - 200 );
         hangerMotor.setPower(motorPower);
         hangerMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }

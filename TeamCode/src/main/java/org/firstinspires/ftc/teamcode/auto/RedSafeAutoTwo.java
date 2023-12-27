@@ -137,13 +137,19 @@ public class RedSafeAutoTwo extends LinearOpMode {
                     output_power = 0;
                 }})
                 .addTemporalMarker(()->{Intake.IntakePixel(1);slider.extendTo(0, output_power);})
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.19);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.73);})
                 .waitSeconds(0.5)
-                .addTemporalMarker(()->{ArmV2.DropPixel(0.95);})
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 200);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{arm.setArmPos(0.48, 0.19);slider.extendTo(200, output_power);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.48, 0.73);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.8)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.19);})
+                .addTemporalMarker(()->{arm.setArmPos(0.48, 0.19);slider.extendTo(0, output_power);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.19);})
                 .waitSeconds(0.3)
@@ -155,7 +161,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
         TrajectorySequence AutoTrajectoryCenter = drive.trajectorySequenceBuilder(startPose)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
                 // right line
-                .lineToSplineHeading(new Pose2d(-51,-22, 0))
+                .lineToSplineHeading(new Pose2d(-51,-24, 0))
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.19);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
@@ -218,13 +224,19 @@ public class RedSafeAutoTwo extends LinearOpMode {
                     output_power = 0;
                 }})
                 .addTemporalMarker(()->{Intake.IntakePixel(1);slider.extendTo(0, output_power);})
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.19);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.73);})
                 .waitSeconds(0.5)
-                .addTemporalMarker(()->{ArmV2.DropPixel(0.95);})
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 200);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{arm.setArmPos(0.48, 0.19);slider.extendTo(200, output_power);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.48, 0.73);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.8)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.19);})
+                .addTemporalMarker(()->{arm.setArmPos(0.48, 0.19);slider.extendTo(0, output_power);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.19);})
                 .waitSeconds(0.3)
@@ -300,13 +312,19 @@ public class RedSafeAutoTwo extends LinearOpMode {
                     output_power = 0;
                 }})
                 .addTemporalMarker(()->{Intake.IntakePixel(1);slider.extendTo(0, output_power);})
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.19);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.73);})
                 .waitSeconds(0.5)
-                .addTemporalMarker(()->{ArmV2.DropPixel(0.95);})
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 200);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{arm.setArmPos(0.48, 0.19);slider.extendTo(200, output_power);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.48, 0.73);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.8)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.19);})
+                .addTemporalMarker(()->{arm.setArmPos(0.48, 0.19);slider.extendTo(0, output_power);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.19);})
                 .waitSeconds(0.3)

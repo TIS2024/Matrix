@@ -47,7 +47,7 @@ public class BlueSafeAutoTwo extends LinearOpMode {
     public static double
             lifter_posL = 0, lifter_posR = 0, error_lifter, error_diff, error_int, error_lifterR, error_diffR, error_intR, errorprev, errorprevR, output_lifter, output_lifterR, output_power, target, dropVal;
 
-    public static double kp = 4.5, ki, kd = 1;
+    public static double kp = 4, ki, kd = 1.7;
     @Override
     public void runOpMode() throws InterruptedException {
         drive = new SampleMecanumDrive(hardwareMap);
@@ -94,7 +94,6 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
                 .waitSeconds(0.8)
                 .addTemporalMarker(this::telem)
-                .waitSeconds(1)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.66);Intake.intakeArmServo.setPosition(0.4);})
@@ -108,7 +107,7 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(28,12),0)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
                 .splineToConstantHeading(new Vector2d(52,29),0)
-                .waitSeconds(1)
+                .waitSeconds(0.5)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.55, 0.19);})
                 .waitSeconds(0.3)
@@ -137,7 +136,13 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                     output_power = 0;
                 }})
                 .addTemporalMarker(()->{Intake.IntakePixel(1);slider.extendTo(0, output_power);})
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.19);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 200);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.19);slider.extendTo(200, output_power);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.73);})
                 .waitSeconds(0.5)
@@ -218,7 +223,12 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                     output_power = 0;
                 }})
                 .addTemporalMarker(()->{Intake.IntakePixel(1);slider.extendTo(0, output_power);})
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.19);})
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 200);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.19);slider.extendTo(200, output_power);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.73);})
                 .waitSeconds(0.5)
@@ -299,7 +309,12 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                     output_power = 0;
                 }})
                 .addTemporalMarker(()->{Intake.IntakePixel(1);slider.extendTo(0, output_power);})
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.19);})
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 200);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.19);slider.extendTo(200, output_power);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.73);})
                 .waitSeconds(0.5)
