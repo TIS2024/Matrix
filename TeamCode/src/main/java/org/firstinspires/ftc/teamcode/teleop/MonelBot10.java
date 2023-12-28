@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import static com.sun.tools.javac.code.Type.map;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -33,6 +35,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Slider;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 import java.util.List;
+import java.util.Map;
 
 @TeleOp(group = "Robot Main")
 @Config
@@ -147,7 +150,7 @@ public class MonelBot10 extends LinearOpMode {
         myLocalizer.setPoseEstimate(PoseStorage.currentPose);
 
         while (opModeInInit()){
-            ArmV2.SetArmPosition(0.15,0.19);
+            ArmV2.SetArmPosition(0.15,0.16);
             Intake.crankServo.setPosition(0.69);
             Intake.intakeArmServo.setPosition(0.5);
             Intake.intakeWristServo.setPosition(0.66);
@@ -161,6 +164,7 @@ public class MonelBot10 extends LinearOpMode {
             outputTimer.reset();
             dropTimer.reset();
             intakeCounter = 0;
+            sliderCounter = 0;
         }
 
         waitForStart();
@@ -228,7 +232,7 @@ public class MonelBot10 extends LinearOpMode {
                 case INTAKE_START:
                     //waiting for input
                     if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 0)) {
-                        ArmV2.wristServo.setPosition(0.19);
+                        ArmV2.wristServo.setPosition(0.16);
 //                        ArmV2.SetArm(0.20);
                         ArmV2.SetArm(0.25);
                         ArmV2.DropPixel(0.95);
@@ -243,7 +247,7 @@ public class MonelBot10 extends LinearOpMode {
                     if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 2)) {
                         Intake.IntakePixel(0.95);
 //                        ArmV2.SetArm(0.20);
-                        ArmV2.wristServo.setPosition(0.19);
+                        ArmV2.wristServo.setPosition(0.16);
                         ArmV2.SetArm(0.25);
                         ArmV2.DropPixel(0.75);
                         if (ArmV2.armServoTwo.getPosition() == 0.25) {
@@ -317,7 +321,7 @@ public class MonelBot10 extends LinearOpMode {
                                 })
                                 .waitSeconds(0.3)
                                 .addTemporalMarker(() -> {
-                                    arm.setArmPos(0.15, 0.19);
+                                    arm.setArmPos(0.15, 0.16);
                                 })
                                 .waitSeconds(0.3)
                                 .build();
@@ -331,10 +335,10 @@ public class MonelBot10 extends LinearOpMode {
                     break;
                 case INTAKE_RETRACT:
                     Intake.CrankPosition(0.69);
-                    if (Intake.crankServo.getPosition() == 0.69){
+                    if (Intake.crankServo.getPosition() == 0.69 && inputTimer.milliseconds()>=400){
                         Intake.intakeArmServo.setPosition(0.4);
-                        Intake.intakeWristServo.setPosition(0.66);
-                        if (inputTimer.milliseconds() >= 300 ) { //inputTimer.milliseconds() >= 300 // 500 //800
+                        Intake.intakeWristServo.setPosition(0.5);
+                        if (inputTimer.milliseconds() >= 500 ) { //inputTimer.milliseconds() >= 300 // 500 //800
                             inputTimer.reset();
                             inputState = IntakeState.INTAKE_INPUT;
                         }
@@ -357,10 +361,10 @@ public class MonelBot10 extends LinearOpMode {
                     break;
                 case INTAKE_FINAL:
                     if (Intake.intakeArmServo.getPosition() == 1 && inputTimer.milliseconds() >= 300) {  //350
-                        ArmV2.SetArmPosition(0.15, 0.19);
+                        ArmV2.SetArmPosition(0.15, 0.16);
                         if (ArmV2.armServoTwo.getPosition() == 0.15) { //350 //400
                             ArmV2.DropPixel(0.5);
-                            ArmV2.SetArmPosition(0.1, 0.19);
+                            ArmV2.SetArmPosition(0.1, 0.16);
                             output_power = lifter_pid(kp, ki, kd, -10);
                             if (output_power > 0.9) {
                                 output_power = 1;
@@ -377,7 +381,7 @@ public class MonelBot10 extends LinearOpMode {
                                 }
                                 slider.extendTo(0, output_power);
                             }
-                            ArmV2.SetArmPosition(0.15, 0.19);
+                            ArmV2.SetArmPosition(0.15, 0.16);
                             if (stackFlag) {
                                 intakeCounter = 2;
                                 stackFlag = false;
@@ -406,10 +410,10 @@ public class MonelBot10 extends LinearOpMode {
                     break;
                 case OUTTAKE_PUSH:
                     Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);Intake.crankServo.setPosition(0.69);
-                    ArmV2.SetArmPosition(0.1, 0.19);
+                    ArmV2.SetArmPosition(0.1, 0.16);
                     if (outputTimer.milliseconds() >= 200){ //200
                         ArmV2.DropPixel(0.5);
-//                        ArmV2.SetArmPosition(0.1, 0.19);
+//                        ArmV2.SetArmPosition(0.1, 0.16);
                         output_power = lifter_pid(kp, ki, kd, -10);
                         if (output_power > 0.9) {
                             output_power = 1;
@@ -425,7 +429,7 @@ public class MonelBot10 extends LinearOpMode {
                                 output_power = 0;
                             }
                             slider.extendTo(0, output_power);
-                            ArmV2.SetArmPosition(0.15, 0.19);
+                            ArmV2.SetArmPosition(0.15, 0.16);
                             outputTimer.reset();
                             outputState = OuttakeState.OUTTAKE_OPEN;
                         }
@@ -444,9 +448,9 @@ public class MonelBot10 extends LinearOpMode {
                     }
                     break;
                 case OUTTAKE_OUTPUT:
-                    ArmV2.SetArmPosition(0.5, 0.19);
+                    ArmV2.SetArmPosition(0.45, 0.16);
                     if (outputTimer.milliseconds()>=300){ //300
-                        ArmV2.SetArmPosition(0.5, 0.75);
+                        ArmV2.SetArmPosition(0.45, 0.75);
                     }
                     if (outputTimer.milliseconds() >= 500){ // 500
                         outputTimer.reset();
@@ -462,10 +466,6 @@ public class MonelBot10 extends LinearOpMode {
                     }
                     break;
                 case OUTTAKE_SLIDER:
-                    ArmV2.SetArmPosition(0.45, 0.19);
-                    if (outputTimer.milliseconds()>=500){ //500
-                        ArmV2.SetArmPosition(0.45, 0.75);
-                    }
                     if (outputTimer.milliseconds() >= 800){ //800
                         if (sliderCounter == 1) {
                             output_power = lifter_pid(kp, ki, kd, levelOne);
@@ -475,7 +475,6 @@ public class MonelBot10 extends LinearOpMode {
                                 output_power = 0;
                             }
                             slider.extendTo(levelOne, output_power);
-                            sliderCounter = 0;
                         }
                         if (sliderCounter == 2) {
                             output_power = lifter_pid(kp, ki, kd, levelTwo);
@@ -485,7 +484,6 @@ public class MonelBot10 extends LinearOpMode {
                                 output_power = 0;
                             }
                             slider.extendTo(levelTwo, output_power);
-                            sliderCounter = 0;
                         }
                         if (sliderCounter == 3) {
                             output_power = lifter_pid(kp, ki, kd, levelThree);
@@ -495,7 +493,6 @@ public class MonelBot10 extends LinearOpMode {
                                 output_power = 0;
                             }
                             slider.extendTo(levelThree, output_power);
-                            sliderCounter = 0;
                         }
                         outputTimer.reset();
                         outputState = OuttakeState.OUTTAKE_FINAL;
@@ -514,6 +511,16 @@ public class MonelBot10 extends LinearOpMode {
                 default:
                     outputState = OuttakeState.OUTTAKE_START;
             }
+            if (sliderCounter != 0 && gamepad2.left_stick_x != 0){
+                double armSliderValue = Range.clip(-gamepad2.left_stick_y,0,1);
+                double mappedYaw = Range.scale(gamepad2.left_stick_x, -1, 1, 0.60, 0.30);
+                double mappedCrank = Range.scale(armSliderValue, 0, 1, 0.95, 0.2);
+
+                ArmV2.armServoTwo.setPosition(mappedYaw);
+                ArmV2.armServoOne.setPosition(mappedYaw+0.1);
+
+                ArmV2.armSliderServo.setPosition(mappedCrank);
+            }
             //--------------------------------------------------------------------------------------
 
             if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 1) && (Intake.intakeArmServo.getPosition() == 1)){
@@ -522,7 +529,7 @@ public class MonelBot10 extends LinearOpMode {
                         .addTemporalMarker(()->{Intake.IntakePixel(0.95);})
                         .waitSeconds(0.1)
                         .addTemporalMarker(()->{ArmV2.DropPixel(0.75);})
-                        .addTemporalMarker(()->{arm.setArmPos(0.25, 0.19);})
+                        .addTemporalMarker(()->{arm.setArmPos(0.25, 0.16);})
                         .waitSeconds(0.3)
                         .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.95);})
                         .waitSeconds(0.2)
@@ -530,7 +537,7 @@ public class MonelBot10 extends LinearOpMode {
                         .waitSeconds(0.4)
                         .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                         .waitSeconds(0.2)
-                        .addTemporalMarker(()->{arm.setArmPos(0.15, 0.19);})
+                        .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
                         .build();
                 drive.followTrajectorySequenceAsync(ResetIntake);
                 intakeCounter = 2;
@@ -544,7 +551,7 @@ public class MonelBot10 extends LinearOpMode {
 //                        .waitSeconds(0.1)
 //                        .addTemporalMarker(()->{
 //                            ArmV2.DropPixel(0.75);})
-//                        .addTemporalMarker(()->{arm.setArmPos(0.25, 0.19);})
+//                        .addTemporalMarker(()->{arm.setArmPos(0.25, 0.16);})
 //                        .waitSeconds(0.3)
 //                        .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.95);})
 //                        .waitSeconds(0.2)
@@ -562,9 +569,9 @@ public class MonelBot10 extends LinearOpMode {
             if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper && (Intake.intakeArmServo.getPosition() < 0.75)){
                 TrajectorySequence OuttakeArm = drive.trajectorySequenceBuilder(startPose)
                         .addTemporalMarker(()->{ArmV2.DropPixel(0.5);})
-                        .addTemporalMarker(()->{arm.setArmPos(0.52, 0.19);})
+                        .addTemporalMarker(()->{arm.setArmPos(0.45, 0.16);})
                         .waitSeconds(0.4)
-                        .addTemporalMarker(()->{arm.setArmPos(0.52, 0.73);})
+                        .addTemporalMarker(()->{arm.setArmPos(0.45, 0.73);})
                         .build();
                 drive.followTrajectorySequenceAsync(OuttakeArm);
                 drive.update();
@@ -579,7 +586,7 @@ public class MonelBot10 extends LinearOpMode {
                         .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.66); Intake.intakeArmServo.setPosition(0.5);})
                         .waitSeconds(0.1)
                         .addTemporalMarker(()->{Intake.IntakePixel(1);})
-                        .addTemporalMarker(()->{arm.setArmPos(0.25, 0.19);})
+                        .addTemporalMarker(()->{arm.setArmPos(0.25, 0.16);})
                         .waitSeconds(0.2)
                         .addTemporalMarker(()->{ArmV2.DropPixel(0.95);})
                         .waitSeconds(0.5)
@@ -588,7 +595,7 @@ public class MonelBot10 extends LinearOpMode {
                         .addTemporalMarker(()->{Intake.IntakePixel(1);})
                         .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
                         .waitSeconds(0.5)
-                        .addTemporalMarker(()->{arm.setArmPos(0.15, 0.19);})
+                        .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
                         .waitSeconds(0.5)
                         .build();
                 drive.followTrajectorySequenceAsync(ResetRobot);
@@ -602,9 +609,9 @@ public class MonelBot10 extends LinearOpMode {
                 TrajectorySequence DropPixelOne = drive.trajectorySequenceBuilder(startPose)
                         .addTemporalMarker(()->{ArmV2.DropPixel(0.79);})
                         .waitSeconds(0.3)
-                        .addTemporalMarker(()->{arm.setArmPos(0.49, 0.73);}) //0.48
+                        .addTemporalMarker(()->{arm.setArmPos(0.44, 0.73);}) //0.48
                         .waitSeconds(0.2)
-                        .addTemporalMarker(()->{arm.setArmPos(0.5, 0.73);})
+                        .addTemporalMarker(()->{arm.setArmPos(0.45, 0.73);})
                         .build();
                 drive.followTrajectorySequenceAsync(DropPixelOne);
                 dropTimer.reset();
@@ -621,24 +628,27 @@ public class MonelBot10 extends LinearOpMode {
                 }
 //                ArmV2.DropPixel(1);
 //                if( ArmV2.deliveryServo.getPosition() == 1) { //dropTimer.milliseconds() >= 800 &&
-//                    arm.setArmPos(0.4, 0.19);
+//                    arm.setArmPos(0.4, 0.16);
 //                    if( wristPosition >= 280) { //dropTimer.milliseconds()>=1200 &&
-//                        arm.setArmPos(0.15, 0.19);
+//                        arm.setArmPos(0.15, 0.16);
 //                        slider.extendTo(levelZero, output_power);
 //                    }
 //                }
                 TrajectorySequence DropPixelTwo = drive.trajectorySequenceBuilder(startPose)
                         .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                         .waitSeconds(0.8) //0.3
-                        .addTemporalMarker(()->{arm.setArmPos(0.3, 0.19);})
+                        .addTemporalMarker(()->{arm.setArmPos(0.45, 0.73); ArmV2.SliderLink(0.95);})
+                        .waitSeconds(0.8)
+                        .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                         .waitSeconds(0.5)
-                        .addTemporalMarker(()->{arm.setArmPos(0.15, 0.19);})
+                        .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
                         .waitSeconds(0.5)
                         .addTemporalMarker(()->{slider.extendTo(levelZero, output_power);})
                         .waitSeconds(0.2)
                         .build();
                 drive.followTrajectorySequenceAsync(DropPixelTwo);
                 drive.update();
+                sliderCounter = 0;
             }
 
             if (currentGamepad1.dpad_up) {
@@ -650,31 +660,18 @@ public class MonelBot10 extends LinearOpMode {
             if (currentGamepad1.x && !previousGamepad1.x){
                 Drone.shootDrone();
             }
-            if (currentGamepad1.dpad_right && !previousGamepad1.dpad_right){
-//                TrajectorySequence WiperRight = drive.trajectorySequenceBuilder(startPose)
-//                        .addTemporalMarker(()->{arm.setArmPos(0.45, 0.73);})
-//                        .waitSeconds(0.5)
-//                        .addTemporalMarker(ArmV2::SetWiperPositionRight)
-//                        .build();
-//                drive.followTrajectorySequenceAsync(WiperRight);
-            }
-            if (currentGamepad1.dpad_left){
-
-            }
+//            if (currentGamepad1.dpad_right && !previousGamepad1.dpad_right && sliderCounter != 0){
+//                ArmV2.SetWiperPositionRight();
+//            }
+//            if (currentGamepad1.dpad_left && !previousGamepad1.dpad_left && sliderCounter != 0){
+//                ArmV2.SetWiperPositionLeft();
+//            }
             if(currentGamepad1.back && !previousGamepad1.back){
                 Hanger.ExtendHanger();
             }
 
             //--------------------------------------------------------------------------------------
-//            double wiper_x = Range.clip(gamepad2.left_stick_x, 0.35, 0.55);
-//            if(wiper_x > 0.40){
-//                ArmV2.armServoTwo.setPosition(wiper_x);
-//                ArmV2.armServoOne.setPosition(wiper_x - 0.1);
-//            }
-//            if(wiper_x < 0.50){
-//                ArmV2.armServoTwo.setPosition(wiper_x);
-//                ArmV2.armServoOne.setPosition(wiper_x + 0.1);
-//            }
+
             if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up){
                 sliderCounter = 1;
             }
@@ -701,11 +698,11 @@ public class MonelBot10 extends LinearOpMode {
                 crankToggle = !crankToggle;
                 if (crankToggle) {
                     TrajectorySequence openCrank = drive.trajectorySequenceBuilder(startPose)
-                            .addTemporalMarker(()->{arm.setArmPos(0.25, 0.19);})
+                            .addTemporalMarker(()->{arm.setArmPos(0.25, 0.16);})
                             .waitSeconds(0.05)
                             .addTemporalMarker(()->{Intake.crankServo.setPosition(0.35);})
                             .waitSeconds(0.05)
-                            .addTemporalMarker(()->{arm.setArmPos(0.15, 0.19);})
+                            .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
                             .waitSeconds(0.05)
                             .build();
                     drive.followTrajectorySequenceAsync(openCrank);
@@ -714,11 +711,11 @@ public class MonelBot10 extends LinearOpMode {
                 else
                 {
                     TrajectorySequence closeCrank = drive.trajectorySequenceBuilder(startPose)
-                            .addTemporalMarker(()->{arm.setArmPos(0.25, 0.19);})
+                            .addTemporalMarker(()->{arm.setArmPos(0.25, 0.16);})
                             .waitSeconds(0.05)
                             .addTemporalMarker(()->{Intake.crankServo.setPosition(0.69);})
                             .waitSeconds(0.05)
-                            .addTemporalMarker(()->{arm.setArmPos(0.15, 0.19);})
+                            .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
                             .waitSeconds(0.05)
                             .build();
                     drive.followTrajectorySequenceAsync(closeCrank);

@@ -21,7 +21,7 @@ public class MeepMeepTesting {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(15, -64, -Math.PI))
                                 //backdrop
-                                .lineToConstantHeading(new Vector2d(30 , -36))
+                                .lineToConstantHeading(new Vector2d(10 , -20))
                                 .splineToConstantHeading(new Vector2d(46.5,-30), 0)
                                 .waitSeconds(1)
                                 .setReversed(false)
@@ -122,7 +122,7 @@ public class MeepMeepTesting {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(15, -64, -Math.PI))
                                 //backdrop
-                                .lineToConstantHeading(new Vector2d(30 , -36))
+                                .lineToConstantHeading(new Vector2d(27 , -25))
                                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 11.47), SampleMecanumDrive.getAccelerationConstraint(35))
                                 .splineToConstantHeading(new Vector2d(47.5,-30), 0)
                                 .resetConstraints()
