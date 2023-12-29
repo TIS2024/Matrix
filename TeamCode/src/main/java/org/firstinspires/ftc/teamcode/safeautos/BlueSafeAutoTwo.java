@@ -102,7 +102,7 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-34,12),0)
                 .splineToConstantHeading(new Vector2d(28,12),0)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(55,32),0)
+                .splineToConstantHeading(new Vector2d(54,32),0)
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
@@ -277,7 +277,7 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-34,12),0)
                 .splineToConstantHeading(new Vector2d(28,12),0)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(53,42),0)
+                .splineToConstantHeading(new Vector2d(53,43),0)
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})

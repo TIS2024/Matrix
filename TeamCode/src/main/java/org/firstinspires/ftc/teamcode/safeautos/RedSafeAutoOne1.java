@@ -109,7 +109,7 @@ public class RedSafeAutoOne1 extends LinearOpMode {
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.645);Intake.intakeWristServo.setPosition(0.269);}) //0.645-0.2595
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.645);Intake.intakeWristServo.setPosition(0.28);}) //0.645-0.2595
                 .waitSeconds(0.8)
                 .addTemporalMarker(this::telem)
 
@@ -131,7 +131,7 @@ public class RedSafeAutoOne1 extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(18,-10),0)
                 .addTemporalMarker(this::telem)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(48,-30),0)
+                .splineToConstantHeading(new Vector2d(50.5,-30),0)
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.16);slider.extendTo(-10, 1);})
                 .UNSTABLE_addTemporalMarkerOffset(0.5,()->{Intake.IntakePixel(1);slider.extendTo(0, 1);})
                 .addTemporalMarker(this::telem)
@@ -171,7 +171,7 @@ public class RedSafeAutoOne1 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.0,()->{arm.setArmPos(0.5, 0.66);})
                 .addTemporalMarker(this::telem)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(48,-35), 0)
+                .splineToConstantHeading(new Vector2d(50,-35), 0)
                 .UNSTABLE_addTemporalMarkerOffset(-0.5,()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.2)//0.55
                 .addTemporalMarker(this::telem)
@@ -199,7 +199,7 @@ public class RedSafeAutoOne1 extends LinearOpMode {
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.645);Intake.intakeWristServo.setPosition(0.269);}) //0.645-0.2595
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.645);Intake.intakeWristServo.setPosition(0.28);}) //0.645-0.2595
                 .waitSeconds(0.8)
                 .addTemporalMarker(this::telem)
 
@@ -221,7 +221,7 @@ public class RedSafeAutoOne1 extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(18,-10),0)
                 .addTemporalMarker(this::telem)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(48,-41),0)
+                .splineToConstantHeading(new Vector2d(50.5,-41),0)
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.16);slider.extendTo(-10, 1);})
                 .UNSTABLE_addTemporalMarkerOffset(0.5,()->{Intake.IntakePixel(1);slider.extendTo(0, 1);})
                 .addTemporalMarker(this::telem)
@@ -264,7 +264,7 @@ public class RedSafeAutoOne1 extends LinearOpMode {
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);arm.setArmPos(0.5, 0.66);})
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(48,-28), 0)
+                .splineToConstantHeading(new Vector2d(50,-25), 0)
                 .UNSTABLE_addTemporalMarkerOffset(-0.5,()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.2)//0.55
                 .addTemporalMarker(this::telem)
@@ -292,7 +292,7 @@ public class RedSafeAutoOne1 extends LinearOpMode {
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.645);Intake.intakeWristServo.setPosition(0.269);}) //0.645-0.2595
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.645);Intake.intakeWristServo.setPosition(0.28);}) //0.645-0.2595
                 .waitSeconds(0.8)
                 .addTemporalMarker(this::telem)
 
@@ -314,7 +314,7 @@ public class RedSafeAutoOne1 extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(18,-10),0)
                 .addTemporalMarker(this::telem)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(48,-41),0)
+                .splineToConstantHeading(new Vector2d(50.5,-41),0)
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.16);slider.extendTo(-10, 1);})
                 .UNSTABLE_addTemporalMarkerOffset(0.5,()->{Intake.IntakePixel(1);slider.extendTo(0, 1);})
                 .addTemporalMarker(this::telem)

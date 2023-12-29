@@ -75,13 +75,16 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.5);})
 
                 //backdrop
-                .lineToConstantHeading(new Vector2d(28 , 34))
-                .UNSTABLE_addTemporalMarkerOffset(-0.20,()->{Intake.IntakePixel(1);})
-                .UNSTABLE_addTemporalMarkerOffset(-0.30,()->{arm.setArmPos(0.4, 0.16);})
-                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{arm.setArmPos(0.5, 0.66);})
-                .addTemporalMarker(this::telem)
+                .lineToConstantHeading(new Vector2d(17.5 , 25))
+                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.4, 0.16);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.42);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{Intake.IntakePixel(1);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.69);arm.setArmPos(0.5, 0.66);})
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(48,41), 0)
+                .lineToConstantHeading(new Vector2d(52,27))
                 .UNSTABLE_addTemporalMarkerOffset(-0.5,()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.2)//0.55
                 .addTemporalMarker(this::telem)
@@ -94,9 +97,9 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 .addTemporalMarker(() -> {arm.setArmPos(0.15, 0.16);})
                 .waitSeconds(0.1)
 //                .splineToConstantHeading(new Vector2d(18,-8), -Math.PI)
-                .lineToConstantHeading(new Vector2d(18,8))
+                .lineToConstantHeading(new Vector2d(36,10))
                 .addTemporalMarker(this::telem)
-                .splineToConstantHeading(new Vector2d(-34,8), -Math.PI)
+                .splineToConstantHeading(new Vector2d(-34,10), -Math.PI)
                 .addTemporalMarker(this::telem)
                 .UNSTABLE_addTemporalMarkerOffset(-0.7, ()->{Intake.intakeArmServo.setPosition(0.636);Intake.intakeWristServo.setPosition(0.28);}) //0.633-0.2515 //arm->0.64
                 .UNSTABLE_addTemporalMarkerOffset(-0.2, ()->{Intake.CrankPosition(0.5);})
@@ -109,7 +112,7 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.645);Intake.intakeWristServo.setPosition(0.269);}) //0.645-0.2595
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.645);Intake.intakeWristServo.setPosition(0.28);}) //0.645-0.2595
                 .waitSeconds(0.8)
                 .addTemporalMarker(this::telem)
 
@@ -131,15 +134,15 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(18,10),0)
                 .addTemporalMarker(this::telem)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(48,30),0)
-                .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.16);slider.extendTo(-10, 1);})
-                .UNSTABLE_addTemporalMarkerOffset(0.5,()->{Intake.IntakePixel(1);slider.extendTo(0, 1);})
+                .splineToConstantHeading(new Vector2d(52,41),0)
+                .UNSTABLE_addTemporalMarkerOffset(0.5,()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.16);slider.extendTo(-10, 1);})
+                .UNSTABLE_addTemporalMarkerOffset(1,()->{Intake.IntakePixel(1);slider.extendTo(0, 1);})
                 .addTemporalMarker(this::telem)
-                .waitSeconds(0.7)
+                .waitSeconds(1.5)
 
                 //place pixel on backdrop
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
-                .waitSeconds(0.3) //0.6
+                .waitSeconds(0.5) //0.6
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
                 .waitSeconds(0.8)
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.8);})
@@ -157,7 +160,7 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.9,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})//0.375-0.513//arm->0.52 //0.50
                 .UNSTABLE_addTemporalMarkerOffset(1.8,()->{arm.setArmPos(0.15, 0.16);})//0.2
                 .setReversed(false)
-                //pixel intake // round 2------------------------------------------------------------
+                //pixel intake // round 2-------
                 .build();
 
         TrajectorySequence AutoTrajectoryCenter = drive.trajectorySequenceBuilder(startPose)
@@ -171,7 +174,7 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.0,()->{arm.setArmPos(0.5, 0.66);})
                 .addTemporalMarker(this::telem)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(48,28), 0)
+                .splineToConstantHeading(new Vector2d(50,35), 0)
                 .UNSTABLE_addTemporalMarkerOffset(-0.5,()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.2)//0.55
                 .addTemporalMarker(this::telem)
@@ -184,7 +187,7 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 .addTemporalMarker(() -> {arm.setArmPos(0.15, 0.16);})
                 .waitSeconds(0.1)
 //                .splineToConstantHeading(new Vector2d(18,-8), -Math.PI)
-                .lineToConstantHeading(new Vector2d(18,8))
+                .lineToConstantHeading(new Vector2d(36,10))
                 .addTemporalMarker(this::telem)
                 .splineToConstantHeading(new Vector2d(-34,8), -Math.PI)
                 .addTemporalMarker(this::telem)
@@ -199,7 +202,7 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.645);Intake.intakeWristServo.setPosition(0.269);}) //0.645-0.2595
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.645);Intake.intakeWristServo.setPosition(0.28);}) //0.645-0.2595
                 .waitSeconds(0.8)
                 .addTemporalMarker(this::telem)
 
@@ -221,11 +224,11 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(18,10),0)
                 .addTemporalMarker(this::telem)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(48,41),0)
-                .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.16);slider.extendTo(-10, 1);})
-                .UNSTABLE_addTemporalMarkerOffset(0.5,()->{Intake.IntakePixel(1);slider.extendTo(0, 1);})
+                .splineToConstantHeading(new Vector2d(50.5,41),0)
+                .UNSTABLE_addTemporalMarkerOffset(0.5,()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.16);slider.extendTo(-10, 1);})
+                .UNSTABLE_addTemporalMarkerOffset(1,()->{Intake.IntakePixel(1);slider.extendTo(0, 1);})
                 .addTemporalMarker(this::telem)
-                .waitSeconds(0.7)
+                .waitSeconds(1.5)
 
                 //place pixel on backdrop
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
@@ -251,20 +254,18 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
         //pixel intake // round 2-------
 
         TrajectorySequence AutoTrajectoryLeft = drive.trajectorySequenceBuilder(startPose)
+
                 .addTemporalMarker(this::telem)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.5);})
 
                 //backdrop
-                .lineToConstantHeading(new Vector2d(12 , 25))
-                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.4, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.42);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.IntakePixel(1);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.69);arm.setArmPos(0.5, 0.66);})
+                .lineToConstantHeading(new Vector2d(30 , 28))
+                .UNSTABLE_addTemporalMarkerOffset(-0.20,()->{Intake.IntakePixel(1);})
+                .UNSTABLE_addTemporalMarkerOffset(-0.30,()->{arm.setArmPos(0.4, 0.16);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{arm.setArmPos(0.5, 0.66);})
+                .addTemporalMarker(this::telem)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(48,35), 0)
+                .splineToConstantHeading(new Vector2d(51.5,41), 0)
                 .UNSTABLE_addTemporalMarkerOffset(-0.5,()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.2)//0.55
                 .addTemporalMarker(this::telem)
@@ -277,7 +278,7 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 .addTemporalMarker(() -> {arm.setArmPos(0.15, 0.16);})
                 .waitSeconds(0.1)
 //                .splineToConstantHeading(new Vector2d(18,-8), -Math.PI)
-                .lineToConstantHeading(new Vector2d(18,8))
+                .lineToConstantHeading(new Vector2d(36,10))
                 .addTemporalMarker(this::telem)
                 .splineToConstantHeading(new Vector2d(-34,8), -Math.PI)
                 .addTemporalMarker(this::telem)
@@ -292,7 +293,7 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.645);Intake.intakeWristServo.setPosition(0.269);}) //0.645-0.2595
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.645);Intake.intakeWristServo.setPosition(0.28);}) //0.645-0.2595
                 .waitSeconds(0.8)
                 .addTemporalMarker(this::telem)
 
@@ -314,11 +315,11 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(18,10),0)
                 .addTemporalMarker(this::telem)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(48,41),0)
-                .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.16);slider.extendTo(-10, 1);})
-                .UNSTABLE_addTemporalMarkerOffset(0.5,()->{Intake.IntakePixel(1);slider.extendTo(0, 1);})
+                .splineToConstantHeading(new Vector2d(51,30),0)
+                .UNSTABLE_addTemporalMarkerOffset(0.5,()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.16);slider.extendTo(-10, 1);})
+                .UNSTABLE_addTemporalMarkerOffset(0.8,()->{Intake.IntakePixel(1);slider.extendTo(0, 1);})
                 .addTemporalMarker(this::telem)
-                .waitSeconds(0.7)
+                .waitSeconds(1.3)
 
                 //place pixel on backdrop
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
@@ -340,7 +341,8 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.9,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})//0.375-0.513//arm->0.52 //0.50
                 .UNSTABLE_addTemporalMarkerOffset(1.8,()->{arm.setArmPos(0.15, 0.16);})//0.2
                 .setReversed(false)
-                //pixel intake // round 2-------
+                //pixel intake // round 2------------------------------------------------------------
+
                 .build();
 
 
@@ -394,13 +396,13 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 telemetry.addLine("Don't see the beacon :(");
             }
             if (gamepad1.b){
-                drive.followTrajectorySequence(AutoTrajectoryLeft);
-            }
-            if (gamepad1.y){
                 drive.followTrajectorySequence(AutoTrajectoryRight);
             }
-            if (gamepad1.x){
+            if (gamepad1.y){
                 drive.followTrajectorySequence(AutoTrajectoryCenter);
+            }
+            if (gamepad1.x){
+                drive.followTrajectorySequence(AutoTrajectoryLeft);
             }
             telemetry.addData("LeftFrontCurrent", drive.getMotorCurrent().get(0));
             telemetry.addData("RightFrontCurrent", drive.getMotorCurrent().get(1));
