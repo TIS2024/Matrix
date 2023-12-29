@@ -160,6 +160,7 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.9,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})//0.375-0.513//arm->0.52 //0.50
                 .UNSTABLE_addTemporalMarkerOffset(1.8,()->{arm.setArmPos(0.15, 0.16);})//0.2
                 .setReversed(false)
+                .strafeRight(10)
                 //pixel intake // round 2-------
                 .build();
 
@@ -249,6 +250,7 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.5,()->{Intake.intakeArmServo.setPosition(0.95);Intake.intakeWristServo.setPosition(0.4);}) //0.0
                 .UNSTABLE_addTemporalMarkerOffset(0.9,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})//0.375-0.513//arm->0.52 //0.50
                 .UNSTABLE_addTemporalMarkerOffset(1.8,()->{arm.setArmPos(0.15, 0.16);})//0.2
+                .strafeRight(10)
                 .setReversed(false)
                 .build();
         //pixel intake // round 2-------
@@ -340,6 +342,7 @@ public class BlueSafeAutoOne1 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.5,()->{Intake.intakeArmServo.setPosition(0.95);Intake.intakeWristServo.setPosition(0.4);}) //0.0
                 .UNSTABLE_addTemporalMarkerOffset(0.9,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})//0.375-0.513//arm->0.52 //0.50
                 .UNSTABLE_addTemporalMarkerOffset(1.8,()->{arm.setArmPos(0.15, 0.16);})//0.2
+                .strafeRight(6)
                 .setReversed(false)
                 //pixel intake // round 2------------------------------------------------------------
 

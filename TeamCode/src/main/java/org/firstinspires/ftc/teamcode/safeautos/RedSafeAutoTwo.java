@@ -159,6 +159,8 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
+                .strafeRight(5)
+                .back(5)
                 .resetConstraints()
                 .setReversed(false)
                 .build();
@@ -246,6 +248,8 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
+                .strafeRight(5)
+                .back(5)
                 .resetConstraints()
                 .setReversed(false)
                 .build();
@@ -334,6 +338,8 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
+                .strafeRight(5)
+                .back(5)
                 .resetConstraints()
                 .setReversed(false)
                 .build();
