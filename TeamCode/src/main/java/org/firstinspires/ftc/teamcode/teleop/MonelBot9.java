@@ -670,12 +670,12 @@ public class MonelBot9 extends LinearOpMode {
                 if (crankToggle) {
                     TrajectorySequence openCrank = drive.trajectorySequenceBuilder(startPose)
                             .addTemporalMarker(()->{arm.setArmPos(0.25, 0.16);})
-                            .waitSeconds(0.2)
+                            .waitSeconds(0.1)
                             .addTemporalMarker(()->{Intake.crankServo.setPosition(0.35);})
-                            .waitSeconds(0.2)
+                            .waitSeconds(0.3)
                             .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
                             .waitSeconds(0.1)
-                                    .build();
+                            .build();
                     drive.followTrajectorySequenceAsync(openCrank);
                     drive.update();
                 }
@@ -683,14 +683,15 @@ public class MonelBot9 extends LinearOpMode {
                 {
                     TrajectorySequence closeCrank = drive.trajectorySequenceBuilder(startPose)
                             .addTemporalMarker(()->{arm.setArmPos(0.25, 0.16);})
-                            .waitSeconds(0.2)
+                            .waitSeconds(0.1)
                             .addTemporalMarker(()->{Intake.crankServo.setPosition(0.69);})
-                            .waitSeconds(0.2)
+                            .waitSeconds(0.4)
                             .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
                             .waitSeconds(0.1)
                             .build();
                     drive.followTrajectorySequenceAsync(closeCrank);
                     drive.update();
+
                 }
             }
 

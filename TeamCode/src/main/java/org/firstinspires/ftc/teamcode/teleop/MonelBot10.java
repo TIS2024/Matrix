@@ -449,10 +449,10 @@ public class MonelBot10 extends LinearOpMode {
                     break;
                 case OUTTAKE_OUTPUT:
                     ArmV2.SetArmPosition(0.5, 0.16);
-                    if (outputTimer.milliseconds()>=500){ //300
+                    if (outputTimer.milliseconds()>=400){ //300
                         ArmV2.SetArmPosition(0.5, 0.66);
                     }
-                    if (outputTimer.milliseconds() >= 800){ // 500
+                    if (outputTimer.milliseconds() >= 500){ // 500
                         outputTimer.reset();
                         if (sliderCounter != 0)
                         {
@@ -466,7 +466,7 @@ public class MonelBot10 extends LinearOpMode {
                     }
                     break;
                 case OUTTAKE_SLIDER:
-                    if (outputTimer.milliseconds() >= 800){ //800
+                    if (outputTimer.milliseconds() >= 100){ //800
                         if (sliderCounter == 1) {
                             output_power = lifter_pid(kp, ki, kd, levelOne);
                             if (output_power > 0.9) {
@@ -609,7 +609,7 @@ public class MonelBot10 extends LinearOpMode {
                 TrajectorySequence DropPixelOne = drive.trajectorySequenceBuilder(startPose)
                         .addTemporalMarker(()->{ArmV2.DropPixel(0.79);})
                         .waitSeconds(0.3)
-                        .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);}) //0.48
+                        .addTemporalMarker(()->{arm.setArmPos(0.48, 0.66);}) //0.48
                         .waitSeconds(0.2)
                         .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
                         .build();
@@ -636,8 +636,8 @@ public class MonelBot10 extends LinearOpMode {
 //                }
                 TrajectorySequence DropPixelTwo = drive.trajectorySequenceBuilder(startPose)
                         .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                        .waitSeconds(0.3) //0.3
-                        .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66); ArmV2.SliderLink(0.95);})
+                        .waitSeconds(0.5) //0.3
+                        .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16); ArmV2.SliderLink(0.95);})
                         .waitSeconds(0.5)
                         .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                         .waitSeconds(0.2)
@@ -698,11 +698,11 @@ public class MonelBot10 extends LinearOpMode {
                 if (crankToggle) {
                     TrajectorySequence openCrank = drive.trajectorySequenceBuilder(startPose)
                             .addTemporalMarker(()->{arm.setArmPos(0.25, 0.16);})
-                            .waitSeconds(0.05)
+                            .waitSeconds(0.1)
                             .addTemporalMarker(()->{Intake.crankServo.setPosition(0.35);})
-                            .waitSeconds(0.05)
+                            .waitSeconds(0.3)
                             .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                            .waitSeconds(0.05)
+                            .waitSeconds(0.1)
                             .build();
                     drive.followTrajectorySequenceAsync(openCrank);
                     drive.update();
@@ -711,11 +711,11 @@ public class MonelBot10 extends LinearOpMode {
                 {
                     TrajectorySequence closeCrank = drive.trajectorySequenceBuilder(startPose)
                             .addTemporalMarker(()->{arm.setArmPos(0.25, 0.16);})
-                            .waitSeconds(0.05)
+                            .waitSeconds(0.1)
                             .addTemporalMarker(()->{Intake.crankServo.setPosition(0.69);})
-                            .waitSeconds(0.05)
+                            .waitSeconds(0.4)
                             .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                            .waitSeconds(0.05)
+                            .waitSeconds(0.1)
                             .build();
                     drive.followTrajectorySequenceAsync(closeCrank);
                     drive.update();
