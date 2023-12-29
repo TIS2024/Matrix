@@ -151,7 +151,7 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                .strafeLeft(5)
+                .strafeLeft(32)
                 .back(5)
                 .resetConstraints()
                 .setReversed(false)
