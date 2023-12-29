@@ -156,7 +156,8 @@ public class RedSafeAutoOne1 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.5,()->{Intake.intakeArmServo.setPosition(0.95);Intake.intakeWristServo.setPosition(0.4);}) //0.0
                 .UNSTABLE_addTemporalMarkerOffset(0.9,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})//0.375-0.513//arm->0.52 //0.50
                 .UNSTABLE_addTemporalMarkerOffset(1.8,()->{arm.setArmPos(0.15, 0.16);})//0.2
-                .strafeLeft(6)
+                .lineToSplineHeading(new Pose2d(50, -60, Math.PI/2))
+//                .strafeLeft(6)
                 .setReversed(false)
                 //pixel intake // round 2------------------------------------------------------------
                 .build();
@@ -247,8 +248,9 @@ public class RedSafeAutoOne1 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.5,()->{Intake.intakeArmServo.setPosition(0.95);Intake.intakeWristServo.setPosition(0.4);}) //0.0
                 .UNSTABLE_addTemporalMarkerOffset(0.9,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})//0.375-0.513//arm->0.52 //0.50
                 .UNSTABLE_addTemporalMarkerOffset(1.8,()->{arm.setArmPos(0.15, 0.16);})//0.2
+                .lineToSplineHeading(new Pose2d(50, -60, Math.PI/2))
                 .setReversed(false)
-                .strafeLeft(10)
+//                .strafeLeft(10)
                 .build();
         //pixel intake // round 2-------
 
@@ -341,9 +343,10 @@ public class RedSafeAutoOne1 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.5,()->{Intake.intakeArmServo.setPosition(0.95);Intake.intakeWristServo.setPosition(0.4);}) //0.0
                 .UNSTABLE_addTemporalMarkerOffset(0.9,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})//0.375-0.513//arm->0.52 //0.50
                 .UNSTABLE_addTemporalMarkerOffset(1.8,()->{arm.setArmPos(0.15, 0.16);})//0.2
+                .lineToSplineHeading(new Pose2d(50, -60, Math.PI/2))
                 .setReversed(false)
                 //pixel intake // round 2-------
-                .strafeLeft(10)
+//                .strafeLeft(10)
                 .build();
 
 

@@ -88,7 +88,9 @@ public class MeepMeepTesting {
                                         //   towards bakdrop
                                         .splineToConstantHeading(new Vector2d(-34,12),0)
                                         .splineToConstantHeading(new Vector2d(28,12),0)
-                                        .splineToConstantHeading(new Vector2d(47,34),0)
+                                        .splineToConstantHeading(new Vector2d(54,32),0)
+                                        .lineToSplineHeading(new Pose2d(50, 60, Math.PI/2))
+//                                        .lineToConstantHeading(new Vector2d(60, 10))
 //                                        .lineToConstantHeading(new Vector2d(47.3, -35))
                                         .setReversed(false)
 //                                        //   2nd cycle
@@ -193,8 +195,8 @@ public class MeepMeepTesting {
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-//                .addEntity(mySecondBot)
-                .addEntity(myThirdBot)
+                .addEntity(mySecondBot)
+//                .addEntity(myThirdBot)
                 .start();
     }
 }
