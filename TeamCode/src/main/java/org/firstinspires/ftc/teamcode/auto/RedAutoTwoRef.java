@@ -25,8 +25,8 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import java.util.List;
 
 @Config
-@Autonomous(name = "Monel_RedSafeAutoTwo")
-public class RedSafeAutoTwo extends LinearOpMode {
+@Autonomous(name = "RedAutoTwoRef")
+public class RedAutoTwoRef extends LinearOpMode {
     SampleMecanumDrive drive = null;
     Slider slider = null;
     ArmV2 arm = null;
