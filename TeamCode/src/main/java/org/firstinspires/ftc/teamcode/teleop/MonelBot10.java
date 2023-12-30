@@ -23,6 +23,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.angle_pid.PIDConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.SlewRateLimiter;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
@@ -47,6 +48,7 @@ public class MonelBot10 extends LinearOpMode {
     Hanger hanger = null;
     Intake intake = null;
     Drone drone = null;
+    SlewRateLimiter slewRateLimiter = null;
     public static DcMotorEx leftFront, leftRear, rightFront, rightRear;
     ElapsedTime inputTimer, outputTimer, angle_timer, dropTimer;
     public static double
@@ -140,7 +142,7 @@ public class MonelBot10 extends LinearOpMode {
         AnalogInput intakeArmAnalogInput = hardwareMap.get(AnalogInput.class, "intakeArmAnalogInput");
         AnalogInput intakeWristAnalogInput = hardwareMap.get(AnalogInput.class, "intakeWristAnalogInput");
         AnalogInput crankAnalogInput = hardwareMap.get(AnalogInput.class, "crankAnalogInput");
-        AnalogInput wristAnalogInput = hardwareMap.get(AnalogInput.class, "wrist`AnalogInput");
+        AnalogInput wristAnalogInput = hardwareMap.get(AnalogInput.class, "wristAnalogInput");
         AnalogInput armOneAnalogInput = hardwareMap.get(AnalogInput.class, "armOneAnalogInput");
         AnalogInput armTwoAnalogInput = hardwareMap.get(AnalogInput.class, "armTwoAnalogInput");
 
@@ -360,7 +362,7 @@ public class MonelBot10 extends LinearOpMode {
                 case INTAKE_FINAL:
                     if (Intake.intakeArmServo.getPosition() == 1 && inputTimer.milliseconds() >= 300) {  //350
                         ArmV2.SetArmPosition(0.15, 0.16);
-                        if (ArmV2.armServoTwo.getPosition() == 0.15) { //350 //400
+                        if (ArmV2.armServoTwo.getPosition() == 0.15 && wristPosition >= 290) { //350 //400
                             ArmV2.DropPixel(0.5);
                             ArmV2.SetArmPosition(0.1, 0.16);
                             output_power = lifter_pid(kp, ki, kd, -10);
@@ -388,6 +390,10 @@ public class MonelBot10 extends LinearOpMode {
                             }
                             inputTimer.reset();
                             inputState = IntakeState.INTAKE_START;
+                        }
+                        else {
+                            ArmV2.wristServo.setPosition(0.16);
+                            inputState = IntakeState.INTAKE_FINAL;
                         }
                     }
                     break;
@@ -511,7 +517,7 @@ public class MonelBot10 extends LinearOpMode {
             }
             if (sliderCounter != 0 && gamepad2.left_stick_x != 0){
                 double armSliderValue = Range.clip(-gamepad2.left_stick_y,0,1);
-                double mappedYaw = Range.scale(gamepad2.left_stick_x, -1, 1, 0.60, 0.30);
+                double mappedYaw = Range.scale(gamepad2.left_stick_x, -1, 1, 0.55, 0.35);
                 double mappedCrank = Range.scale(armSliderValue, 0, 1, 0.95, 0.2);
 
                 ArmV2.armServoTwo.setPosition(mappedYaw);

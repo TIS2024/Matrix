@@ -82,8 +82,8 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                 //   towards pixel stack
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
 
-                .lineToSplineHeading(new Pose2d(-39 , 11, -Math.PI))
-                .lineToSplineHeading(new Pose2d(-51 , 10, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-35 , 11, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-51 , 11, -Math.PI))
 
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
@@ -140,7 +140,7 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                 }})
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(200, output_power);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.66);})
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
                 .waitSeconds(0.5)
                 .strafeRight(12)
                 .waitSeconds(0.2)
@@ -198,7 +198,7 @@ public class BlueSafeAutoTwo extends LinearOpMode {
 
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.64);})
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.65);})
                 .waitSeconds(0.8)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.7)
@@ -231,7 +231,7 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                 }})
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(200, output_power);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.53, 0.66);})
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
                 .waitSeconds(0.5)
                 .strafeLeft(9)
                 .waitSeconds(0.2)
@@ -324,7 +324,7 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(200, output_power);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.66);})
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
                 .waitSeconds(0.5)
                 .strafeLeft(15)
                 .waitSeconds(0.5)
