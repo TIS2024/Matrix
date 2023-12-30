@@ -1,15 +1,10 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_RPM;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.TICKS_PER_REV;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.getMotorVelocityF;
+import static com.sun.tools.javac.code.Type.map;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.profile.MotionProfile;
-import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
-import com.acmerobotics.roadrunner.profile.MotionState;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -21,8 +16,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -33,6 +26,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.SlewRateLimiter;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
+import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.ArmV2;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.Drone;
@@ -42,6 +36,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Slider;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 import java.util.List;
+import java.util.Map;
 
 @TeleOp(group = "Robot Main")
 @Config
@@ -53,14 +48,12 @@ public class MonelBot11 extends LinearOpMode {
     Hanger hanger = null;
     Intake intake = null;
     Drone drone = null;
-
     SlewRateLimiter slewRateLimiter = null;
     private SlewRateLimiter fw;
     private SlewRateLimiter str;
 
-
     public static DcMotorEx leftFront, leftRear, rightFront, rightRear;
-    ElapsedTime inputTimer, outputTimer, angle_timer, dropTimer, elapsedTime;
+    ElapsedTime inputTimer, outputTimer, angle_timer, dropTimer;
     public static double
             armServoOnePos, armServoTwoPos, wristServoPos, deliveryServoPos, armSliderServoPos;
     public static double
@@ -72,10 +65,11 @@ public class MonelBot11 extends LinearOpMode {
     public static double
             lifter_posL = 0, lifter_posR = 0, error_lifter, error_diff, error_int, error_lifterR, error_diffR, error_intR, errorprev, errorprevR, output_lifter, output_lifterR, output_power, target, dropVal;
 
-    double kP_drive = 4, kI_drive = 0, kD_drive=0.5;
     public static double kp = 4, ki, kd = 1.7;
     double Kp = PIDConstants.Kp, Ki = PIDConstants.Ki, Kd = PIDConstants.Kd;
-    private double lastError = 0, integralSum = 0;;
+    private double lastError = 0, integralSum = 0;
+    public static double fw_r = 4;
+    public static double str_r = 4;
     private BHI260IMU imu;
     public enum IntakeState {
         INTAKE_START,
@@ -108,11 +102,6 @@ public class MonelBot11 extends LinearOpMode {
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         // TODO: reverse any motors using DcMotor.setDirection()
         leftFront.setDirection(DcMotorEx.Direction.FORWARD);
         rightRear.setDirection(DcMotorEx.Direction.REVERSE);
@@ -137,7 +126,6 @@ public class MonelBot11 extends LinearOpMode {
         outputTimer = new ElapsedTime();
         angle_timer = new ElapsedTime();
         dropTimer = new ElapsedTime();
-        elapsedTime = new ElapsedTime();
 
         Pose2d startPose = new Pose2d(0, 0, Math.toRadians(180));
         drive.setPoseEstimate(startPose);
@@ -168,13 +156,6 @@ public class MonelBot11 extends LinearOpMode {
         TwoWheelTrackingLocalizer myLocalizer = new TwoWheelTrackingLocalizer(hardwareMap, drive);
         myLocalizer.setPoseEstimate(PoseStorage.currentPose);
 
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(4, 0, 0.5, getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
-
-        drive.setPIDFCoefficients(DcMotor.RunMode.RUN_WITHOUT_ENCODER, pidfCoefficients);
-        drive.setPIDFCoefficients(rightFront.getMode(), pidfCoefficients);
-        drive.setPIDFCoefficients(leftRear.getMode(), pidfCoefficients);
-        drive.setPIDFCoefficients(rightRear.getMode(), pidfCoefficients);
-
         while (opModeInInit()){
             ArmV2.SetArmPosition(0.15,0.16);
             Intake.crankServo.setPosition(0.69);
@@ -189,7 +170,6 @@ public class MonelBot11 extends LinearOpMode {
             inputTimer.reset();
             outputTimer.reset();
             dropTimer.reset();
-            elapsedTime.reset();
             intakeCounter = 0;
             sliderCounter = 0;
         }
@@ -214,8 +194,6 @@ public class MonelBot11 extends LinearOpMode {
             double x = gamepad1.left_stick_x;
             double rx = gamepad1.right_stick_x;
 
-            joystickScalar(y,x);
-
             if (currentGamepad1.start && !previousGamepad1.start) {
                 imu.resetYaw();
             }
@@ -223,10 +201,15 @@ public class MonelBot11 extends LinearOpMode {
             // Main teleop loop goes here
 
             //drivetrain ---------------------------------------------------------------------------
-
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+
+            fw = new SlewRateLimiter(fw_r);
+            str = new SlewRateLimiter(str_r);
+
+            fw.calculate(rotX);
+            str.calculate(rotY);
 
             rotX = rotX * 1.1;
 
@@ -236,12 +219,11 @@ public class MonelBot11 extends LinearOpMode {
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
 
+//            DriveTrain.setPower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
             leftFront.setPower(frontLeftPower);
             leftRear.setPower(backLeftPower);
             rightFront.setPower(frontRightPower);
             rightRear.setPower(backRightPower);
-
-//            drive.setWeightedDrivePower(new Pose2d(x, y, rx));
 
             myLocalizer.update();
 
@@ -392,10 +374,9 @@ public class MonelBot11 extends LinearOpMode {
                     break;
                 case INTAKE_FINAL:
                     if (Intake.intakeArmServo.getPosition() == 1 && inputTimer.milliseconds() >= 300) {  //350
-                        ArmV2.DropPixel(1);
                         ArmV2.SetArmPosition(0.15, 0.16);
                         if (ArmV2.armServoTwo.getPosition() == 0.15) { //350 //400
-//                            ArmV2.DropPixel(0.5);
+                            ArmV2.DropPixel(0.5);
                             ArmV2.SetArmPosition(0.1, 0.16);
                             output_power = lifter_pid(kp, ki, kd, -10);
                             if (output_power > 0.9) {
@@ -595,6 +576,28 @@ public class MonelBot11 extends LinearOpMode {
                 drive.update();
             }
 
+//            if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 2) && (Intake.intakeArmServo.getPosition() == 1)){
+//                intakeCounter = 0;
+//                TrajectorySequence OneplusOne = drive.trajectorySequenceBuilder(startPose)
+//                        .addTemporalMarker(()->{Intake.IntakePixel(0.95);})
+//                        .waitSeconds(0.1)
+//                        .addTemporalMarker(()->{
+//                            ArmV2.DropPixel(0.75);})
+//                        .addTemporalMarker(()->{arm.setArmPos(0.25, 0.16);})
+//                        .waitSeconds(0.3)
+//                        .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.95);})
+//                        .waitSeconds(0.2)
+//                        .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.38);})
+//                        .waitSeconds(0.4)
+//                        .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
+//                        .waitSeconds(0.2)
+//                        .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4); Intake.intakeWristServo.setPosition(0.47);})
+//                        .waitSeconds(0.2)
+//                        .build();
+//                drive.followTrajectorySequenceAsync(OneplusOne);
+//                drive.update();
+//            }
+
             if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper && (Intake.intakeArmServo.getPosition() < 0.75)){
                 TrajectorySequence OuttakeArm = drive.trajectorySequenceBuilder(startPose)
                         .addTemporalMarker(()->{ArmV2.DropPixel(0.5);})
@@ -655,7 +658,14 @@ public class MonelBot11 extends LinearOpMode {
                 } else if (output_power < 0.2) {
                     output_power = 0;
                 }
-
+//                ArmV2.DropPixel(1);
+//                if( ArmV2.deliveryServo.getPosition() == 1) { //dropTimer.milliseconds() >= 800 &&
+//                    arm.setArmPos(0.4, 0.16);
+//                    if( wristPosition >= 280) { //dropTimer.milliseconds()>=1200 &&
+//                        arm.setArmPos(0.15, 0.16);
+//                        slider.extendTo(levelZero, output_power);
+//                    }
+//                }
                 TrajectorySequence DropPixelTwo = drive.trajectorySequenceBuilder(startPose)
                         .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                         .waitSeconds(0.8) //0.3
@@ -682,7 +692,12 @@ public class MonelBot11 extends LinearOpMode {
             if (currentGamepad1.x && !previousGamepad1.x){
                 Drone.shootDrone();
             }
-
+//            if (currentGamepad1.dpad_right && !previousGamepad1.dpad_right && sliderCounter != 0){
+//                ArmV2.SetWiperPositionRight();
+//            }
+//            if (currentGamepad1.dpad_left && !previousGamepad1.dpad_left && sliderCounter != 0){
+//                ArmV2.SetWiperPositionLeft();
+//            }
             if(currentGamepad1.back && !previousGamepad1.back){
                 Hanger.ExtendHanger();
             }
@@ -831,6 +846,7 @@ public class MonelBot11 extends LinearOpMode {
         double output = (error * Kp) + (derivative * Kd) + (integralSum * Ki);
         return output;
     }
+
     public double angleWrap(double radians){
         while(radians > Math.PI){
             radians -= 2 * Math.PI;
@@ -840,22 +856,5 @@ public class MonelBot11 extends LinearOpMode {
         }
         return radians;
     }
-    MotionProfile profile = MotionProfileGenerator.generateSimpleMotionProfile(
-            new MotionState(0, 0, 0),
-            new MotionState(60, 0, 0),
-            50,
-            60,
-            100
-    );
-    public static double joystickScalar(double num, double min) {
-        return joystickScalar(num, min, 0.66, 1.2);
-    }
 
-    private static double joystickScalar(double n, double m, double l, double a) {
-        return Math.signum(n) * m
-                + (1 - m) *
-                (Math.abs(n) > l ?
-                        Math.pow(Math.abs(n), Math.log(l / a) / Math.log(l)) * Math.signum(n) :
-                        n / a);
-    }
 }
