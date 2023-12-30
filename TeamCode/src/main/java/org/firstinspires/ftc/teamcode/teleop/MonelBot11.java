@@ -68,8 +68,8 @@ public class MonelBot11 extends LinearOpMode {
     public static double kp = 4, ki, kd = 1.7;
     double Kp = PIDConstants.Kp, Ki = PIDConstants.Ki, Kd = PIDConstants.Kd;
     private double lastError = 0, integralSum = 0;
-    public static double fw_r = 4;
-    public static double str_r = 4;
+    public static double fw_r = 6;
+    public static double str_r = 8;
     private BHI260IMU imu;
     public enum IntakeState {
         INTAKE_START,
@@ -210,6 +210,8 @@ public class MonelBot11 extends LinearOpMode {
 
             fw.calculate(rotX);
             str.calculate(rotY);
+
+            joystickScalar(rotX, rotY);
 
             rotX = rotX * 1.1;
 
@@ -855,6 +857,17 @@ public class MonelBot11 extends LinearOpMode {
             radians += 2 * Math.PI;
         }
         return radians;
+    }
+    public static double joystickScalar(double num, double min) {
+        return joystickScalar(num, min, 0.66, 4);
+    }
+
+    private static double joystickScalar(double n, double m, double l, double a) {
+        return Math.signum(n) * m
+                + (1 - m) *
+                (Math.abs(n) > l ?
+                        Math.pow(Math.abs(n), Math.log(l / a) / Math.log(l)) * Math.signum(n) :
+                        n / a);
     }
 
 }

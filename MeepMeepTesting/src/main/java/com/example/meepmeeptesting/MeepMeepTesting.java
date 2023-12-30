@@ -79,19 +79,22 @@ public class MeepMeepTesting {
                 .followTrajectorySequence(drive ->
                                 drive.trajectorySequenceBuilder(new Pose2d(-39, 64, -Math.PI))
                                         // bottom line
-                                        .lineToSplineHeading(new Pose2d(-35,32, -Math.PI))
-                                        .lineToSplineHeading(new Pose2d(-35,11, -Math.PI))
-                                        //   towards pixel stack
-                                        .lineToSplineHeading(new Pose2d(-51 , 10, -Math.PI))
-                                        //   mid line
-//                                           .lineToSplineHeading(new Pose2d(-51 , -12, -Math.PI))
-                                        .setReversed(true)
-                                        //   towards bakdrop
-                                        .splineToConstantHeading(new Vector2d(-34,12),0)
-                                        .splineToConstantHeading(new Vector2d(28,12),0)
-                                        .splineToConstantHeading(new Vector2d(54,32),0)
-                                        .lineToConstantHeading(new Vector2d(50, 60))
-                                        .turn(Math.PI/2)
+                                        .lineToSplineHeading(new Pose2d(-45,24, -Math.PI))
+                                        .lineToSplineHeading(new Pose2d(-50,24,0))
+//                                        //   towards pixel stack
+//                                        .lineToSplineHeading(new Pose2d(-51 , 12, 0))
+//                                        //   mid line
+////                                           .lineToSplineHeading(new Pose2d(-51 , -12, -Math.PI))
+//                                        .setReversed(true)
+//                                        //   towards bakdrop
+////                                        .splineToConstantHeading(new Vector2d(-38,9),0)
+                                        .lineToConstantHeading(new Vector2d(-47.5,36))
+                                        .splineToConstantHeading(new Vector2d(28,59),0)
+                                        .splineToConstantHeading(new Vector2d(48,42),0)
+//                                        .lineToConstantHeading(new Vector2d(50, 60))
+//                                        .turn(Math.PI/2)
+
+
 //                                        .lineToSplineHeading(new Pose2d(50, 10, -Math.PI/2))
 //                                        .lineToConstantHeading(new Vector2d(60, 10))
                                         .setReversed(false)
