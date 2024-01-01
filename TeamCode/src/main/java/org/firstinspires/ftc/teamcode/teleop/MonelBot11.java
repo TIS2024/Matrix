@@ -3,8 +3,14 @@ package org.firstinspires.ftc.teamcode.teleop;
 import static com.sun.tools.javac.code.Type.map;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.profile.MotionProfile;
+import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
+import com.acmerobotics.roadrunner.profile.MotionState;
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -22,6 +28,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.angle_pid.PIDConstants;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.SlewRateLimiter;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
@@ -53,7 +60,7 @@ public class MonelBot11 extends LinearOpMode {
     private SlewRateLimiter str;
 
     public static DcMotorEx leftFront, leftRear, rightFront, rightRear;
-    ElapsedTime inputTimer, outputTimer, angle_timer, dropTimer;
+    ElapsedTime inputTimer, outputTimer, angle_timer, dropTimer, elapsedTime;
     public static double
             armServoOnePos, armServoTwoPos, wristServoPos, deliveryServoPos, armSliderServoPos;
     public static double
@@ -67,9 +74,14 @@ public class MonelBot11 extends LinearOpMode {
 
     public static double kp = 4, ki, kd = 1.7;
     double Kp = PIDConstants.Kp, Ki = PIDConstants.Ki, Kd = PIDConstants.Kd;
+    public static double kp_x = 2, ki_x = 0, kd_x = 0, kp_y = 2, ki_y = 0, kd_y = 0, kp_t = 2, ki_t = 0, kd_t = 0;
+    PIDController xControl = new PIDController(kp_x, ki_x, kd_x);
+    PIDController yControl = new PIDController(kp_y, ki_y, kd_y);
+    PIDController thetaControl = new PIDController(kp_t, ki_t, kd_t);
     private double lastError = 0, integralSum = 0;
     public static double fw_r = 6;
     public static double str_r = 8;
+    public static double fastSpeed = 1, slowSpeed = 0.5;
     private BHI260IMU imu;
     public enum IntakeState {
         INTAKE_START,
@@ -126,6 +138,7 @@ public class MonelBot11 extends LinearOpMode {
         outputTimer = new ElapsedTime();
         angle_timer = new ElapsedTime();
         dropTimer = new ElapsedTime();
+        elapsedTime = new ElapsedTime();
 
         Pose2d startPose = new Pose2d(0, 0, Math.toRadians(180));
         drive.setPoseEstimate(startPose);
@@ -156,6 +169,14 @@ public class MonelBot11 extends LinearOpMode {
         TwoWheelTrackingLocalizer myLocalizer = new TwoWheelTrackingLocalizer(hardwareMap, drive);
         myLocalizer.setPoseEstimate(PoseStorage.currentPose);
 
+        MotionProfile profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                new MotionState(0, 0, 0),
+                new MotionState(100, 0, 0),
+                DriveConstants.MAX_VEL,
+                DriveConstants.MAX_ACCEL,
+                100
+        );
+
         while (opModeInInit()){
             ArmV2.SetArmPosition(0.15,0.16);
             Intake.crankServo.setPosition(0.69);
@@ -170,6 +191,7 @@ public class MonelBot11 extends LinearOpMode {
             inputTimer.reset();
             outputTimer.reset();
             dropTimer.reset();
+            elapsedTime.reset();
             intakeCounter = 0;
             sliderCounter = 0;
         }
@@ -202,6 +224,12 @@ public class MonelBot11 extends LinearOpMode {
 
             //drivetrain ---------------------------------------------------------------------------
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            MotionState state = profile.get(elapsedTime.time());
+
+            double targetPose = myLocalizer.getWheelPositions().get(0);
+
+            double xCon = xControl.calculate(state.getX(), targetPose);
+
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
@@ -216,16 +244,15 @@ public class MonelBot11 extends LinearOpMode {
             rotX = rotX * 1.1;
 
             double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-            double frontLeftPower = (rotY + rotX + rx) / denominator;
-            double backLeftPower = (rotY - rotX + rx) / denominator;
-            double frontRightPower = (rotY - rotX - rx) / denominator;
-            double backRightPower = (rotY + rotX - rx) / denominator;
+            double frontLeftPower = (rotY + rotX + rx) / denominator + xCon;
+            double backLeftPower = (rotY - rotX + rx) / denominator + xCon;
+            double frontRightPower = (rotY - rotX - rx) / denominator + xCon;
+            double backRightPower = (rotY + rotX - rx) / denominator + xCon;
 
-//            DriveTrain.setPower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
-            leftFront.setPower(frontLeftPower);
-            leftRear.setPower(backLeftPower);
-            rightFront.setPower(frontRightPower);
-            rightRear.setPower(backRightPower);
+            leftFront.setPower(fastSpeed * frontLeftPower);
+            leftRear.setPower(fastSpeed * backLeftPower);
+            rightFront.setPower(fastSpeed * frontRightPower);
+            rightRear.setPower(fastSpeed * backRightPower);
 
             myLocalizer.update();
 
@@ -239,6 +266,12 @@ public class MonelBot11 extends LinearOpMode {
             }
             if (currentGamepad1.right_trigger > 0.5 && !(previousGamepad1.right_trigger > 0.5)){
                 drive.turn(turn180);
+            }
+            if (currentGamepad2.left_trigger>0.3){
+                leftFront.setPower(slowSpeed * frontLeftPower);
+                leftRear.setPower(slowSpeed * backLeftPower);
+                rightFront.setPower(slowSpeed * frontRightPower);
+                rightRear.setPower(slowSpeed * backRightPower);
             }
             //--------------------------------------------------------------------------------------
 
@@ -760,12 +793,7 @@ public class MonelBot11 extends LinearOpMode {
             if (currentGamepad2.start && !previousGamepad2.start){
                 intakeToggle = !intakeToggle;
             }
-            if (currentGamepad2.left_trigger>0.1 && !(previousGamepad2.left_trigger >0.1)){
 
-            }
-            else {
-                DriveTrain.setPower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
-            }
             if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper){
                 gripperServoPos = 0.75;
                 Intake.IntakePixel(gripperServoPos);
