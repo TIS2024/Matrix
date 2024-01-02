@@ -85,7 +85,7 @@ public class RedInAutoTwo extends LinearOpMode {
                 //   towards pixel stack
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
 
-                .lineToSplineHeading(new Pose2d(-51 , -11, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-50,-35,-Math.PI))
 
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
@@ -102,10 +102,10 @@ public class RedInAutoTwo extends LinearOpMode {
                 .setReversed(true)
 
                 //   towards backdrop
-                .splineToConstantHeading(new Vector2d(-34,-12),0)
-                .splineToConstantHeading(new Vector2d(28,-12),0)
+                .lineToConstantHeading(new Vector2d(-40,-58))
+                .lineToConstantHeading(new Vector2d(28,-58))
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(53,-43.5),0)
+                .splineToConstantHeading(new Vector2d(53,-42), 0)
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
@@ -157,8 +157,10 @@ public class RedInAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-//                .lineToSplineHeading(new Pose2d(50, -10, Math.PI/2))
-//                .lineToConstantHeading(new Vector2d(60, -10))
+//                .lineToConstantHeading(new Vector2d(48, -12))
+//                .turn(-Math.PI/2)
+                .lineToSplineHeading(new Pose2d(48, -10, Math.PI/2))
+                .lineToConstantHeading(new Vector2d(60, -10))
 //                .strafeRight(20)
 //                .back(5)
                 .resetConstraints()
@@ -168,6 +170,7 @@ public class RedInAutoTwo extends LinearOpMode {
         TrajectorySequence AutoTrajectoryCenter = drive.trajectorySequenceBuilder(startPose)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
                 // right line
+                
                 .lineToSplineHeading(new Pose2d(-42,-32,0))
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
