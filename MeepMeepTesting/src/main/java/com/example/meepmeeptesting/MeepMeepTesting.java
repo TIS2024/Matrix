@@ -77,10 +77,10 @@ public class MeepMeepTesting {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 11.71)
                 .followTrajectorySequence(drive ->
-                                drive.trajectorySequenceBuilder(new Pose2d(-39, 64, -Math.PI))
+                                drive.trajectorySequenceBuilder(new Pose2d(-39, -64, -Math.PI))
                                         // bottom line
-                                        .lineToSplineHeading(new Pose2d(-45,24, -Math.PI))
-                                        .lineToSplineHeading(new Pose2d(-50,24,0))
+                                        .lineToSplineHeading(new Pose2d(-42,-32, -Math.PI))
+                                        .lineToSplineHeading(new Pose2d(-50,-35,0))
 //                                        //   towards pixel stack
 //                                        .lineToSplineHeading(new Pose2d(-51 , 12, 0))
 //                                        //   mid line
@@ -88,9 +88,9 @@ public class MeepMeepTesting {
 //                                        .setReversed(true)
 //                                        //   towards bakdrop
 ////                                        .splineToConstantHeading(new Vector2d(-38,9),0)
-                                        .lineToConstantHeading(new Vector2d(-47.5,36))
-                                        .splineToConstantHeading(new Vector2d(28,59),0)
-                                        .splineToConstantHeading(new Vector2d(48,42),0)
+                                        .lineToConstantHeading(new Vector2d(-47.5,-39))
+                                        .splineToConstantHeading(new Vector2d(28,-59),0)
+                                        .splineToConstantHeading(new Vector2d(48,-42),0)
 //                                        .lineToConstantHeading(new Vector2d(50, 60))
 //                                        .turn(Math.PI/2)
 
