@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.ArmV2;
 import org.firstinspires.ftc.teamcode.subsystems.Hanger;
@@ -65,7 +66,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
         while (opModeInInit()){
             slider.extendToHome();
             ArmV2.SetArmPosition(0.15, 0.16);
-            Intake.SetArmPosition(0.4,0.66);
+            Intake.SetArmPosition(0.5,0.66);
             Intake.IntakePixel(0.8);
             ArmV2.DropPixel(0.5);
             Intake.CrankPosition(0.69);
@@ -159,11 +160,9 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
+                .resetConstraints()
                 .lineToSplineHeading(new Pose2d(50, -10, Math.PI/2))
                 .lineToConstantHeading(new Vector2d(60, -10))
-//                .strafeRight(20)
-//                .back(5)
-                .resetConstraints()
                 .setReversed(false)
                 .build();
 
@@ -250,11 +249,9 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
+                .resetConstraints()
                 .lineToSplineHeading(new Pose2d(50, -10, Math.PI/2))
                 .lineToConstantHeading(new Vector2d(60, -10))
-//                .strafeRight(5)
-//                .back(5)
-                .resetConstraints()
                 .setReversed(false)
                 .build();
 
@@ -342,11 +339,9 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
+                .resetConstraints()
                 .lineToSplineHeading(new Pose2d(50, -10, Math.PI/2))
                 .lineToConstantHeading(new Vector2d(60, -10))
-//                .strafeRight(20)
-//                .back(5)
-                .resetConstraints()
                 .setReversed(false)
                 .build();
 
@@ -425,6 +420,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
             }
         }
         visionPortal.close();
+        PoseStorage.currentPose = drive.getPoseEstimate();
     }
     private void initTfod() {
 

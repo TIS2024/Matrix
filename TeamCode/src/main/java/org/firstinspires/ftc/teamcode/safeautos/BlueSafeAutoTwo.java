@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 import org.firstinspires.ftc.teamcode.subsystems.ArmV2;
 import org.firstinspires.ftc.teamcode.subsystems.Hanger;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -63,7 +64,7 @@ public class BlueSafeAutoTwo extends LinearOpMode {
         while (opModeInInit()){
             slider.extendToHome();
             ArmV2.SetArmPosition(0.15, 0.16);
-            Intake.SetArmPosition(0.4,0.66);
+            Intake.SetArmPosition(0.5,0.66);
             Intake.IntakePixel(0.8);
             ArmV2.DropPixel(0.5);
             Intake.CrankPosition(0.69);
@@ -414,6 +415,7 @@ public class BlueSafeAutoTwo extends LinearOpMode {
             drive.update();
             telemetry.update();
         }
+        PoseStorage.currentPose = drive.getPoseEstimate();
     }
     private void initTfod() {
 

@@ -63,8 +63,7 @@ public class MonelBot10 extends LinearOpMode {
     public static double
             error_servoOne, error_servoTwo, error_diffOne, error_diffTwo, error_prevOne, error_prevTwo, error_intOne, error_intTwo, output_servoOne, output_servoTwo;
     public static double kp = 4, ki, kd = 1.7;
-    double Kp = PIDConstants.Kp, Ki = PIDConstants.Ki, Kd = PIDConstants.Kd;
-    private double lastError = 0, integralSum = 0;;
+    public static double fastSpeed = 1, slowSpeed = 0.5;
     private BHI260IMU imu;
     public enum IntakeState {
         INTAKE_GRIP_COMMAND,
@@ -211,24 +210,23 @@ public class MonelBot10 extends LinearOpMode {
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
 
-//            DriveTrain.setPower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
-            leftFront.setPower(frontLeftPower);
-            leftRear.setPower(backLeftPower);
-            rightFront.setPower(frontRightPower);
-            rightRear.setPower(backRightPower);
+            leftFront.setPower(fastSpeed * frontLeftPower);
+            leftRear.setPower(fastSpeed * backLeftPower);
+            rightFront.setPower(fastSpeed * frontRightPower);
+            rightRear.setPower(fastSpeed * backRightPower);
 
             myLocalizer.update();
 
             // Retrieve your pose
             Pose2d myPose = myLocalizer.getPoseEstimate();
 
-            double turn90 = angleWrap(Math.toRadians(90) - botHeading);
-            double turn180 = angleWrap(Math.toRadians(180) - botHeading);
+            double turnStack = angleWrap(Math.toRadians(90) - botHeading);
+            double turnBackDrop = angleWrap(Math.toRadians(180) - botHeading);
             if (currentGamepad1.left_trigger > 0.5 && !(previousGamepad1.left_trigger > 0.5)){
-                drive.turn(turn90);
+                drive.turn(turnStack);
             }
             if (currentGamepad1.right_trigger > 0.5 && !(previousGamepad1.right_trigger > 0.5)){
-                drive.turn(turn180);
+                drive.turn(turnBackDrop);
             }
             //--------------------------------------------------------------------------------------
 
@@ -729,12 +727,7 @@ public class MonelBot10 extends LinearOpMode {
             if (currentGamepad2.start && !previousGamepad2.start){
                 intakeToggle = !intakeToggle;
             }
-            if (currentGamepad2.left_trigger>0.1 && !(previousGamepad2.left_trigger >0.1)){
 
-            }
-            else {
-                DriveTrain.setPower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
-            }
             if(currentGamepad2.x && previousGamepad2.x){
                 Intake.SetArmPosition(intakeArmServoPos, intakeWristServoPos);
             }

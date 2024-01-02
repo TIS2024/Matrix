@@ -79,7 +79,7 @@ public class MeepMeepTesting {
                 .followTrajectorySequence(drive ->
                                 drive.trajectorySequenceBuilder(new Pose2d(-39, -64, 0))
                                         // bottom line
-                                        .lineToSplineHeading(new Pose2d(-42,-32, 0))
+                                        .lineToSplineHeading(new Pose2d(-46,-40, Math.PI/2))
                                         .lineToSplineHeading(new Pose2d(-50,-35,-Math.PI))
 //                                        //   towards pixel stack
 //                                        .lineToSplineHeading(new Pose2d(-51 , 12, 0))
@@ -90,7 +90,7 @@ public class MeepMeepTesting {
 ////                                        .splineToConstantHeading(new Vector2d(-38,9),0)
                                         .lineToConstantHeading(new Vector2d(-38,-58))
                                         .lineToConstantHeading(new Vector2d(28,-58))
-                                        .splineToConstantHeading(new Vector2d(48,-42), 0)
+                                        .splineToConstantHeading(new Vector2d(52,-29), 0)
                                         .lineToSplineHeading(new Pose2d(48, -10, Math.PI/2))
                                         .lineToConstantHeading(new Vector2d(60, -10))
 

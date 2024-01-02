@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 import org.firstinspires.ftc.teamcode.subsystems.ArmV2;
 import org.firstinspires.ftc.teamcode.subsystems.Hanger;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -63,7 +64,7 @@ public class RedInAutoTwo extends LinearOpMode {
         while (opModeInInit()){
             slider.extendToHome();
             ArmV2.SetArmPosition(0.15, 0.16);
-            Intake.SetArmPosition(0.4,0.66);
+            Intake.SetArmPosition(0.5,0.66);
             Intake.IntakePixel(0.8);
             ArmV2.DropPixel(0.5);
             Intake.CrankPosition(0.69);
@@ -157,21 +158,17 @@ public class RedInAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-//                .lineToConstantHeading(new Vector2d(48, -12))
-//                .turn(-Math.PI/2)
+                .resetConstraints()
                 .lineToSplineHeading(new Pose2d(48, -10, Math.PI/2))
                 .lineToConstantHeading(new Vector2d(60, -10))
-//                .strafeRight(20)
-//                .back(5)
-                .resetConstraints()
                 .setReversed(false)
                 .build();
 
         TrajectorySequence AutoTrajectoryCenter = drive.trajectorySequenceBuilder(startPose)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
                 // right line
-                
-                .lineToSplineHeading(new Pose2d(-42,-32,0))
+
+                .lineToSplineHeading(new Pose2d(-51,-24, 0))
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
@@ -183,7 +180,7 @@ public class RedInAutoTwo extends LinearOpMode {
                 //   towards pixel stack
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
 
-                .lineToSplineHeading(new Pose2d(-51 , -35, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-50 , -35, -Math.PI))
 
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
@@ -199,11 +196,10 @@ public class RedInAutoTwo extends LinearOpMode {
                 .setReversed(true)
 
                 //   towards backdrop
-                .lineToConstantHeading(new Vector2d(-47.5,-39))
-
-                .splineToConstantHeading(new Vector2d(28,-59),-Math.PI)
+                .lineToConstantHeading(new Vector2d(-38,-58))
+                .lineToConstantHeading(new Vector2d(28,-58))
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(48,-42),-Math.PI)
+                .splineToConstantHeading(new Vector2d(52,-39), 0)
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
@@ -252,18 +248,16 @@ public class RedInAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-//                .lineToSplineHeading(new Pose2d(50, -10, Math.PI/2))
-//                .lineToConstantHeading(new Vector2d(60, -10))
-//                .strafeRight(5)
-//                .back(5)
                 .resetConstraints()
+                .lineToSplineHeading(new Pose2d(48, -10, Math.PI/2))
+                .lineToConstantHeading(new Vector2d(60, -10))
                 .setReversed(false)
                 .build();
 
         TrajectorySequence AutoTrajectoryLeft = drive.trajectorySequenceBuilder(startPose)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
                 // right line
-                .lineToSplineHeading(new Pose2d(-46,-45, -Math.PI/2))
+                .lineToSplineHeading(new Pose2d(-46,-40, Math.PI/2))
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.4);})
@@ -276,7 +270,6 @@ public class RedInAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
 
                 .lineToSplineHeading(new Pose2d(-50,-35,-Math.PI))
-
 
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
@@ -292,11 +285,10 @@ public class RedInAutoTwo extends LinearOpMode {
                 .setReversed(true)
 
                 //   towards backdrop
-                .lineToConstantHeading(new Vector2d(-47.5,-39))
-                .splineToConstantHeading(new Vector2d(28,-59),-Math.PI)
-                .splineToConstantHeading(new Vector2d(48,-42),-Math.PI)
+                .lineToConstantHeading(new Vector2d(-38,-58))
+                .lineToConstantHeading(new Vector2d(28,-58))
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(51,-29),-Math.PI)
+                .splineToConstantHeading(new Vector2d(52,-29), 0)
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
@@ -345,11 +337,9 @@ public class RedInAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-//                .lineToSplineHeading(new Pose2d(50, -10, Math.PI/2))
-//                .lineToConstantHeading(new Vector2d(60, -10))
-//                .strafeRight(20)
-//                .back(5)
                 .resetConstraints()
+                .lineToSplineHeading(new Pose2d(48, -10, Math.PI/2))
+                .lineToConstantHeading(new Vector2d(60, -10))
                 .setReversed(false)
                 .build();
 
@@ -394,11 +384,9 @@ public class RedInAutoTwo extends LinearOpMode {
                             drive.followTrajectorySequence(AutoTrajectoryCenter);
                         }
                         else if(x>=300 && x<=470) {
-//                            propPosition = "right";
+                            propPosition = "right";
                             drive.followTrajectorySequence(AutoTrajectoryRight);
                         }
-
-
                     }
                     else{
                         telemetry.addLine("Don't see the beacon :(");
@@ -416,18 +404,18 @@ public class RedInAutoTwo extends LinearOpMode {
                 if (gamepad1.x){
                     drive.followTrajectorySequence(AutoTrajectoryLeft);
                 }
-//                telemetry.addData("LeftFrontCurrent", drive.getMotorCurrent().get(0));
-//                telemetry.addData("RightFrontCurrent", drive.getMotorCurrent().get(1));
-//                telemetry.addData("LeftRearCurrent", drive.getMotorCurrent().get(2));
-//                telemetry.addData("RightRearCurrent", drive.getMotorCurrent().get(3));
-                visionPortal.close();
-//                telemetry.addData("position",propPosition);
+                telemetry.addData("LeftFrontCurrent", drive.getMotorCurrent().get(0));
+                telemetry.addData("RightFrontCurrent", drive.getMotorCurrent().get(1));
+                telemetry.addData("LeftRearCurrent", drive.getMotorCurrent().get(2));
+                telemetry.addData("RightRearCurrent", drive.getMotorCurrent().get(3));
+                telemetry.addData("position", propPosition);
 //                sleep(500);
                 drive.update();
                 telemetry.update();
             }
         }
         visionPortal.close();
+        PoseStorage.currentPose = drive.getPoseEstimate();
     }
     private void initTfod() {
 
