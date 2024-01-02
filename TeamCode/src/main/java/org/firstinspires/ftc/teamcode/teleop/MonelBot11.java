@@ -249,7 +249,18 @@ public class MonelBot11 extends LinearOpMode {
             double frontRightPower = (rotY - rotX - rx) / denominator + xCon;
             double backRightPower = (rotY + rotX - rx) / denominator + xCon;
 
-            leftFront.setPower(fastSpeed * frontLeftPower);
+            for(double i = 0; i <= frontLeftPower; i = i + 0.05){
+                leftFront.setPower(fastSpeed * i);
+            }
+            for(double i = 0; i <= backLeftPower; i = i + 0.05){
+                leftRear.setPower(fastSpeed * i);
+            }
+            for(double i = 0; i <= frontRightPower; i = i + 0.05){
+                leftRear.setPower(fastSpeed * i);
+            }
+            for(double i = 0; i <= backRightPower; i = i + 0.05){
+                leftRear.setPower(fastSpeed * i);
+            }
             leftRear.setPower(fastSpeed * backLeftPower);
             rightFront.setPower(fastSpeed * frontRightPower);
             rightRear.setPower(fastSpeed * backRightPower);

@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -24,6 +25,7 @@ import java.util.List;
 
 @Config
 @Autonomous(name = "Monel_BlueSafeAuto1")
+@Disabled
 public class BlueSafeAuto1 extends LinearOpMode {
     SampleMecanumDrive drive = null;
     Slider slider = null;

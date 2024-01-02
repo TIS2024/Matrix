@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -26,6 +27,7 @@ import java.util.List;
 
 @Config
 @Autonomous(name = "RedAutoTwoRef")
+@Disabled
 public class RedAutoTwoRef extends LinearOpMode {
     SampleMecanumDrive drive = null;
     Slider slider = null;
