@@ -42,6 +42,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Slider;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -71,6 +72,8 @@ public class MonelBot11 extends LinearOpMode {
     public static int intakeCounter, outtakeCounter,sliderCounter =0;
     public static double
             lifter_posL = 0, lifter_posR = 0, error_lifter, error_diff, error_int, error_lifterR, error_diffR, error_intR, errorprev, errorprevR, output_lifter, output_lifterR, output_power, target, dropVal;
+
+    double error_servoOne, error_servoTwo, error_diffOne, error_diffTwo, error_prevOne, error_prevTwo, error_intOne, error_intTwo, output_servoOne, output_servoTwo;
 
     public static double kp = 4, ki, kd = 1.7;
     double Kp = PIDConstants.Kp, Ki = PIDConstants.Ki, Kd = PIDConstants.Kd;
@@ -224,11 +227,6 @@ public class MonelBot11 extends LinearOpMode {
 
             //drivetrain ---------------------------------------------------------------------------
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-            MotionState state = profile.get(elapsedTime.time());
-
-            double targetPose = myLocalizer.getWheelPositions().get(0);
-
-            double xCon = xControl.calculate(state.getX(), targetPose);
 
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
@@ -244,23 +242,12 @@ public class MonelBot11 extends LinearOpMode {
             rotX = rotX * 1.1;
 
             double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-            double frontLeftPower = (rotY + rotX + rx) / denominator + xCon;
-            double backLeftPower = (rotY - rotX + rx) / denominator + xCon;
-            double frontRightPower = (rotY - rotX - rx) / denominator + xCon;
-            double backRightPower = (rotY + rotX - rx) / denominator + xCon;
+            double frontLeftPower = (rotY + rotX + rx) / denominator;
+            double backLeftPower = (rotY - rotX + rx) / denominator;
+            double frontRightPower = (rotY - rotX - rx) / denominator;
+            double backRightPower = (rotY + rotX - rx) / denominator;
 
-            for(double i = 0; i <= frontLeftPower; i = i + 0.05){
-                leftFront.setPower(fastSpeed * i);
-            }
-            for(double i = 0; i <= backLeftPower; i = i + 0.05){
-                leftRear.setPower(fastSpeed * i);
-            }
-            for(double i = 0; i <= frontRightPower; i = i + 0.05){
-                leftRear.setPower(fastSpeed * i);
-            }
-            for(double i = 0; i <= backRightPower; i = i + 0.05){
-                leftRear.setPower(fastSpeed * i);
-            }
+            leftFront.setPower(fastSpeed * frontLeftPower);
             leftRear.setPower(fastSpeed * backLeftPower);
             rightFront.setPower(fastSpeed * frontRightPower);
             rightRear.setPower(fastSpeed * backRightPower);
@@ -865,29 +852,42 @@ public class MonelBot11 extends LinearOpMode {
     {
         lifter_posL = Slider.sliderMotorOne.getCurrentPosition();
         lifter_posR = Slider.sliderMotorTwo.getCurrentPosition();
+
         error_lifter = target - lifter_posL;
         error_diff = error_lifter - errorprev;
         error_int = error_lifter + errorprev;
         output_lifter = kp_lifter*error_lifter + kd_lifter*error_diff +ki_lifter*error_int;
+
         error_lifterR = target - lifter_posR;
         error_diffR = error_lifterR - errorprevR;
         error_intR = error_lifterR + errorprevR;
         output_lifterR = kp_lifter*error_lifterR + kd_lifter*error_diffR +ki_lifter*error_intR;
+
         errorprev = error_lifter;
         errorprevR = error_lifterR;
+
         return Math.abs(output_lifter);
     }
-    public double PIDControl(double reference, double state) {
-        double error = angleWrap(reference - state);
-        telemetry.addData("Error: ", error);
-        integralSum += error * angle_timer.seconds();
-        double derivative = (error - lastError) / (angle_timer.seconds());
-        lastError = error;
-        angle_timer.reset();
-        double output = (error * Kp) + (derivative * Kd) + (integralSum * Ki);
-        return output;
-    }
+    public List<Double> servo_pid(double kp_servo, double ki_servo, double kd_servo, double targetOne, double targetTwo, double armOnePosition, double armTwoPosition)
+    {
+        error_servoOne = targetOne - armOnePosition;
+        error_diffOne = error_servoOne - error_prevOne;
+        error_intOne = error_servoOne + error_prevOne;
+        output_servoOne = kp_servo * error_servoOne + kd_servo * error_diffOne + ki_servo * error_intOne;
 
+        error_servoTwo = targetTwo - armTwoPosition;
+        error_diffTwo = error_servoTwo - error_prevTwo;
+        error_intTwo = error_servoTwo + error_prevTwo;
+        output_servoTwo = kp_servo * error_servoTwo + kd_servo * error_diffTwo + ki_servo * error_intTwo;
+
+        error_prevOne = error_servoOne;
+        error_prevTwo = error_servoTwo;
+
+        List<Double> ArmPosition = new ArrayList<>();
+        ArmPosition.add(output_servoOne);
+        ArmPosition.add(output_servoTwo);
+        return ArmPosition;
+    }
     public double angleWrap(double radians){
         while(radians > Math.PI){
             radians -= 2 * Math.PI;
@@ -909,4 +909,9 @@ public class MonelBot11 extends LinearOpMode {
                         n / a);
     }
 
+    float mapCubic(float x, float inMin, float inMax, float outMin, float outMax) {
+        float normalizedX = (x - inMin) / (inMax - inMin);
+        float mappedValue = normalizedX * normalizedX * normalizedX * (outMax - outMin) + outMin;
+        return mappedValue;
+    }
 }
