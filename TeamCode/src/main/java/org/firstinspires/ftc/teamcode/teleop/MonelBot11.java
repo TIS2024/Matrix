@@ -188,9 +188,14 @@ public class MonelBot11 extends LinearOpMode {
             double armOnePosition = armOneAnalogInput.getVoltage() / 3.3 * 360;
             double armTwoPosition = armTwoAnalogInput.getVoltage() / 3.3 * 360;
 
-            double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
-            double x = gamepad1.left_stick_x;
-            double rx = gamepad1.right_stick_x;
+//            double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
+//            double x = gamepad1.left_stick_x;
+//            double rx = gamepad1.right_stick_x;
+
+
+            double y = Math.pow(-gamepad1.left_stick_y, 3); // Remember, Y stick value is reversed
+            double x = Math.pow(gamepad1.left_stick_x, 3);
+            double rx = Math.pow(gamepad1.right_stick_x, 3);
 
             if (currentGamepad1.start && !previousGamepad1.start) {
                 imu.resetYaw();
@@ -211,7 +216,6 @@ public class MonelBot11 extends LinearOpMode {
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
 
-//            DriveTrain.setPower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
             leftFront.setPower(frontLeftPower);
             leftRear.setPower(backLeftPower);
             rightFront.setPower(frontRightPower);
