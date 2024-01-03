@@ -416,6 +416,7 @@ public class MonelBot10 extends LinearOpMode {
                                 intakeCounter = 1;
                             }
                             inputTimer.reset();
+                            outtakeCounter = 0;
                             intake_stack_command = "GroundIntake";
                             inputState = IntakeState.INTAKE_START;
 
@@ -434,6 +435,7 @@ public class MonelBot10 extends LinearOpMode {
                     //waiting for input
                     if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper && (Intake.intakeArmServo.getPosition() > 0.75)){
                         outputTimer.reset();
+                        outtakeCounter = 0;
                         outputState = OuttakeState.OUTTAKE_PUSH;
                     }
                     break;
@@ -482,12 +484,10 @@ public class MonelBot10 extends LinearOpMode {
                     }
                     if (outputTimer.milliseconds() >= 350){ // 500
                         outputTimer.reset();
-                        if (sliderCounter != 0)
-                        {
+                        if (sliderCounter != 0) {
                             outputState = OuttakeState.OUTTAKE_SLIDER;
                         }
-                        else
-                        {
+                        else {
                             outputState = OuttakeState.OUTTAKE_FINAL;
                         }
 
@@ -650,6 +650,7 @@ public class MonelBot10 extends LinearOpMode {
                 drive.followTrajectorySequenceAsync(DropPixelTwo);
                 drive.update();
                 sliderCounter = 0;
+                outtakeCounter = 0;
             }
 
             if (currentGamepad1.dpad_up) {
@@ -750,6 +751,8 @@ public class MonelBot10 extends LinearOpMode {
             telemetry.addData("stackFlag", stackFlag);
             telemetry.addData("IntakeCounter", intakeCounter);
             telemetry.addData("Beam Breaker State:", beamBreaker.getState());
+            telemetry.addData("OuttakeCounter", outtakeCounter);
+
             telemetry.addData("SliderMotorOne tick count", Slider.sliderMotorOne.getCurrentPosition());
             telemetry.addData("SliderMotorTwo tick count", Slider.sliderMotorTwo.getCurrentPosition());
             telemetry.addData("SliderMotorOne Current", Slider.sliderMotorOne.getCurrent(CurrentUnit.AMPS));

@@ -71,12 +71,200 @@ public class BlueInAutoTwo extends LinearOpMode {
             ArmV2.DropPixel(0.5);
             Intake.CrankPosition(0.69);
             ArmV2.SliderLink(0.95);
+//            telemetry.addData("Object Found", objectFound);
         }
 
         TrajectorySequence AutoTrajectoryRight = drive.trajectorySequenceBuilder(startPose)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
                 // right line
-                .lineToSplineHeading(new Pose2d(-42,32, 0))
+                .lineToSplineHeading(new Pose2d(-46,46, -Math.PI/2))
+                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.4);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{Intake.IntakePixel(1);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+
+                //   towards pixel stack
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
+
+                .lineToSplineHeading(new Pose2d(-51,37,-Math.PI))
+
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.66);Intake.intakeArmServo.setPosition(0.4);})
+                .waitSeconds(0.4)
+                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
+                .waitSeconds(0.3)
+                .setReversed(true)
+
+                //   towards backdrop
+                .lineToConstantHeading(new Vector2d(-40,60))
+                .lineToConstantHeading(new Vector2d(30,60))
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
+                .splineToConstantHeading(new Vector2d(53,28), 0)
+                .waitSeconds(1)
+
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
+                .waitSeconds(0.8)
+                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
+                .waitSeconds(0.7)
+                .addTemporalMarker(()->{arm.setArmPos(0.4, 0.16);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.75);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
+                .waitSeconds(0.8)
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, -10);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.16);slider.extendTo(-10, output_power);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 0);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{Intake.IntakePixel(1);slider.extendTo(0, output_power);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 200);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(200, output_power);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
+                .waitSeconds(0.5)
+                .strafeRight(12)
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(0, output_power);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
+                .resetConstraints()
+                //right side parking
+//                .lineToSplineHeading(new Pose2d(50, 10, -Math.PI/2))
+//                .lineToConstantHeading(new Vector2d(60, 10))
+                //left side parking
+                .lineToConstantHeading(new Vector2d(50, 60))
+                .turn(Math.PI/2)
+                .setReversed(false)
+                .build();
+
+        TrajectorySequence AutoTrajectoryCenter = drive.trajectorySequenceBuilder(startPose)
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
+                // right line
+
+                .lineToSplineHeading(new Pose2d(-51,23, 0))
+                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{Intake.IntakePixel(1);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+
+                //   towards pixel stack
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
+
+                .lineToSplineHeading(new Pose2d(-51 , 37, -Math.PI))
+
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.66);Intake.intakeArmServo.setPosition(0.4);})
+                .waitSeconds(0.4)
+                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
+                .waitSeconds(0.3)
+                .setReversed(true)
+
+                //   towards backdrop
+                .lineToConstantHeading(new Vector2d(-40,60))
+                .lineToConstantHeading(new Vector2d(30,60))
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
+                .splineToConstantHeading(new Vector2d(54,36), 0)
+                .waitSeconds(1)
+
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
+                .waitSeconds(0.8)
+                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
+                .waitSeconds(0.7)
+                .addTemporalMarker(()->{arm.setArmPos(0.4, 0.16);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.75);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
+                .waitSeconds(0.8)
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, -10);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.16);slider.extendTo(-10, output_power);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 0);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{Intake.IntakePixel(1);slider.extendTo(0, output_power);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 200);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(200, output_power);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
+                .waitSeconds(0.5)
+                .strafeRight(10)
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(0, output_power);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
+                .resetConstraints()
+                //right side parking
+//                .lineToSplineHeading(new Pose2d(50, 10, -Math.PI/2))
+//                .lineToConstantHeading(new Vector2d(60, 10))
+                //left side parking
+                .lineToConstantHeading(new Vector2d(50, 60))
+                .turn(Math.PI/2)
+                .setReversed(false)
+                .build();
+
+        TrajectorySequence AutoTrajectoryLeft = drive.trajectorySequenceBuilder(startPose)
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
+                // right line
+                .lineToSplineHeading(new Pose2d(-44,32, 0))
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.42);})
@@ -88,7 +276,7 @@ public class BlueInAutoTwo extends LinearOpMode {
                 //   towards pixel stack
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
 
-                .lineToSplineHeading(new Pose2d(-51 , 11, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-50,37,-Math.PI))
 
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
@@ -105,10 +293,10 @@ public class BlueInAutoTwo extends LinearOpMode {
                 .setReversed(true)
 
                 //   towards backdrop
-                .splineToConstantHeading(new Vector2d(-34,12),0)
-                .splineToConstantHeading(new Vector2d(28,12),0)
+                .lineToConstantHeading(new Vector2d(-40,60))
+                .lineToConstantHeading(new Vector2d(30,60))
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(53,43.5),0)
+                .splineToConstantHeading(new Vector2d(52,41), 0)
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
@@ -149,7 +337,7 @@ public class BlueInAutoTwo extends LinearOpMode {
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
                 .waitSeconds(0.5)
-                .strafeRight(15)
+                .strafeLeft(15)
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.7)
@@ -160,194 +348,13 @@ public class BlueInAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                .lineToSplineHeading(new Pose2d(50, 10, Math.PI/2))
-                .lineToConstantHeading(new Vector2d(60, 10))
-//                .strafeRight(20)
-//                .back(5)
                 .resetConstraints()
-                .setReversed(false)
-                .build();
-
-        TrajectorySequence AutoTrajectoryCenter = drive.trajectorySequenceBuilder(startPose)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
-                // right line
-                .lineToSplineHeading(new Pose2d(-51,24, 0))
-                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.IntakePixel(1);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
-
-                //   towards pixel stack
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
-
-                .lineToSplineHeading(new Pose2d(-51 , 11, -Math.PI))
-
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.66);Intake.intakeArmServo.setPosition(0.4);})
-                .waitSeconds(0.4)
-                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                .waitSeconds(0.3)
-                .setReversed(true)
-
-                //   towards backdrop
-                .splineToConstantHeading(new Vector2d(-34,12),0)
-                .splineToConstantHeading(new Vector2d(28,12),0)
-                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(52,39),0)
-                .waitSeconds(1)
-
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
-                .waitSeconds(0.8)
-                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.7)
-                .addTemporalMarker(()->{arm.setArmPos(0.4, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.75);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                .waitSeconds(0.8)
-                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, -10);if (output_power > 0.9) {
-                    output_power = 1;
-                } else if (output_power < 0.2) {
-                    output_power = 0;
-                }})
-                .addTemporalMarker(()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.16);slider.extendTo(-10, output_power);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 0);if (output_power > 0.9) {
-                    output_power = 1;
-                } else if (output_power < 0.2) {
-                    output_power = 0;
-                }})
-                .addTemporalMarker(()->{Intake.IntakePixel(1);slider.extendTo(0, output_power);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 200);if (output_power > 0.9) {
-                    output_power = 1;
-                } else if (output_power < 0.2) {
-                    output_power = 0;
-                }})
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(200, output_power);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
-                .waitSeconds(0.5)
-                .strafeLeft(6)
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(0, output_power);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                .lineToSplineHeading(new Pose2d(50, 10, Math.PI/2))
-                .lineToConstantHeading(new Vector2d(60, 10))
-//                .strafeRight(5)
-//                .back(5)
-                .resetConstraints()
-                .setReversed(false)
-                .build();
-
-        TrajectorySequence AutoTrajectoryLeft = drive.trajectorySequenceBuilder(startPose)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
-                // right line
-                .lineToSplineHeading(new Pose2d(-39,32, -Math.PI))
-//                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
-//                .waitSeconds(0.3)
-//                .addTemporalMarker(()->{Intake.CrankPosition(0.4);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.IntakePixel(1);})
-                .waitSeconds(0.5)
-//                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
-
-                //   towards pixel stack
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
-
-                .lineToSplineHeading(new Pose2d(-39 , 11, -Math.PI))
-                .lineToSplineHeading(new Pose2d(-51 , 11, -Math.PI))
-
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.66);Intake.intakeArmServo.setPosition(0.4);})
-                .waitSeconds(0.4)
-                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                .waitSeconds(0.3)
-                .setReversed(true)
-
-                //   towards backdrop
-                .splineToConstantHeading(new Vector2d(-34,12),0)
-                .splineToConstantHeading(new Vector2d(28,12),0)
-                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(51,29),0)
-                .waitSeconds(1)
-
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
-                .waitSeconds(0.8)
-                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.7)
-                .addTemporalMarker(()->{arm.setArmPos(0.4, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.75);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                .waitSeconds(0.8)
-                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, -10);if (output_power > 0.9) {
-                    output_power = 1;
-                } else if (output_power < 0.2) {
-                    output_power = 0;
-                }})
-                .addTemporalMarker(()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.16);slider.extendTo(-10, output_power);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 0);if (output_power > 0.9) {
-                    output_power = 1;
-                } else if (output_power < 0.2) {
-                    output_power = 0;
-                }})
-                .addTemporalMarker(()->{Intake.IntakePixel(1);slider.extendTo(0, output_power);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 200);if (output_power > 0.9) {
-                    output_power = 1;
-                } else if (output_power < 0.2) {
-                    output_power = 0;
-                }})
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(200, output_power);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
-                .waitSeconds(0.5)
-                .strafeLeft(12)
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(0, output_power);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                .lineToSplineHeading(new Pose2d(50, 10, Math.PI/2))
-                .lineToConstantHeading(new Vector2d(60, 10))
-//                .strafeRight(20)
-//                .back(5)
-                .resetConstraints()
+                //right side parking
+//                .lineToSplineHeading(new Pose2d(50, 10, -Math.PI/2))
+//                .lineToConstantHeading(new Vector2d(60, 10))
+                //left side parking
+                .lineToConstantHeading(new Vector2d(50, 60))
+                .turn(Math.PI/2)
                 .setReversed(false)
                 .build();
 
