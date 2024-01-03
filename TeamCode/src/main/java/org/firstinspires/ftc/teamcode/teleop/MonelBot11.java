@@ -560,7 +560,7 @@ public class MonelBot11 extends LinearOpMode {
                     outputState = OuttakeState.OUTTAKE_START;
             }
 
-            if (sliderCounter != 0 && gamepad2.left_stick_x != 0){
+            if (sliderCounter != 0 && gamepad2.left_stick_x != 0 ){
                 double armSliderValue = Range.clip(-gamepad2.left_stick_y,0,1);
                 double mappedYaw = Range.scale(gamepad2.left_stick_x, -1, 1, 0.60, 0.30);
                 double mappedCrank = Range.scale(armSliderValue, 0, 1, 0.95, 0.2);
