@@ -74,7 +74,7 @@ public class RedInAutoTwo extends LinearOpMode {
         TrajectorySequence AutoTrajectoryRight = drive.trajectorySequenceBuilder(startPose)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
                 // right line
-                .lineToSplineHeading(new Pose2d(-42,-32, 0))
+                .lineToSplineHeading(new Pose2d(-44,-32, 0))
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.42);})
@@ -86,7 +86,7 @@ public class RedInAutoTwo extends LinearOpMode {
                 //   towards pixel stack
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
 
-                .lineToSplineHeading(new Pose2d(-50,-35,-Math.PI))
+                .lineToSplineHeading(new Pose2d(-50,-36,-Math.PI))
 
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
@@ -104,9 +104,9 @@ public class RedInAutoTwo extends LinearOpMode {
 
                 //   towards backdrop
                 .lineToConstantHeading(new Vector2d(-40,-58))
-                .lineToConstantHeading(new Vector2d(28,-58))
+                .lineToConstantHeading(new Vector2d(30,-58))
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(53,-42), 0)
+                .splineToConstantHeading(new Vector2d(52,-39), 0)
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
@@ -159,8 +159,12 @@ public class RedInAutoTwo extends LinearOpMode {
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
                 .resetConstraints()
-                .lineToSplineHeading(new Pose2d(48, -10, Math.PI/2))
-                .lineToConstantHeading(new Vector2d(60, -10))
+                //right side parking
+//                .lineToSplineHeading(new Pose2d(48, -10, Math.PI/2))
+//                .lineToConstantHeading(new Vector2d(60, -10))1
+                //left side parking
+                .lineToConstantHeading(new Vector2d(50, -60))
+                .turn(-Math.PI/2)
                 .setReversed(false)
                 .build();
 
@@ -180,7 +184,7 @@ public class RedInAutoTwo extends LinearOpMode {
                 //   towards pixel stack
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
 
-                .lineToSplineHeading(new Pose2d(-50 , -35, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-51 , -38, -Math.PI))
 
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
@@ -196,10 +200,10 @@ public class RedInAutoTwo extends LinearOpMode {
                 .setReversed(true)
 
                 //   towards backdrop
-                .lineToConstantHeading(new Vector2d(-38,-58))
-                .lineToConstantHeading(new Vector2d(28,-58))
+                .lineToConstantHeading(new Vector2d(-40,-58))
+                .lineToConstantHeading(new Vector2d(30,-58))
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(52,-39), 0)
+                .splineToConstantHeading(new Vector2d(53,-32), 0)
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
@@ -239,7 +243,7 @@ public class RedInAutoTwo extends LinearOpMode {
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
                 .waitSeconds(0.5)
-                .strafeLeft(6)
+                .strafeLeft(8)
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.5)
@@ -249,15 +253,19 @@ public class RedInAutoTwo extends LinearOpMode {
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
                 .resetConstraints()
-                .lineToSplineHeading(new Pose2d(48, -10, Math.PI/2))
-                .lineToConstantHeading(new Vector2d(60, -10))
+                //right side parking
+//                .lineToSplineHeading(new Pose2d(48, -10, Math.PI/2))
+//                .lineToConstantHeading(new Vector2d(60, -10))
+                //left side parking
+                .lineToConstantHeading(new Vector2d(50, -60))
+                .turn(-Math.PI/2)
                 .setReversed(false)
                 .build();
 
         TrajectorySequence AutoTrajectoryLeft = drive.trajectorySequenceBuilder(startPose)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
                 // right line
-                .lineToSplineHeading(new Pose2d(-46,-40, Math.PI/2))
+                .lineToSplineHeading(new Pose2d(-48,-46, Math.PI/2))
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.4);})
@@ -269,7 +277,7 @@ public class RedInAutoTwo extends LinearOpMode {
                 //   towards pixel stack
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
 
-                .lineToSplineHeading(new Pose2d(-50,-35,-Math.PI))
+                .lineToSplineHeading(new Pose2d(-51,-35,-Math.PI))
 
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
@@ -285,10 +293,10 @@ public class RedInAutoTwo extends LinearOpMode {
                 .setReversed(true)
 
                 //   towards backdrop
-                .lineToConstantHeading(new Vector2d(-38,-58))
-                .lineToConstantHeading(new Vector2d(28,-58))
+                .lineToConstantHeading(new Vector2d(-40,-58))
+                .lineToConstantHeading(new Vector2d(30,-58))
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(52,-29), 0)
+                .splineToConstantHeading(new Vector2d(52,-24.5), 0)
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
@@ -338,8 +346,12 @@ public class RedInAutoTwo extends LinearOpMode {
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
                 .resetConstraints()
-                .lineToSplineHeading(new Pose2d(48, -10, Math.PI/2))
-                .lineToConstantHeading(new Vector2d(60, -10))
+                //right side parking
+//                .lineToSplineHeading(new Pose2d(48, -10, Math.PI/2))
+//                .lineToConstantHeading(new Vector2d(60, -10))
+                //left side parking
+                .lineToConstantHeading(new Vector2d(50, -60))
+                .turn(-Math.PI/2)
                 .setReversed(false)
                 .build();
 
@@ -375,15 +387,15 @@ public class RedInAutoTwo extends LinearOpMode {
                     if(objectFound){
 
 //                    Adjust values according to your bot and camera position
-                        if( x>=800 && x<=1000){
+                        if( x>=800 && x<=1100){
                             propPosition  = "left";
                             drive.followTrajectorySequence(AutoTrajectoryLeft);
                         }
-                        else if(x>=500 && x<=700){
+                        else if(x>=500 && x<=790){
                             propPosition = "center";
                             drive.followTrajectorySequence(AutoTrajectoryCenter);
                         }
-                        else if(x>=300 && x<=470) {
+                        else if(x>=200 && x<=490) {
                             propPosition = "right";
                             drive.followTrajectorySequence(AutoTrajectoryRight);
                         }

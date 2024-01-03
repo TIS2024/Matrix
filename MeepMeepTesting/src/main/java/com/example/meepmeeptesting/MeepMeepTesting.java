@@ -91,8 +91,10 @@ public class MeepMeepTesting {
                                         .lineToConstantHeading(new Vector2d(-38,-58))
                                         .lineToConstantHeading(new Vector2d(28,-58))
                                         .splineToConstantHeading(new Vector2d(52,-29), 0)
-                                        .lineToSplineHeading(new Pose2d(48, -10, Math.PI/2))
-                                        .lineToConstantHeading(new Vector2d(60, -10))
+//                                        .lineToSplineHeading(new Pose2d(48, -10, Math.PI/2))
+//                                        .lineToConstantHeading(new Vector2d(60, -10))
+                                        .lineToConstantHeading(new Vector2d(50, -60))
+                                        .turn(-Math.PI/2)
 
 
 
