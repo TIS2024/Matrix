@@ -248,16 +248,16 @@ public class MonelBot10 extends LinearOpMode {
                         }
                         if(intake_stack_command == "FiveStackGo")
                         {
-                            Intake.intakeArmServo.setPosition(0.645);
-                            Intake.intakeWristServo.setPosition(0.265);
+                            Intake.intakeArmServo.setPosition(0.65);
+                            Intake.intakeWristServo.setPosition(0.27);
                             Intake.IntakePixel(1);
                             inputTimer.reset();
                             inputState = IntakeState.INTAKE_EXTEND;
                         }
                         if (intake_stack_command == "ThreeStackGo")
                         {
-                            Intake.intakeArmServo.setPosition(0.513);
-                            Intake.intakeWristServo.setPosition(0.395);
+                            Intake.intakeArmServo.setPosition(0.520);
+                            Intake.intakeWristServo.setPosition(0.40);
                             Intake.IntakePixel(1);
                             inputTimer.reset();
                             inputState = IntakeState.INTAKE_EXTEND;
@@ -543,7 +543,8 @@ public class MonelBot10 extends LinearOpMode {
                 default:
                     outputState = OuttakeState.OUTTAKE_START;
             }
-            if (sliderCounter != 0 && gamepad2.left_stick_x != 0){
+
+            if (sliderCounter != 0 && (gamepad2.left_stick_x != 0 || gamepad2.left_stick_y != 0)){
                 double armSliderValue = Range.clip(-gamepad2.left_stick_y,0,1);
                 double mappedYaw = Range.scale(gamepad2.left_stick_x, -1, 1, 0.60, 0.30);
                 double mappedCrank = Range.scale(armSliderValue, 0, 1, 0.95, 0.2);
@@ -752,6 +753,7 @@ public class MonelBot10 extends LinearOpMode {
             telemetry.addData("IntakeCounter", intakeCounter);
             telemetry.addData("Beam Breaker State:", beamBreaker.getState());
             telemetry.addData("OuttakeCounter", outtakeCounter);
+            telemetry.addData("Intake_stack_Command", intake_stack_command);
 
             telemetry.addData("SliderMotorOne tick count", Slider.sliderMotorOne.getCurrentPosition());
             telemetry.addData("SliderMotorTwo tick count", Slider.sliderMotorTwo.getCurrentPosition());
@@ -760,10 +762,10 @@ public class MonelBot10 extends LinearOpMode {
             telemetry.addData("HangerMotor tick count", Hanger.hangerMotor.getCurrentPosition());
             telemetry.addData("Hanger Current", Hanger.hangerMotor.getCurrent(CurrentUnit.AMPS));
 
+            telemetry.addData("armOnePosition", armOnePosition);
             telemetry.addData("armTwoPosition", armTwoPosition);
             telemetry.addData("wristPosition", wristPosition);
             telemetry.addData("intakeWristPosition", intakeWristPosition);
-            telemetry.addData("armOnePosition", armOnePosition);
             telemetry.addData("crankPosition", crankPosition);
             telemetry.addData("intakeArm Position", intakeArmPosition);
             telemetry.addData("gripperServo", Intake.gripperServo.getPosition());

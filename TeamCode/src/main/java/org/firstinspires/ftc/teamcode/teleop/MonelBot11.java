@@ -239,10 +239,10 @@ public class MonelBot11 extends LinearOpMode {
             double turnStack = angleWrap(Math.toRadians(90) - botHeading);
             double turnBackDrop = angleWrap(Math.toRadians(-90) - botHeading);
             if (currentGamepad1.left_trigger > 0.5 && !(previousGamepad1.left_trigger > 0.5) && !drive.isBusy()){
-                drive.turnAsync(turnStack);
+                drive.turn(turnStack);
             }
             if (currentGamepad1.right_trigger > 0.5 && !(previousGamepad1.right_trigger > 0.5) && !drive.isBusy()){
-                drive.turnAsync(turnBackDrop);
+                drive.turn(turnBackDrop);
             }
             //--------------------------------------------------------------------------------------
 
@@ -432,6 +432,7 @@ public class MonelBot11 extends LinearOpMode {
                                 intakeCounter = 1;
                             }
                             inputTimer.reset();
+                            outtakeCounter = 0;
                             intake_stack_command = "GroundIntake";
                             inputState = IntakeState.INTAKE_START;
 
@@ -450,6 +451,7 @@ public class MonelBot11 extends LinearOpMode {
                     //waiting for input
                     if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper && (Intake.intakeArmServo.getPosition() > 0.75)){
                         outputTimer.reset();
+                        outtakeCounter = 0;
                         outputState = OuttakeState.OUTTAKE_PUSH;
                     }
                     break;
@@ -560,9 +562,11 @@ public class MonelBot11 extends LinearOpMode {
                     outputState = OuttakeState.OUTTAKE_START;
             }
 
-            if (sliderCounter != 0 && gamepad2.left_stick_x != 0 ){
+            if (sliderCounter != 0 && (gamepad2.left_stick_x != 0 || gamepad2.left_stick_y != 0)){
+                ArmV2.SetArmPosition(0.5, 0.66);
+
                 double armSliderValue = Range.clip(-gamepad2.left_stick_y,0,1);
-                double mappedYaw = Range.scale(gamepad2.left_stick_x, -1, 1, 0.60, 0.30);
+                double mappedYaw = Range.scale(gamepad2.left_stick_x, -1, 1, 0.6, 0.30);
                 double mappedCrank = Range.scale(armSliderValue, 0, 1, 0.95, 0.2);
 
                 ArmV2.armServoTwo.setPosition(mappedYaw);
@@ -689,6 +693,7 @@ public class MonelBot11 extends LinearOpMode {
                 drive.followTrajectorySequenceAsync(DropPixelTwo);
                 drive.update();
                 sliderCounter = 0;
+                outtakeCounter = 0;
             }
 
             if (currentGamepad1.dpad_up) {
@@ -790,6 +795,9 @@ public class MonelBot11 extends LinearOpMode {
             telemetry.addData("stackFlag", stackFlag);
             telemetry.addData("IntakeCounter", intakeCounter);
             telemetry.addData("Beam Breaker State:", beamBreaker.getState());
+            telemetry.addData("OuttakeCounter", outtakeCounter);
+            telemetry.addData("Intake_stack_Command", intake_stack_command);
+
             telemetry.addData("SliderMotorOne tick count", Slider.sliderMotorOne.getCurrentPosition());
             telemetry.addData("SliderMotorTwo tick count", Slider.sliderMotorTwo.getCurrentPosition());
             telemetry.addData("SliderMotorOne Current", Slider.sliderMotorOne.getCurrent(CurrentUnit.AMPS));
@@ -797,10 +805,10 @@ public class MonelBot11 extends LinearOpMode {
             telemetry.addData("HangerMotor tick count", Hanger.hangerMotor.getCurrentPosition());
             telemetry.addData("Hanger Current", Hanger.hangerMotor.getCurrent(CurrentUnit.AMPS));
 
+            telemetry.addData("armOnePosition", armOnePosition);
             telemetry.addData("armTwoPosition", armTwoPosition);
             telemetry.addData("wristPosition", wristPosition);
             telemetry.addData("intakeWristPosition", intakeWristPosition);
-            telemetry.addData("armOnePosition", armOnePosition);
             telemetry.addData("crankPosition", crankPosition);
             telemetry.addData("intakeArm Position", intakeArmPosition);
             telemetry.addData("gripperServo", Intake.gripperServo.getPosition());

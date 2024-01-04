@@ -71,6 +71,8 @@ public class RedSafeAutoTwo extends LinearOpMode {
             ArmV2.DropPixel(0.5);
             Intake.CrankPosition(0.69);
             ArmV2.SliderLink(0.95);
+            List<Recognition> currentRecognitions = tfod.getRecognitions();
+            telemetry.addData("# Objects Detected", currentRecognitions.size());
         }
 
         TrajectorySequence AutoTrajectoryRight = drive.trajectorySequenceBuilder(startPose)

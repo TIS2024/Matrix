@@ -61,15 +61,6 @@ public class BlueSafeAutoTwo extends LinearOpMode {
         drive.setPoseEstimate(startPose);
         initTfod();
 
-        while (opModeInInit()){
-            slider.extendToHome();
-            ArmV2.SetArmPosition(0.15, 0.16);
-            Intake.SetArmPosition(0.5,0.66);
-            Intake.IntakePixel(0.8);
-            ArmV2.DropPixel(0.5);
-            Intake.CrankPosition(0.69);
-            ArmV2.SliderLink(0.95);
-        }
 
         TrajectorySequence AutoTrajectoryRight = drive.trajectorySequenceBuilder(startPose)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
@@ -346,7 +337,56 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                 .setReversed(false)
                 .build();
 
+        while (opModeInInit()) {
+            slider.extendToHome();
+            ArmV2.SetArmPosition(0.15, 0.16);
+            Intake.SetArmPosition(0.5, 0.66);
+            Intake.IntakePixel(0.8);
+            ArmV2.DropPixel(0.5);
+            Intake.CrankPosition(0.69);
+            ArmV2.SliderLink(0.95);
+            List<Recognition> currentRecognitions = tfod.getRecognitions();
+            telemetry.addData("# Objects Detected", currentRecognitions.size());
+            if (currentRecognitions.size() != 0) {
 
+                boolean objectFound = false;
+
+                for (Recognition recognition : currentRecognitions) {
+                    x = (recognition.getLeft() + recognition.getRight()) / 2;
+                    y = (recognition.getTop() + recognition.getBottom()) / 2;
+
+                    objectFound = true;
+
+                    telemetry.addLine("Beacon");
+                    telemetry.addData("", " ");
+                    telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+                    telemetry.addData("- Position", "%.0f / %.0f", x, y);
+                    telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+                    telemetry.update();
+
+                    break;
+                }
+
+                if (objectFound) {
+
+//                    Adjust values according to your bot and camera position
+                    if (x >= 800 && x <= 1100) {
+                        propPosition = "right";
+                    } else if (x >= 500 && x <= 790) {
+                        propPosition = "center";
+                    } else if (x >= 200 && x <= 490) {
+                        propPosition = "left";
+                    }
+
+
+                } else {
+                    telemetry.addLine("Don't see the beacon :(");
+                }
+                telemetry.addData("position", propPosition);
+                telemetry.update();
+                telemetry.update();
+            }
+        }
 
         waitForStart();
 
@@ -378,16 +418,16 @@ public class BlueSafeAutoTwo extends LinearOpMode {
 
 //                    Adjust values according to your bot and camera position
                     if(x>=800 && x<=1100){
-                        propPosition  = "left";
-                        drive.followTrajectorySequence(AutoTrajectoryLeft);
+                        propPosition  = "right";
+                        drive.followTrajectorySequence(AutoTrajectoryRight);
                     }
                     else if(x>=500 && x<=790){
                         propPosition = "center";
                         drive.followTrajectorySequence(AutoTrajectoryCenter);
                     }
                     else if(x>=200 && x<=490) {
-                        propPosition = "right";
-                        drive.followTrajectorySequence(AutoTrajectoryRight);
+                        propPosition = "left";
+                        drive.followTrajectorySequence(AutoTrajectoryLeft);
                     }
 
 
