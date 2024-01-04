@@ -65,11 +65,15 @@ public class BlueSafeAutoTwo extends LinearOpMode {
         TrajectorySequence AutoTrajectoryRight = drive.trajectorySequenceBuilder(startPose)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
                 // right line
-                .lineToSplineHeading(new Pose2d(-35,32, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-32,32, -Math.PI))
+                .waitSeconds(0.1)
+                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.50);})
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{Intake.IntakePixel(1);})
                 .waitSeconds(0.5)
-//                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
 
                 //   towards pixel stack
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
@@ -79,9 +83,9 @@ public class BlueSafeAutoTwo extends LinearOpMode {
 
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
-                .waitSeconds(0.5)
+                .waitSeconds(0.6)
                 .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
-                .waitSeconds(0.5)
+                .waitSeconds(0.6)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.66);Intake.intakeArmServo.setPosition(0.4);})
@@ -143,8 +147,8 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                .lineToSplineHeading(new Pose2d(50, 10, -Math.PI/2))
-                .lineToConstantHeading(new Vector2d(60, 10))
+                .lineToSplineHeading(new Pose2d(50, 12, -Math.PI/2))
+                .lineToConstantHeading(new Vector2d(60, 12))
 //                .strafeLeft(32)
 //                .back(5)
                 .resetConstraints()
@@ -170,9 +174,9 @@ public class BlueSafeAutoTwo extends LinearOpMode {
 
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
-                .waitSeconds(0.5)
+                .waitSeconds(0.7)
                 .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
-                .waitSeconds(0.5)
+                .waitSeconds(0.7)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.66);Intake.intakeArmServo.setPosition(0.4);})
@@ -234,8 +238,8 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                .lineToSplineHeading(new Pose2d(48, 10, -Math.PI/2))
-                .lineToConstantHeading(new Vector2d(60, 10))
+                .lineToSplineHeading(new Pose2d(48, 12, -Math.PI/2))
+                .lineToConstantHeading(new Vector2d(60, 12))
                 .resetConstraints()
 //                .strafeLeft(5)
 //                .back(5)
@@ -248,7 +252,7 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(-42,32, 0))
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.42);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.39);})
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{Intake.IntakePixel(1);})
                 .waitSeconds(0.5)
@@ -257,13 +261,14 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                 //   towards pixel stack
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
 
+                .lineToSplineHeading(new Pose2d(-32 , 11, -Math.PI))
                 .lineToSplineHeading(new Pose2d(-51 , 11, -Math.PI))
 
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
-                .waitSeconds(0.5)
+                .waitSeconds(0.7)
                 .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
-                .waitSeconds(0.5)
+                .waitSeconds(0.7)
                 .addTemporalMarker(this::telem)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
                 .waitSeconds(0.2)
@@ -345,6 +350,7 @@ public class BlueSafeAutoTwo extends LinearOpMode {
             ArmV2.DropPixel(0.5);
             Intake.CrankPosition(0.69);
             ArmV2.SliderLink(0.95);
+
             List<Recognition> currentRecognitions = tfod.getRecognitions();
             telemetry.addData("# Objects Detected", currentRecognitions.size());
             if (currentRecognitions.size() != 0) {
@@ -371,11 +377,11 @@ public class BlueSafeAutoTwo extends LinearOpMode {
 
 //                    Adjust values according to your bot and camera position
                     if (x >= 800 && x <= 1100) {
-                        propPosition = "right";
+                        propPosition = "left";
                     } else if (x >= 500 && x <= 790) {
                         propPosition = "center";
                     } else if (x >= 200 && x <= 490) {
-                        propPosition = "left";
+                        propPosition = "right";
                     }
 
 
@@ -391,53 +397,58 @@ public class BlueSafeAutoTwo extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            List<Recognition> currentRecognitions = tfod.getRecognitions();
-            telemetry.addData("# Objects Detected", currentRecognitions.size());
+//            List<Recognition> currentRecognitions = tfod.getRecognitions();
+//            telemetry.addData("# Objects Detected", currentRecognitions.size());
+//
+//            if (currentRecognitions.size() != 0) {
+//
+//                boolean objectFound = false;
+//
+//                for (Recognition recognition : currentRecognitions) {
+//                    x = (recognition.getLeft() + recognition.getRight()) / 2;
+//                    y = (recognition.getTop() + recognition.getBottom()) / 2;
+//
+//                    objectFound = true;
+//
+//                    telemetry.addLine("Beacon");
+//                    telemetry.addData("", " ");
+//                    telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+//                    telemetry.addData("- Position", "%.0f / %.0f", x, y);
+//                    telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+//                    telemetry.update();
+//
+//                    break;
+//                }
+//
+//                if(objectFound){
+//
+////                    Adjust values according to your bot and camera position
+//                    if(propPosition  == "right"){
+//                        drive.followTrajectorySequence(AutoTrajectoryRight);
+//                    }
+//                    if(propPosition == "center"){
+//                        drive.followTrajectorySequence(AutoTrajectoryCenter);
+//                    }
+//                    if(propPosition == "center") {
+//                        drive.followTrajectorySequence(AutoTrajectoryLeft);
+//                    }
+//                }
+//                else{
+//                    telemetry.addLine("Don't see the beacon :(");
+//                }
+//            }
+//            else{
+//                telemetry.addLine("Don't see the beacon :(");
+//            }
 
-            if (currentRecognitions.size() != 0) {
-
-                boolean objectFound = false;
-
-                for (Recognition recognition : currentRecognitions) {
-                    x = (recognition.getLeft() + recognition.getRight()) / 2;
-                    y = (recognition.getTop() + recognition.getBottom()) / 2;
-
-                    objectFound = true;
-
-                    telemetry.addLine("Beacon");
-                    telemetry.addData("", " ");
-                    telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-                    telemetry.addData("- Position", "%.0f / %.0f", x, y);
-                    telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
-                    telemetry.update();
-
-                    break;
-                }
-
-                if(objectFound){
-
-//                    Adjust values according to your bot and camera position
-                    if(x>=800 && x<=1100){
-                        propPosition  = "right";
-                        drive.followTrajectorySequence(AutoTrajectoryRight);
-                    }
-                    else if(x>=500 && x<=790){
-                        propPosition = "center";
-                        drive.followTrajectorySequence(AutoTrajectoryCenter);
-                    }
-                    else if(x>=200 && x<=490) {
-                        propPosition = "left";
-                        drive.followTrajectorySequence(AutoTrajectoryLeft);
-                    }
-
-
-                }
-                else{
-                    telemetry.addLine("Don't see the beacon :(");
-                }
+            if(propPosition  == "right"){
+                drive.followTrajectorySequence(AutoTrajectoryRight);
             }
-            else{
-                telemetry.addLine("Don't see the beacon :(");
+            if(propPosition == "center"){
+                drive.followTrajectorySequence(AutoTrajectoryCenter);
+            }
+            if(propPosition == "left") {
+                drive.followTrajectorySequence(AutoTrajectoryLeft);
             }
             if (gamepad1.b){
                 drive.followTrajectorySequence(AutoTrajectoryRight);
@@ -507,7 +518,7 @@ public class BlueSafeAutoTwo extends LinearOpMode {
         telemetry.update();
 
         // Set confidence threshold for TFOD recognitions, at any time.
-        //tfod.setMinResultConfidence(0.75f);
+        tfod.setMinResultConfidence(0.92f);
 
         // Disable or re-enable the TFOD processor at any time.
         //visionPortal.setProcessorEnabled(tfod, true);

@@ -147,8 +147,12 @@ public class RedSafeAutoOne extends LinearOpMode {
 //                .UNSTABLE_addTemporalMarkerOffset(0.5,()->{Intake.intakeArmServo.setPosition(0.95);Intake.intakeWristServo.setPosition(0.4);}) //0.0
 //                .UNSTABLE_addTemporalMarkerOffset(0.9,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})//0.375-0.513//arm->0.52 //0.50
 //                .UNSTABLE_addTemporalMarkerOffset(1.8,()->{arm.setArmPos(0.15, 0.16);})//0.2
-                .lineToSplineHeading(new Pose2d(48, -60, Math.PI/2))
-                .strafeLeft(6)
+
+//                .lineToSplineHeading(new Pose2d(48, -60, Math.PI/2))
+                .lineToConstantHeading(new Vector2d(48, -60))
+                .turn(Math.PI/2)
+
+//                .strafeLeft(6)
                 .setReversed(false)
                 //pixel intake // round 2------------------------------------------------------------
                 .build();
@@ -239,7 +243,9 @@ public class RedSafeAutoOne extends LinearOpMode {
 //                .UNSTABLE_addTemporalMarkerOffset(0.5,()->{Intake.intakeArmServo.setPosition(0.95);Intake.intakeWristServo.setPosition(0.4);}) //0.0
 //                .UNSTABLE_addTemporalMarkerOffset(0.9,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})//0.375-0.513//arm->0.52 //0.50
 //                .UNSTABLE_addTemporalMarkerOffset(1.8,()->{arm.setArmPos(0.15, 0.16);})//0.2
+
                 .lineToSplineHeading(new Pose2d(50, -60, Math.PI/2))
+
                 .setReversed(false)
 //                .strafeLeft(10)
                 .build();
@@ -381,12 +387,10 @@ public class RedSafeAutoOne extends LinearOpMode {
                         propPosition = "left";
                     }
 
-
                 } else {
                     telemetry.addLine("Don't see the beacon :(");
                 }
                 telemetry.addData("position", propPosition);
-                telemetry.update();
                 telemetry.update();
             }
         }
@@ -432,8 +436,6 @@ public class RedSafeAutoOne extends LinearOpMode {
                         propPosition = "right";
                         drive.followTrajectorySequence(AutoTrajectoryRight);
                     }
-
-
                 }
                 else{
                     telemetry.addLine("Don't see the beacon :(");
@@ -456,7 +458,7 @@ public class RedSafeAutoOne extends LinearOpMode {
             telemetry.addData("LeftRearCurrent", drive.getMotorCurrent().get(2));
             telemetry.addData("RightRearCurrent", drive.getMotorCurrent().get(3));
             visionPortal.close();
-            telemetry.addData("position",propPosition);
+            telemetry.addData("position", propPosition);
             sleep(500);
             drive.update();
             telemetry.update();
