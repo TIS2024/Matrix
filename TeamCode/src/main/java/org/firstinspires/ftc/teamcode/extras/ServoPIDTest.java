@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.subsystems.ArmV2;
@@ -16,6 +17,7 @@ import java.util.Map;
 @Config
 public class ServoPIDTest extends LinearOpMode {
     ArmV2 arm = null;
+    Servo servo;
     public static double
             error_servoOne, error_servoTwo, error_diffOne, error_diffTwo, error_prevOne, error_prevTwo, error_intOne, error_intTwo, output_servoOne, output_servoTwo;
 
@@ -24,6 +26,9 @@ public class ServoPIDTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         arm = new ArmV2(hardwareMap, telemetry);
 
+        servo = hardwareMap.get(Servo.class, "servo");
+
+        AnalogInput servoAnalogInput = hardwareMap.get(AnalogInput.class, "servoAnalogInput");
         AnalogInput wristAnalogInput = hardwareMap.get(AnalogInput.class, "wristAnalogInput");
         AnalogInput armOneAnalogInput = hardwareMap.get(AnalogInput.class, "armOneAnalogInput");
         AnalogInput armTwoAnalogInput = hardwareMap.get(AnalogInput.class, "armTwoAnalogInput");
@@ -33,22 +38,27 @@ public class ServoPIDTest extends LinearOpMode {
         }
         waitForStart();
         while (opModeIsActive()){
+            double servoPosition = servoAnalogInput.getVoltage() / 3.3 * 360;
             double wristPosition = wristAnalogInput.getVoltage() / 3.3 * 360;
             double armOnePosition = armOneAnalogInput.getVoltage() / 3.3 * 360;
             double armTwoPosition = armTwoAnalogInput.getVoltage() / 3.3 * 360;
 
             if (gamepad1.x){
-                List<Double> armposition = servo_pid(servo_kp, servo_ki, servo_kd, 67, 295, armOnePosition, armTwoPosition);
+                List<Double> armposition = servo_pid(servo_kp, servo_ki, servo_kd, 67, 295, servoPosition, servoPosition);
                 double armpos2 = armposition.get(1);
                 double value = armpos2 * 0.15/67;
 
-                ArmV2.SetArmPosition(value, 0.155);
+//                ArmV2.SetArmPosition(value, 0.155);
+                servo.setPosition(0);
+
             }
             if (gamepad1.y){
-                ArmV2.SetArmPosition(0.5, 0.155);
+//                ArmV2.SetArmPosition(0.5, 0.155);
+                servo.setPosition(0.5);
             }
             if (gamepad1.a){
-                ArmV2.SetArmPosition(0.3, 0.155);
+//                ArmV2.SetArmPosition(0.3, 0.155);
+                servo.setPosition(1);
             }
 //            if (gamepad1.b){
 //                ArmV2.SetArmPosition(0.6, 0.155);
@@ -56,6 +66,7 @@ public class ServoPIDTest extends LinearOpMode {
 
             telemetry.addData("armOnePosition", armOnePosition);
             telemetry.addData("armTwoPosition", armTwoPosition);
+            telemetry.addData("servoPosition", servoPosition);
 
             telemetry.addData("armServoOne", ArmV2.armServoOne.getPosition());
             telemetry.addData("armServoTwo", ArmV2.armServoTwo.getPosition());

@@ -24,7 +24,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import java.util.List;
 
 @Config
-@Autonomous(name = "Monel_RedInAutoTwo")
+@Autonomous(name = "RED_InAuto2")
 public class RedInAutoTwo extends LinearOpMode {
     SampleMecanumDrive drive = null;
     Slider slider = null;

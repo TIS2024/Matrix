@@ -216,13 +216,21 @@ public class MonelBot10 extends LinearOpMode {
             rightFront.setPower(fastSpeed * frontRightPower);
             rightRear.setPower(fastSpeed * backRightPower);
 
+            if (currentGamepad2.left_trigger > 0.5){
+                leftFront.setPower(slowSpeed * frontLeftPower);
+                leftRear.setPower(slowSpeed * backLeftPower);
+                rightFront.setPower(slowSpeed * frontRightPower);
+                rightRear.setPower(slowSpeed * backRightPower);
+
+            }
+
             myLocalizer.update();
 
             // Retrieve your pose
             Pose2d myPose = myLocalizer.getPoseEstimate();
 
             double turnStack = angleWrap(Math.toRadians(90) - botHeading);
-            double turnBackDrop = angleWrap(Math.toRadians(180) - botHeading);
+            double turnBackDrop = angleWrap(Math.toRadians(270) - botHeading);
             if (currentGamepad1.left_trigger > 0.5 && !(previousGamepad1.left_trigger > 0.5)){
                 drive.turn(turnStack);
             }
@@ -428,7 +436,7 @@ public class MonelBot10 extends LinearOpMode {
                     inputState = IntakeState.INTAKE_START;
                     intakeCounter = 0;
             }
-            //--------------------------------------------------------------------------------------
+            //--------------------------------------------------------------------------------------0
 
             //Outtake Sequence
             switch (outputState){
@@ -547,11 +555,11 @@ public class MonelBot10 extends LinearOpMode {
 
             if (outtakeCounter != 0 && (gamepad2.left_stick_x != 0 || gamepad2.left_stick_y != 0)){
                 double armSliderValue = Range.clip(-gamepad2.left_stick_y,0,1);
-                double mappedYaw = Range.scale(gamepad2.left_stick_x, -1, 1, 0.55, 0.35);
+//                double mappedYaw = Range.scale(gamepad2.left_stick_x, -1, 1, 0.55, 0.35);
                 double mappedCrank = Range.scale(armSliderValue, 0, 1, 0.95, 0.2);
 
-                ArmV2.armServoTwo.setPosition(mappedYaw);
-                ArmV2.armServoOne.setPosition(mappedYaw+0.1);
+//                ArmV2.armServoTwo.setPosition(mappedYaw);
+//                ArmV2.armServoOne.setPosition(mappedYaw+0.1);
 
                 ArmV2.armSliderServo.setPosition(mappedCrank);
             }
@@ -565,11 +573,9 @@ public class MonelBot10 extends LinearOpMode {
                         .addTemporalMarker(()->{ArmV2.DropPixel(0.75);})
                         .waitSeconds(0.2)
                         .addTemporalMarker(()->{arm.setArmPos(0.25, wristServoPos);})
-                        .waitSeconds(0.3)
-                        .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.95);})
                         .waitSeconds(0.2)
                         .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.38);})
-                        .waitSeconds(0.4)
+                        .waitSeconds(0.2)//0.4
                         .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                         .waitSeconds(0.2)
                         .addTemporalMarker(()->{arm.setArmPos(0.15, wristServoPos);})
@@ -620,9 +626,9 @@ public class MonelBot10 extends LinearOpMode {
                 deliveryServoPos = 0.79;
                 ArmV2.DropPixel(deliveryServoPos);
                 TrajectorySequence DropPixelOne = drive.trajectorySequenceBuilder(startPose)
-                        .addTemporalMarker(()->{ArmV2.DropPixel(0.81);})
+                        .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
                         .waitSeconds(0.3)
-                        .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);}) //0.48
+                        .addTemporalMarker(()->{arm.setArmPos(0.47, 0.66);}) //0.48
                         .waitSeconds(0.2)
                         .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
                         .build();
@@ -700,7 +706,13 @@ public class MonelBot10 extends LinearOpMode {
 
             }
             if(currentGamepad2.a && !previousGamepad2.a){
-
+                TrajectorySequence replung = drive.trajectorySequenceBuilder(startPose)
+                        .addTemporalMarker(()->{arm.setArmPos(0.3, 0.155);})
+                        .waitSeconds(0.3)
+                        .addTemporalMarker(()->{if (ArmV2.wristServo.getPosition()==0.15){arm.setArmPos(0.15, 0.155);}})
+                        .addTemporalMarker(()->{arm.setArmPos(0.15, 0.155);})
+                        .build();
+                drive.followTrajectorySequenceAsync(replung);
             }
             if(currentGamepad2.b && !previousGamepad2.b){
 

@@ -26,7 +26,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import java.util.List;
 
 @Config
-@Autonomous(name = "Monel_RedSafeAutoTwo")
+@Autonomous(name = "RED_SafeAuto2")
 public class RedSafeAutoTwo extends LinearOpMode {
     SampleMecanumDrive drive = null;
     Slider slider = null;
@@ -110,7 +110,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-34,-12),0)
                 .splineToConstantHeading(new Vector2d(28,-12),0)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(53,-43.5),0)
+                .splineToConstantHeading(new Vector2d(51,-43.5),0)
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
@@ -202,7 +202,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-34,-12),0)
                 .splineToConstantHeading(new Vector2d(28,-12),0)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(52,-39),0)
+                .splineToConstantHeading(new Vector2d(51,-33),0)
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
@@ -242,7 +242,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
                 .waitSeconds(0.5)
-                .strafeLeft(6)
+                .strafeRight(12)
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.5)
@@ -260,19 +260,19 @@ public class RedSafeAutoTwo extends LinearOpMode {
         TrajectorySequence AutoTrajectoryLeft = drive.trajectorySequenceBuilder(startPose)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
                 // right line
-                .lineToSplineHeading(new Pose2d(-39,-32, -Math.PI))
-//                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
-//                .waitSeconds(0.3)
-//                .addTemporalMarker(()->{Intake.CrankPosition(0.4);})
+                .lineToSplineHeading(new Pose2d(-37,-30, -Math.PI))
+                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.6);})
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{Intake.IntakePixel(1);})
                 .waitSeconds(0.5)
-//                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
 
                 //   towards pixel stack
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
 
-                .lineToSplineHeading(new Pose2d(-39 , -11, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-37 , -11, -Math.PI))
                 .lineToSplineHeading(new Pose2d(-51 , -11, -Math.PI))
 
                 .waitSeconds(0.2)
@@ -346,8 +346,6 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(60, -10))
                 .setReversed(false)
                 .build();
-
-
 
         waitForStart();
 

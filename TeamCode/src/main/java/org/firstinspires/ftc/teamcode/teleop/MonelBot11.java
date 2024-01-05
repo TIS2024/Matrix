@@ -659,7 +659,7 @@ public class MonelBot11 extends LinearOpMode {
                 deliveryServoPos = 0.79;
                 ArmV2.DropPixel(deliveryServoPos);
                 TrajectorySequence DropPixelOne = drive.trajectorySequenceBuilder(startPose)
-                        .addTemporalMarker(()->{ArmV2.DropPixel(0.82);})
+                        .addTemporalMarker(()->{ArmV2.DropPixel(0.83);})
                         .waitSeconds(0.3)
                         .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);}) //0.48
                         .waitSeconds(0.2)
