@@ -231,10 +231,22 @@ public class MonelBot10 extends LinearOpMode {
 
             double turnStack = angleWrap(Math.toRadians(90) - botHeading);
             double turnBackDrop = angleWrap(Math.toRadians(270) - botHeading);
-            if (currentGamepad1.left_trigger > 0.5 && !(previousGamepad1.left_trigger > 0.5)){
+            double turnBotFront = angleWrap(Math.toRadians(0) - botHeading);
+            double turnBotBack = angleWrap(Math.toRadians(180) - botHeading);
+
+            if (currentGamepad1.dpad_up && !previousGamepad1.dpad_up && !drive.isBusy()) {
+                drive.turn(turnBotFront);
+            }
+
+            if (currentGamepad1.dpad_down && !previousGamepad1.dpad_down && !drive.isBusy()) {
+                drive.turn(turnBotBack);
+            }
+
+            if (currentGamepad1.dpad_left && !previousGamepad1.dpad_left && !drive.isBusy()) {
                 drive.turn(turnStack);
             }
-            if (currentGamepad1.right_trigger > 0.5 && !(previousGamepad1.right_trigger > 0.5)){
+
+            if (currentGamepad1.dpad_right && !previousGamepad1.dpad_right && !drive.isBusy()) {
                 drive.turn(turnBackDrop);
             }
             //--------------------------------------------------------------------------------------
@@ -662,11 +674,11 @@ public class MonelBot10 extends LinearOpMode {
                 outtakeCounter = 0;
             }
 
-            if (currentGamepad1.dpad_up && hangerflag == "hangerUP") {
+            if (currentGamepad1.left_trigger >= 0.5 && hangerflag == "hangerUP") {
                 Hanger.LiftRobot();
                 hangerflag = "hangerDOWN";
             }
-            if (currentGamepad1.dpad_down ) {
+            if (currentGamepad1.right_trigger >= 0.5) {
                 Hanger.PutDownRobot();
             }
             if (currentGamepad1.x && !previousGamepad1.x){
