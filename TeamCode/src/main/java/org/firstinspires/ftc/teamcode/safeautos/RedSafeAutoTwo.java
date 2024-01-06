@@ -110,12 +110,12 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-34,-12),0)
                 .splineToConstantHeading(new Vector2d(28,-12),0)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(51,-43.5),0)
+                .splineToConstantHeading(new Vector2d(51.5,-43.5),0) //51
                 .waitSeconds(1)
 
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.16);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .waitSeconds(0.8)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.7)
@@ -147,15 +147,15 @@ public class RedSafeAutoTwo extends LinearOpMode {
                     output_power = 0;
                 }})
                 .waitSeconds(0.5)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(200, output_power);})
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.16);slider.extendTo(200, output_power);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .waitSeconds(0.5)
                 .strafeRight(15)
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.7)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66); slider.extendTo(0, output_power);})
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68); slider.extendTo(0, output_power);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
                 .waitSeconds(0.3)
@@ -202,12 +202,12 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-34,-12),0)
                 .splineToConstantHeading(new Vector2d(28,-12),0)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(51,-33),0)
+                .splineToConstantHeading(new Vector2d(51.5,-33),0) //51
                 .waitSeconds(1)
 
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.16);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .waitSeconds(0.8)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.7)
@@ -238,15 +238,15 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 } else if (output_power < 0.2) {
                     output_power = 0;
                 }})
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(200, output_power);})
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.16);slider.extendTo(200, output_power);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .waitSeconds(0.5)
                 .strafeRight(12)
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.5)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(0, output_power);})
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.16);slider.extendTo(0, output_power);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
@@ -292,12 +292,12 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-34,-12),0)
                 .splineToConstantHeading(new Vector2d(28,-12),0)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(51,-29),0)
+                .splineToConstantHeading(new Vector2d(51.5,-29),0) //51
                 .waitSeconds(1)
 
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.16);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .waitSeconds(0.8)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.7)
@@ -328,15 +328,15 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 } else if (output_power < 0.2) {
                     output_power = 0;
                 }})
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(200, output_power);})
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.16);slider.extendTo(200, output_power);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .waitSeconds(0.5)
                 .strafeLeft(12)
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.5)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(0, output_power);})
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.16);slider.extendTo(0, output_power);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
@@ -386,10 +386,9 @@ public class RedSafeAutoTwo extends LinearOpMode {
                             drive.followTrajectorySequence(AutoTrajectoryCenter);
                         }
                         else if(x>=200 && x<=490) {
-//                            propPosition = "right";
+                            propPosition = "right";
                             drive.followTrajectorySequence(AutoTrajectoryRight);
                         }
-
 
                     }
                     else{
@@ -408,13 +407,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 if (gamepad1.x){
                     drive.followTrajectorySequence(AutoTrajectoryLeft);
                 }
-//                telemetry.addData("LeftFrontCurrent", drive.getMotorCurrent().get(0));
-//                telemetry.addData("RightFrontCurrent", drive.getMotorCurrent().get(1));
-//                telemetry.addData("LeftRearCurrent", drive.getMotorCurrent().get(2));
-//                telemetry.addData("RightRearCurrent", drive.getMotorCurrent().get(3));
                 visionPortal.close();
-//                telemetry.addData("position",propPosition);
-//                sleep(500);
                 drive.update();
                 telemetry.update();
             }
@@ -439,7 +432,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
 
                 .build();
 
-        // C reate the vision portal by using a builder.
+        // Create the vision portal by using a builder.
 
 
         VisionPortal.Builder builder = new VisionPortal.Builder();
@@ -450,7 +443,6 @@ public class RedSafeAutoTwo extends LinearOpMode {
         builder.setCameraResolution(new Size(1280, 720));
 
         // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
-//        builder.enableLiveView(true);
         builder.enableLiveView(true);
         // Set the stream format; MJPEG uses less bandwidth than default YUY2.
         builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);

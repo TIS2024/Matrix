@@ -56,7 +56,7 @@ public class MonelBot11 extends LinearOpMode {
             gripperServoPos, intakeArmServoPos, intakeWristServoPos, crankServoPos;
     public static int levelZero = 0, levelOne = 200, levelTwo = 400, levelThree = 500;
     boolean
-            armToggle = false, deliveryToggleOne = false, deliveryToggleTwo = false, intakeToggle = false, crankToggle = false, driveToggle = false, angleToggle1 = false, angleToggle2=false,stackFlag = false;;
+            intakeToggle = false, crankToggle = false,stackFlag = false, resetIntakeFlag = false;
     public static int intakeCounter, outtakeCounter,sliderCounter =0;
     public static double
             lifter_posL = 0, lifter_posR = 0, error_lifter, error_diff, error_int, error_lifterR, error_diffR, error_intR, errorprev, errorprevR, output_lifter, output_lifterR, output_power, target, dropVal;
@@ -357,7 +357,6 @@ public class MonelBot11 extends LinearOpMode {
                             }
                         }
                     }
-                    // TODO: DO THIS MANUALLY ON R3
                     if (beamBreaker.getState() && inputTimer.milliseconds() >= 5000) {
                         TrajectorySequence CancelIntakePixel = drive.trajectorySequenceBuilder(startPose)
                                 .addTemporalMarker(() -> {
@@ -380,6 +379,28 @@ public class MonelBot11 extends LinearOpMode {
                         if (inputTimer.milliseconds() > 6000) {
                             inputState = IntakeState.INTAKE_START;
                         }
+                    }
+                    if (resetIntakeFlag){
+                        TrajectorySequence CancelIntakePixel = drive.trajectorySequenceBuilder(startPose)
+                                .addTemporalMarker(() -> {
+                                    Intake.intakeArmServo.setPosition(0.5);
+                                    Intake.intakeWristServo.setPosition(0.66);
+                                })
+                                .waitSeconds(0.2)
+                                .addTemporalMarker(() -> {
+                                    Intake.CrankPosition(0.69);
+                                })
+                                .waitSeconds(0.3)
+                                .addTemporalMarker(() -> {
+                                    arm.setArmPos(0.15, wristServoPos);
+                                })
+                                .waitSeconds(0.3)
+                                .build();
+                        drive.followTrajectorySequence(CancelIntakePixel);
+                        drive.update();
+                        intakeCounter = 0;
+                        resetIntakeFlag = false;
+                        inputState = IntakeState.INTAKE_START;
                     }
                     break;
                 case INTAKE_RETRACT:
@@ -604,6 +625,10 @@ public class MonelBot11 extends LinearOpMode {
                 drive.update();
             }
 
+            if (currentGamepad1.right_stick_button && !previousGamepad1.right_stick_button && !resetIntakeFlag){
+                resetIntakeFlag = true;
+            }
+
             if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper && (Intake.intakeArmServo.getPosition() < 0.75)){
                 TrajectorySequence OuttakeArm = drive.trajectorySequenceBuilder(startPose)
                         .addTemporalMarker(()->{ArmV2.DropPixel(0.5);})
@@ -627,8 +652,7 @@ public class MonelBot11 extends LinearOpMode {
                         .addTemporalMarker(()->{arm.setArmPos(0.25, wristServoPos);})
                         .waitSeconds(0.2)
                         .addTemporalMarker(()->{ArmV2.DropPixel(0.95);})
-                        .waitSeconds(0.5)
-                        .addTemporalMarker(()->{})
+                        .waitSeconds(0.3)
                         .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.65); Intake.intakeArmServo.setPosition(0.5);})
                         .addTemporalMarker(()->{Intake.IntakePixel(1);})
                         .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
@@ -767,7 +791,7 @@ public class MonelBot11 extends LinearOpMode {
             }
 
             if(currentGamepad2.x && previousGamepad2.x){
-//                Intake.SetArmPosition(intakeArmServoPos, intakeWristServoPos);
+
             }
             if(currentGamepad2.y && previousGamepad2.y && hangerflag == "hangerUP"){
                 Hanger.LiftRobot();
