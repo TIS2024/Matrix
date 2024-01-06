@@ -78,7 +78,7 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                 //   towards pixel stack
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
 
-                .lineToSplineHeading(new Pose2d(-35 , 11, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-30 , 11, -Math.PI))
                 .lineToSplineHeading(new Pose2d(-51 , 11, -Math.PI))
 
                 .waitSeconds(0.2)
@@ -101,7 +101,7 @@ public class BlueSafeAutoTwo extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(52.5,32),0)
                 .waitSeconds(1)
 
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
+                .addTemporalMarker(()->{arm.setArmPos(0.5   , 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.65);})
                 .waitSeconds(0.8)
