@@ -52,7 +52,7 @@ public class MonelBot11 extends LinearOpMode {
     public static DcMotorEx leftFront, leftRear, rightFront, rightRear;
     ElapsedTime inputTimer, outputTimer, angle_timer, dropTimer;
     public static double
-            armServoOnePos, armServoTwoPos, wristServoPos = 0.155, deliveryServoPos, armSliderServoPos;
+            armServoOnePos, armServoTwoPos, wristServoPos = 0.175, deliveryServoPos, armSliderServoPos;
     public static double
             gripperServoPos, intakeArmServoPos, intakeWristServoPos, crankServoPos;
     public static int levelZero = 0, levelOne = 200, levelTwo = 400, levelThree = 500;
@@ -390,6 +390,7 @@ public class MonelBot11 extends LinearOpMode {
                 case INTAKE_INPUT:
                     Intake.intakeWristServo.setPosition(0.66);
                     Intake.intakeArmServo.setPosition(0.4);
+                    
                     if (intakeWristPosition>=130) { //inputTimer.milliseconds() >= 400  // 500 //600
                         Intake.intakeArmServo.setPosition(0.75);
                         gamepad1.rumble(100);
@@ -398,13 +399,13 @@ public class MonelBot11 extends LinearOpMode {
                             Intake.intakeArmServo.setPosition(1);
                             Intake.crankServo.setPosition(0.69);
                             inputTimer.reset();
-                            inputState = IntakeState.INTAKE_FINAL;
+                            inputState = IntakeState.INTAKE_RETRACT;
                         }
                     }
                     break;
                 case INTAKE_FINAL:
                     ArmV2.wristServo.setPosition(wristServoPos);
-                    if (Intake.intakeArmServo.getPosition() == 1 && wristPosition >= 290 && inputTimer.milliseconds() >= 350) {  //350 //inputTimer.milliseconds() >= 300
+                    if (Intake.intakeArmServo.getPosition() == 1 && wristPosition >= 285 && inputTimer.milliseconds() >= 350) {  //350 //inputTimer.milliseconds() >= 300
                         ArmV2.SetArmPosition(0.15, wristServoPos);
                         if (ArmV2.armServoTwo.getPosition() == 0.15 && inputTimer.milliseconds() >= 500) { //350 //400
                             ArmV2.DropPixel(0.5);
@@ -478,38 +479,24 @@ public class MonelBot11 extends LinearOpMode {
                             slider.extendTo(0, output_power);
                             ArmV2.SetArmPosition(0.15, wristServoPos);
                             outputTimer.reset();
-                            outputState = OuttakeState.OUTTAKE_OPEN;
-                        }
-                    }
-                    break;
-                case OUTTAKE_OPEN:
-                    Intake.IntakePixel(1);
-                    if(outputTimer.milliseconds()>=200) {
-                        Intake.intakeWristServo.setPosition(0.38);
-                        if (outputTimer.milliseconds()>=400) {//400
-                            Intake.intakeArmServo.setPosition(0.5);
-                            Intake.intakeWristServo.setPosition(0.66);
-                            outputTimer.reset();
                             outputState = OuttakeState.OUTTAKE_OUTPUT;
                         }
                     }
                     break;
                 case OUTTAKE_OUTPUT:
+                    Intake.IntakePixel(1);
                     ArmV2.SetArmPosition(0.5, wristServoPos);
                     if (outputTimer.milliseconds()>=300){ //300
                         ArmV2.SetArmPosition(0.5, 0.66);
-                    }
-                    if (outputTimer.milliseconds() >= 350){ // 500
-                        outputTimer.reset();
-                        if (sliderCounter != 0)
-                        {
-                            outputState = OuttakeState.OUTTAKE_SLIDER;
+                        if (outputTimer.milliseconds() >= 450){ // 500
+                            outputTimer.reset();
+                            if (sliderCounter != 0) {
+                                outputState = OuttakeState.OUTTAKE_SLIDER;
+                            }
+                            else {
+                                outputState = OuttakeState.OUTTAKE_OPEN;
+                            }
                         }
-                        else
-                        {
-                            outputState = OuttakeState.OUTTAKE_FINAL;
-                        }
-
                     }
                     break;
                 case OUTTAKE_SLIDER:
@@ -545,7 +532,19 @@ public class MonelBot11 extends LinearOpMode {
                             outtakeCounter = 0;
                         }
                         outputTimer.reset();
-                        outputState = OuttakeState.OUTTAKE_FINAL;
+                        outputState = OuttakeState.OUTTAKE_OPEN;
+                    }
+                    break;
+                case OUTTAKE_OPEN:
+                    Intake.IntakePixel(1);
+                    if(outputTimer.milliseconds()>=200) {
+                        Intake.intakeWristServo.setPosition(0.38);
+                        if (outputTimer.milliseconds()>=400) {//400
+                            Intake.intakeArmServo.setPosition(0.5);
+                            Intake.intakeWristServo.setPosition(0.66);
+                            outputTimer.reset();
+                            outputState = OuttakeState.OUTTAKE_FINAL;
+                        }
                     }
                     break;
                 case OUTTAKE_FINAL:

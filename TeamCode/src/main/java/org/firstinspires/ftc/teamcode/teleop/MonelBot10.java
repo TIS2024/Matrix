@@ -51,7 +51,7 @@ public class MonelBot10 extends LinearOpMode {
     public static DcMotorEx leftFront, leftRear, rightFront, rightRear;
     ElapsedTime inputTimer, outputTimer, angle_timer, dropTimer;
     public static double
-            armServoOnePos, armServoTwoPos, wristServoPos = 0.155, wristServoOutPos, deliveryServoPos, armSliderServoPos;
+            armServoOnePos, armServoTwoPos, wristServoPos = 0.175, wristServoOutPos, deliveryServoPos, armSliderServoPos;
     public static double
             gripperServoPos, intakeArmServoPos, intakeWristServoPos, crankServoPos;
     public static int levelZero = 0, levelOne = 200, levelTwo = 400, levelThree = 500;
@@ -396,7 +396,7 @@ public class MonelBot10 extends LinearOpMode {
                     break;
                 case INTAKE_FINAL:
                     ArmV2.wristServo.setPosition(wristServoPos);
-                    if (Intake.intakeArmServo.getPosition() == 1 && wristPosition >= 290 && inputTimer.milliseconds() >= 350) {  //350 //inputTimer.milliseconds() >= 300
+                    if (Intake.intakeArmServo.getPosition() == 1 && wristPosition >= 280 && inputTimer.milliseconds() >= 350) {  //350 //inputTimer.milliseconds() >= 300
                         ArmV2.SetArmPosition(0.15, wristServoPos);
                         if (ArmV2.armServoTwo.getPosition() == 0.15 && inputTimer.milliseconds() >= 500) { //350 //400
                             ArmV2.DropPixel(0.5);
@@ -647,7 +647,7 @@ public class MonelBot10 extends LinearOpMode {
                 }
                 TrajectorySequence DropPixelTwo = drive.trajectorySequenceBuilder(startPose)
                         .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                        .waitSeconds(0.3) //0.3
+                        .waitSeconds(0.3)
                         .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66); ArmV2.SliderLink(0.95);})
                         .waitSeconds(0.4)
                         .addTemporalMarker(()->{arm.setArmPos(0.3, wristServoPos);})
