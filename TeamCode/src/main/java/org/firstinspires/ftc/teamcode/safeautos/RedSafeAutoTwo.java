@@ -78,7 +78,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
         TrajectorySequence AutoTrajectoryRight = drive.trajectorySequenceBuilder(startPose)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
                 // right line
-                .lineToSplineHeading(new Pose2d(-42,-32, 0))
+                .lineToSplineHeading(new Pose2d(-44,-32, 0))
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.42);})
@@ -88,9 +88,9 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
 
                 //   towards pixel stack
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.69);Intake.intakeWristServo.setPosition(0.245);})
 
-                .lineToSplineHeading(new Pose2d(-51 , -11, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-52 , -12, -Math.PI)) //51,12
 
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
@@ -109,11 +109,16 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 //   towards backdrop
                 .splineToConstantHeading(new Vector2d(-34,-12),0)
                 .splineToConstantHeading(new Vector2d(28,-12),0)
-                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(51.5,-43.5),0) //51
-                .waitSeconds(1)
-
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(30, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(30))
+//                .splineToConstantHeading(new Vector2d(49,-39),0) //51
+                .lineToConstantHeading(new Vector2d(49, -39))
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.16);})
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, -10);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{slider.extendTo(100, output_power);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .waitSeconds(0.8)
@@ -122,6 +127,13 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.4, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.75);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, -10);if (output_power > 0.9) {
+                    output_power = 1;
+                } else if (output_power < 0.2) {
+                    output_power = 0;
+                }})
+                .addTemporalMarker(()->{slider.extendTo(0, output_power);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);})
                 .waitSeconds(0.5)

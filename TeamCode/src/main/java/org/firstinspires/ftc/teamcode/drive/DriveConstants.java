@@ -48,7 +48,7 @@ public class DriveConstants {
      */
     public static double WHEEL_RADIUS = 1.8898; // in
     public static double GEAR_RATIO = 0.0667; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 11.01; //11.81; //13.97;11.2 // in
+    public static double TRACK_WIDTH = 12.46; //11.81; //13.97;11.2 // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -57,9 +57,9 @@ public class DriveConstants {
      * empirically tuned.
      */
 
-    public static double kA = 0.00195; //0.00325; //0.00165; //0.00165; //0.00171;
-    public static double kStatic = 0.12380; //0.01912; //0.10984; //0.10984; //0.0810;
-    public static double kV = 0.01258; //0.01740; //0.0157; //0.0157; //0.01641; 1.0 / rpmToVelocity(MAX_RPM);
+    public static double kA = 0.0022; //0.00195; //0.00325; //0.00165; //0.00165; //0.00171;
+    public static double kStatic = 0.12089; //0.12380; //0.01912; //0.10984; //0.10984; //0.0810;
+    public static double kV = 0.01220; //0.01258; //0.01740; //0.0157; //0.0157; //0.01641; 1.0 / rpmToVelocity(MAX_RPM);
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -89,8 +89,8 @@ public class DriveConstants {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
 
      */
-    public static double MAX_VEL = 60; //50.4643527240892;//50.4643527240892; //47.4944536 //30.46434527240892;
-    public static double MAX_ACCEL = 60; //48.46434527240892;//45.46434527240892; //30.46434527240892;
+    public static double MAX_VEL = 50; //50.4643527240892;//50.4643527240892; //47.4944536 //30.46434527240892;
+    public static double MAX_ACCEL = 50; //48.46434527240892;//45.46434527240892; //30.46434527240892;
     public static double MAX_ANG_VEL = Math.toRadians(253.6310526315789); //253.6310526315789 //recommended 136.52544; 128.1777; 134.57315176755623;
     public static double MAX_ANG_ACCEL = Math.toRadians(253.6310526315789);
 
