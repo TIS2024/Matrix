@@ -690,7 +690,6 @@ public class MonelBot11 extends LinearOpMode {
                 Intake.SetArmPosition(0.75, 0.66);
             }
 
-
             //--------------------------------------------------------------------------------------
 
             if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up){
