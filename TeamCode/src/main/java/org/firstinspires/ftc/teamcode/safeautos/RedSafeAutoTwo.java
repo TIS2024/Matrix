@@ -178,6 +178,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(50, -10, Math.PI/2))
                 .lineToConstantHeading(new Vector2d(60, -10))
                 .setReversed(false)
+                .waitSeconds(300)
                 .build();
 
         TrajectorySequence AutoTrajectoryCenter = drive.trajectorySequenceBuilder(startPose)
