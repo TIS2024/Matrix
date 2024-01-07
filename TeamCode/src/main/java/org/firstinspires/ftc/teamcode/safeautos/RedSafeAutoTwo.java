@@ -111,7 +111,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(28,-12),0)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(30, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(30))
 //                .splineToConstantHeading(new Vector2d(49,-39),0) //51
-                .lineToConstantHeading(new Vector2d(50, -39))
+                .lineToConstantHeading(new Vector2d(50.5, -39))
 
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.16);})
                 .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, -10);if (output_power > 0.9) {
@@ -217,7 +217,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(28,-12),0)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
 //                .splineToConstantHeading(new Vector2d(51.5,-33),0) //51
-                .lineToConstantHeading(new Vector2d(50, -33))
+                .lineToConstantHeading(new Vector2d(50.5, -33))
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.16);})
@@ -309,7 +309,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(28,-12),0)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
 //                .splineToConstantHeading(new Vector2d(51.5,-29),0) //51
-                .lineToConstantHeading(new Vector2d(50, -29))
+                .lineToConstantHeading(new Vector2d(50.5, -29))
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.16);})

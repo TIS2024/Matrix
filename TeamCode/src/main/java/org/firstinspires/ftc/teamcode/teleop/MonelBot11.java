@@ -49,7 +49,7 @@ public class MonelBot11 extends LinearOpMode {
     Intake intake = null;
     Drone drone = null;
     public static DcMotorEx leftFront, leftRear, rightFront, rightRear;
-    ElapsedTime inputTimer, outputTimer, angle_timer, dropTimer;
+    ElapsedTime inputTimer, outputTimer, angle_timer, dropTimer, replungeTimer;
     public static double
             armServoOnePos, armServoTwoPos, wristServoPos = 0.175, wristServoOutPos, deliveryServoPos, armSliderServoPos;
     public static double
@@ -123,6 +123,7 @@ public class MonelBot11 extends LinearOpMode {
         outputTimer = new ElapsedTime();
         angle_timer = new ElapsedTime();
         dropTimer = new ElapsedTime();
+        replungeTimer = new ElapsedTime();
 
         Pose2d startPose = new Pose2d(0, 0, Math.toRadians(180));
         drive.setPoseEstimate(startPose);
@@ -167,6 +168,7 @@ public class MonelBot11 extends LinearOpMode {
             inputTimer.reset();
             outputTimer.reset();
             dropTimer.reset();
+            replungeTimer.reset();
             intakeCounter = 0;
             sliderCounter = 0;
             outtakeCounter = 0;

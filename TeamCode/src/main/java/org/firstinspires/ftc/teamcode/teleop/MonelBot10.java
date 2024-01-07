@@ -535,10 +535,10 @@ public class MonelBot10 extends LinearOpMode {
                     break;
                 case OUTTAKE_OUTPUT:
                     ArmV2.SetArmPosition(0.5, wristServoPos);
-                    if (outputTimer.milliseconds()>=300){ //300
+                    if (outputTimer.milliseconds()>=400 && armTwoPosition >= 175){ //300
                         ArmV2.SetArmPosition(0.5, 0.66);
                     }
-                    if (outputTimer.milliseconds() >= 350){ // 500
+                    if (outputTimer.milliseconds() >= 500){ // 500
                         outputTimer.reset();
                         if (sliderCounter != 0) {
                             outputState = OuttakeState.OUTTAKE_SLIDER;
