@@ -77,6 +77,7 @@ public class BlueSafeAutoOne extends LinearOpMode {
 
                 //backdrop
                 .lineToConstantHeading(new Vector2d(17.5 , 30))
+
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.4, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.42);})
@@ -84,6 +85,7 @@ public class BlueSafeAutoOne extends LinearOpMode {
                 .addTemporalMarker(()->{Intake.IntakePixel(1);})
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);arm.setArmPos(0.5, 0.66);})
+
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
                 .lineToConstantHeading(new Vector2d(52,27))
                 .UNSTABLE_addTemporalMarkerOffset(-0.5,()->{ArmV2.DropPixel(1);})

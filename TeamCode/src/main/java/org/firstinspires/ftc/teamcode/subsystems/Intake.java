@@ -20,6 +20,10 @@ public class Intake {
 //        sleep(100);
         intakeArmServo.setPosition(intakeArmServoPos);
     }
+    public void setArm(double intakeArmServoPos, double intakeWristServoPos){
+        intakeWristServo.setPosition(intakeWristServoPos);
+        intakeArmServo.setPosition(intakeArmServoPos);
+    }
     public static void IntakePixel(double gripperServoPos){
         gripperServo.setPosition(gripperServoPos);
     }
