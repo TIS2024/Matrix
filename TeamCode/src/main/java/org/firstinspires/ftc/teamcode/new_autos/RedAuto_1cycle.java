@@ -24,7 +24,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import java.util.List;
 
 @Config
-@Autonomous(name = "Monel_RedAuto_1cycle")
+@Autonomous(name = "Monel_RedAuto_1cycle", group = "Cycle_Autos")
 public class RedAuto_1cycle extends LinearOpMode {
     SampleMecanumDrive drive = null;
     Slider slider = null;

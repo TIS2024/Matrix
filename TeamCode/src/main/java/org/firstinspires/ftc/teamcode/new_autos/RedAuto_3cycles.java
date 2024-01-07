@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Slider;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous(name="RedAuto_3cycles")
+@Autonomous(name="RedAuto_3cycles", group = "Cycle_Autos")
 @Config
 public class RedAuto_3cycles extends LinearOpMode {
     SampleMecanumDrive drive = null;
