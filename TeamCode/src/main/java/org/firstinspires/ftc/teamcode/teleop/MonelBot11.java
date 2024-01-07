@@ -270,8 +270,8 @@ public class MonelBot11 extends LinearOpMode {
                         }
                         if(intake_stack_command == "FiveStackGo")
                         {
-                            Intake.intakeArmServo.setPosition(0.65);
-                            Intake.intakeWristServo.setPosition(0.27);
+                            Intake.intakeArmServo.setPosition(0.670);
+                            Intake.intakeWristServo.setPosition(0.25);
                             Intake.IntakePixel(1);
                             inputTimer.reset();
                             inputState = IntakeState.INTAKE_EXTEND;
@@ -316,6 +316,11 @@ public class MonelBot11 extends LinearOpMode {
                                 Intake.intakeArmServo.setPosition(0.4);
                                 Intake.intakeWristServo.setPosition(0.48);
                             }
+                            if (intake_stack_command == "FiveStackGo")
+                            {
+                                Intake.intakeArmServo.setPosition(0.67);
+                                Intake.intakeWristServo.setPosition(0.25);
+                            }
                             TrajectorySequence IntakePixel = drive.trajectorySequenceBuilder(startPose)
                                     .addTemporalMarker(() -> {
                                         Intake.CrankPosition(0.35);
@@ -339,6 +344,11 @@ public class MonelBot11 extends LinearOpMode {
                             {
                                 Intake.intakeArmServo.setPosition(0.4);
                                 Intake.intakeWristServo.setPosition(0.48);
+                            }
+                            if (intake_stack_command == "FiveStackGo")
+                            {
+                                Intake.intakeArmServo.setPosition(0.67);
+                                Intake.intakeWristServo.setPosition(0.25);
                             }
                             TrajectorySequence IntakePixel = drive.trajectorySequenceBuilder(startPose)
                                     .addTemporalMarker(() -> {
@@ -402,6 +412,7 @@ public class MonelBot11 extends LinearOpMode {
                         resetIntakeFlag = false;
                         inputState = IntakeState.INTAKE_START;
                     }
+
                     break;
                 case INTAKE_RETRACT:
                     Intake.CrankPosition(0.69);
@@ -625,7 +636,7 @@ public class MonelBot11 extends LinearOpMode {
                 drive.update();
             }
 
-            if (currentGamepad1.right_stick_button && !previousGamepad1.right_stick_button && !resetIntakeFlag){
+            if (currentGamepad1.right_trigger > 0.5 && !(previousGamepad1.right_trigger > 0.5) && !resetIntakeFlag){
                 resetIntakeFlag = true;
             }
 

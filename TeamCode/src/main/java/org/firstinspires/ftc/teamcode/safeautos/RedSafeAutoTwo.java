@@ -111,7 +111,8 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(28,-12),0)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(30, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(30))
 //                .splineToConstantHeading(new Vector2d(49,-39),0) //51
-                .lineToConstantHeading(new Vector2d(49, -39))
+                .lineToConstantHeading(new Vector2d(50, -39))
+
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.16);})
                 .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, -10);if (output_power > 0.9) {
                     output_power = 1;
@@ -178,7 +179,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(50, -10, Math.PI/2))
                 .lineToConstantHeading(new Vector2d(60, -10))
                 .setReversed(false)
-                .waitSeconds(300)
+                .waitSeconds(30)
                 .build();
 
         TrajectorySequence AutoTrajectoryCenter = drive.trajectorySequenceBuilder(startPose)
@@ -196,7 +197,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 //   towards pixel stack
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
 
-                .lineToSplineHeading(new Pose2d(-51 , -11, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-52 , -12, -Math.PI))
 
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
@@ -215,7 +216,8 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-34,-12),0)
                 .splineToConstantHeading(new Vector2d(28,-12),0)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(51.5,-33),0) //51
+//                .splineToConstantHeading(new Vector2d(51.5,-33),0) //51
+                .lineToConstantHeading(new Vector2d(50, -33))
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.16);})
@@ -268,6 +270,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(50, -10, Math.PI/2))
                 .lineToConstantHeading(new Vector2d(60, -10))
                 .setReversed(false)
+                .waitSeconds(30)
                 .build();
 
         TrajectorySequence AutoTrajectoryLeft = drive.trajectorySequenceBuilder(startPose)
@@ -286,7 +289,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
 
                 .lineToSplineHeading(new Pose2d(-37 , -11, -Math.PI))
-                .lineToSplineHeading(new Pose2d(-51 , -11, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-52 , -12, -Math.PI))
 
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
@@ -305,7 +308,8 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-34,-12),0)
                 .splineToConstantHeading(new Vector2d(28,-12),0)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(51.5,-29),0) //51
+//                .splineToConstantHeading(new Vector2d(51.5,-29),0) //51
+                .lineToConstantHeading(new Vector2d(50, -29))
                 .waitSeconds(1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.16);})
@@ -358,6 +362,7 @@ public class RedSafeAutoTwo extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(50, -10, Math.PI/2))
                 .lineToConstantHeading(new Vector2d(60, -10))
                 .setReversed(false)
+                .waitSeconds(30)
                 .build();
 
         waitForStart();

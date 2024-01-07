@@ -84,7 +84,7 @@ public class RedInAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
 
                 //   towards pixel stack
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.69);Intake.intakeWristServo.setPosition(0.245);})
 
                 .lineToSplineHeading(new Pose2d(-50,-36,-Math.PI))
 
@@ -182,7 +182,7 @@ public class RedInAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
 
                 //   towards pixel stack
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.69);Intake.intakeWristServo.setPosition(0.245);})
 
                 .lineToSplineHeading(new Pose2d(-51 , -38, -Math.PI))
 
@@ -275,7 +275,7 @@ public class RedInAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
 
                 //   towards pixel stack
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.69);Intake.intakeWristServo.setPosition(0.245);})
 
                 .lineToSplineHeading(new Pose2d(-51,-35,-Math.PI))
 
