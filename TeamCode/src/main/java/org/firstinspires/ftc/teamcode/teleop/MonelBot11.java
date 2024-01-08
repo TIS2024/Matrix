@@ -336,7 +336,8 @@ public class MonelBot11 extends LinearOpMode {
                             drive.update();
                             if (inputTimer.milliseconds() >= 500) { ///800
                                 inputTimer.reset();
-                                inputState = IntakeState.INTAKE_RETRACT;
+//                                inputState = IntakeState.INTAKE_RETRACT;
+                                inputState = IntakeState.INTAKE_INPUT;
                             }
                         }
                     }
@@ -406,7 +407,7 @@ public class MonelBot11 extends LinearOpMode {
                                 .addTemporalMarker(() -> {
                                     arm.setArmPos(0.15, wristServoPos);
                                 })
-                                .waitSeconds(0.3)
+//                                .waitSeconds(0.3)
                                 .build();
                         drive.followTrajectorySequence(CancelIntakePixel);
                         drive.update();
@@ -430,15 +431,19 @@ public class MonelBot11 extends LinearOpMode {
                 case INTAKE_INPUT:
                     Intake.intakeWristServo.setPosition(0.66);
                     Intake.intakeArmServo.setPosition(0.4);
-                    if (intakeWristPosition>=130) { //inputTimer.milliseconds() >= 400  // 500 //600
+                    if (intakeWristPosition>=130 && inputTimer.milliseconds() >= 400) { //inputTimer.milliseconds() >= 400  // 500 //600
                         Intake.intakeArmServo.setPosition(0.75);
+                        Intake.intakeWristServo.setPosition(0.7);
                         gamepad1.rumble(100);
-                        if (intakeArmPosition <= 117) {//inputTimer.milliseconds() >= 1000 //axonPosition <= 130 //inputTimer.milliseconds() >= 400 &&
+                        if (inputTimer.milliseconds() >= 1000) {//inputTimer.milliseconds() >= 1000 //axonPosition <= 130 //inputTimer.milliseconds() >= 400 &&
                             Intake.intakeWristServo.setPosition(0.45);
-                            Intake.intakeArmServo.setPosition(1);
-                            Intake.crankServo.setPosition(0.69);
-                            inputTimer.reset();
-                            inputState = IntakeState.INTAKE_FINAL;
+                            if(inputTimer.milliseconds() >= 600){
+                                Intake.intakeArmServo.setPosition(1);
+//                            Intake.crankServo.setPosition(0.69);
+                                inputTimer.reset();
+                                inputState = IntakeState.INTAKE_FINAL;
+                            }
+
                         }
                     }
                     break;
@@ -799,7 +804,7 @@ public class MonelBot11 extends LinearOpMode {
                 }
             }
 
-            if (currentGamepad2.start && !previousGamepad2.start){
+            if (currentGamepad1.right_stick_button && !previousGamepad1.right_stick_button){ //gamepad2.start
                 intakeToggle = !intakeToggle;
             }
 

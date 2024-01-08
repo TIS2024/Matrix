@@ -379,33 +379,25 @@ public class MonelBot10 extends LinearOpMode {
                                 .addTemporalMarker(() -> {
                                     arm.setArmPos(0.15, wristServoPos);
                                 })
-                                .waitSeconds(0.3)
+//                                .waitSeconds(0.3)
                                 .build();
                         drive.followTrajectorySequence(CancelIntakePixel);
-                        drive.update();
                         intakeCounter = 0;
-                        if (inputTimer.milliseconds() > 6000) {
-                            inputState = IntakeState.INTAKE_START;
-                        }
+                        inputState = IntakeState.INTAKE_START;
+//                        if (inputTimer.milliseconds() > 6000) {
+//                            inputState = IntakeState.INTAKE_START;
+//                        }
                     }
                     if (resetIntakeFlag){
                         TrajectorySequence CancelIntakePixel = drive.trajectorySequenceBuilder(startPose)
-                                .addTemporalMarker(() -> {
-                                    Intake.intakeArmServo.setPosition(0.5);
-                                    Intake.intakeWristServo.setPosition(0.66);
-                                })
+                                .addTemporalMarker(() -> {Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                                 .waitSeconds(0.2)
-                                .addTemporalMarker(() -> {
-                                    Intake.CrankPosition(0.69);
-                                })
+                                .addTemporalMarker(() -> {Intake.CrankPosition(0.69);})
                                 .waitSeconds(0.3)
-                                .addTemporalMarker(() -> {
-                                    arm.setArmPos(0.15, wristServoPos);
-                                })
-                                .waitSeconds(0.3)
+                                .addTemporalMarker(() -> {arm.setArmPos(0.15, wristServoPos);})
+//                                .waitSeconds(0.3)
                                 .build();
                         drive.followTrajectorySequence(CancelIntakePixel);
-                        drive.update();
                         intakeCounter = 0;
                         resetIntakeFlag = false;
                         inputState = IntakeState.INTAKE_START;
@@ -425,7 +417,7 @@ public class MonelBot10 extends LinearOpMode {
                 case INTAKE_INPUT:
                     Intake.intakeWristServo.setPosition(0.66);
                     Intake.intakeArmServo.setPosition(0.4);
-                    if (intakeWristPosition>=130 && inputTimer.milliseconds() >= 400) { //inputTimer.milliseconds() >= 400
+                    if (intakeWristPosition>=130 && inputTimer.milliseconds() >= 400 ) { //inputTimer.milliseconds() >= 400
                         Intake.intakeArmServo.setPosition(0.75);
                         gamepad1.rumble(100);
                         if (intakeArmPosition <= 117 && inputTimer.milliseconds() >= 500) { //inputTimer.milliseconds() >= 500
@@ -461,19 +453,18 @@ public class MonelBot10 extends LinearOpMode {
                                 }
                                 slider.extendTo(0, output_power);
                                 Intake.IntakePixel(0.8);
+                                ArmV2.SetArmPosition(0.15, wristServoPos);
+                                if (stackFlag) {
+                                    intakeCounter = 2;
+                                    stackFlag = false;
+                                } else {
+                                    intakeCounter = 1;
+                                }
+                                inputTimer.reset();
+                                outtakeCounter = 0;
+                                intake_stack_command = "GroundIntake";
+                                inputState = IntakeState.INTAKE_START;
                             }
-                            ArmV2.SetArmPosition(0.15, wristServoPos);
-                            if (stackFlag) {
-                                intakeCounter = 2;
-                                stackFlag = false;
-                            } else {
-                                intakeCounter = 1;
-                            }
-                            inputTimer.reset();
-                            outtakeCounter = 0;
-                            intake_stack_command = "GroundIntake";
-                            inputState = IntakeState.INTAKE_START;
-
                         }
                     }
                     break;
@@ -481,7 +472,7 @@ public class MonelBot10 extends LinearOpMode {
                     inputState = IntakeState.INTAKE_START;
                     intakeCounter = 0;
             }
-            //--------------------------------------------------------------------------------------0
+            //--------------------------------------------------------------------------------------
 
             //Outtake Sequence
             switch (outputState){
@@ -588,7 +579,7 @@ public class MonelBot10 extends LinearOpMode {
                 case OUTTAKE_FINAL:
                     Intake.crankServo.setPosition(0.69);
                     Intake.intakeArmServo.setPosition(0.5);
-                    Intake.intakeWristServo.setPosition(0.66);
+                    Intake.intakeWristServo.setPosition(0.67);
                     if (outputTimer.milliseconds()>=50){
                         outputTimer.reset();
                         intakeCounter = 0;
@@ -795,7 +786,7 @@ public class MonelBot10 extends LinearOpMode {
                 }
             }
 
-            if (currentGamepad2.start && !previousGamepad2.start){
+            if (currentGamepad1.right_stick_button && !previousGamepad1.right_stick_button){ //currentGamepad2.start
                 intakeToggle = !intakeToggle;
             }
 
