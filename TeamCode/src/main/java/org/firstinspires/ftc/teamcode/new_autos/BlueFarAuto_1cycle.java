@@ -49,7 +49,7 @@ public class BlueFarAuto_1cycle extends LinearOpMode {
 
     public static double kp = 4, ki, kd = 1.7;
     public static Pose2d PurpleRightPos = new Pose2d(-35,32, -Math.PI), YellowRightPos, StackRightPos = new Pose2d(-51 , 12, -Math.PI);
-    public static Vector2d PurpleRight, YellowRight = new Vector2d(51,29), StackRight = new Vector2d(-51, 12);
+    public static Vector2d PurpleRight, YellowRight = new Vector2d(52,12), StackRight = new Vector2d(-51, 12);
 
 
     public static Pose2d PurpleLeftPos = new Pose2d(-44,30, 0), YellowLeftPos, StackLeftPos = new Pose2d(-51 , 12, -Math.PI);
@@ -70,7 +70,31 @@ public class BlueFarAuto_1cycle extends LinearOpMode {
         ParkingOut,
         IDLE
     }
+    enum AutoTrajectoryCenter {
+        Start,
+        AutoTrajectoryCenterPurple,
+        CenterPathPlacing,
+        AutoTrajectoryCenterYellow,
+        CenterPathPicking,
+        CenterPathPlacing2,
+        AutoTrajectoryCenterYellow2,
+        ParkingOut,
+        IDLE
+    }
+    enum AutoTrajectoryLeft {
+        Start,
+        AutoTrajectoryLeftPurple,
+        CenterPathPlacing,
+        AutoTrajectoryLeftYellow,
+        CenterPathPicking,
+        CenterPathPlacing2,
+        AutoTrajectoryLeftYellow2,
+        ParkingOut,
+        IDLE
+    }
     AutoTrajectoryRight currentState = AutoTrajectoryRight.Start;
+    AutoTrajectoryCenter currentState2 = AutoTrajectoryCenter.Start;
+    AutoTrajectoryLeft currentState3 = AutoTrajectoryLeft.Start;
     @Override
     public void runOpMode() throws InterruptedException {
         drive = new SampleMecanumDrive(hardwareMap);
@@ -86,21 +110,49 @@ public class BlueFarAuto_1cycle extends LinearOpMode {
 
         TrajectorySequence AutoTrajectoryRightPurple = drive.trajectorySequenceBuilder(startPose)
                 // right line
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
                 .lineToSplineHeading(PurpleRightPos)
+                .addTemporalMarker(()->{Intake.IntakePixel(1);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{intake.setArm(0.5, 0.66);})
                 .build();
 
         TrajectorySequence CenterPathPlacing = drive.trajectorySequenceBuilder(AutoTrajectoryRightPurple.end())
                 .lineToSplineHeading(new Pose2d(-34 , 12, -Math.PI))
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.69);Intake.intakeWristServo.setPosition(0.245);})
+                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
                 .lineToSplineHeading(StackRightPos)
+                .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{intake.setArm(0.69, 0.4);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
                 .setReversed(true)
                 .waitSeconds(1)
                 .splineToConstantHeading(new Vector2d(-34,12),0)
+//                .UNSTABLE_addTemporalMarkerOffset(0.0, ()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
+//                .UNSTABLE_addTemporalMarkerOffset(0.3, ()->{Intake.intakeArmServo.setPosition(0.75);})
+//                .UNSTABLE_addTemporalMarkerOffset(0.7, ()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);})
+//                .UNSTABLE_addTemporalMarkerOffset(1, ()->{arm.setArmPos(0.15, 0.175);})
+//                .UNSTABLE_addTemporalMarkerOffset(1.2,()->{Intake.IntakePixel(1);ArmV2.DropPixel(0.5);})
+                .UNSTABLE_addTemporalMarkerOffset(-0.5,()->{arm.setArmPos(0.15, 0.175);})
                 .splineToConstantHeading(new Vector2d(28,12),0)
                 .build();
 
         TrajectorySequence AutoTrajectoryRightYellow = drive.trajectorySequenceBuilder(CenterPathPlacing.end())
-                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(YellowRight,0)
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(40, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(40))
+                .lineToConstantHeading(YellowRight)
+                .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
+                .lineToConstantHeading(new Vector2d(52, 32))
+                .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
+                .waitSeconds(0.2)
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, ()->{ArmV2.DropPixel(1);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.175);})
+                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.175);})
+                .waitSeconds(5)
                 .resetConstraints()
                 .build();
 
@@ -139,8 +191,11 @@ public class BlueFarAuto_1cycle extends LinearOpMode {
                 .turn(Math.PI/2)
                 .build();
 
-//        TrajectorySequence AutoTrajectoryCenter = drive.trajectorySequenceBuilder(startPose)
-//                .lineToSplineHeading(PurpleCenterPos)
+        TrajectorySequence AutoTrajectoryCenterPurple = drive.trajectorySequenceBuilder(startPose)
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
+                .lineToSplineHeading(PurpleCenterPos)
+                .build();
+
 //                .lineToSplineHeading(StackCenterPos)
 //                .setReversed(true)
 //                .splineToConstantHeading(new Vector2d(-34,12),0)
@@ -165,8 +220,7 @@ public class BlueFarAuto_1cycle extends LinearOpMode {
 //                .resetConstraints()
 //                .setReversed(false)
 //                .waitSeconds(30)
-//                .build();
-//
+
 //        TrajectorySequence AutoTrajectoryLeft = drive.trajectorySequenceBuilder(startPose)
 //                .lineToSplineHeading(PurpleLeftPos)
 //                .lineToSplineHeading(new Pose2d(-44 , 12, -Math.PI))
@@ -283,33 +337,34 @@ public class BlueFarAuto_1cycle extends LinearOpMode {
                     break;
                 case AutoTrajectoryRightYellow:
                     if (!drive.isBusy()) {
-                        currentState = AutoTrajectoryRight.CenterPathPicking;
-                        drive.followTrajectorySequenceAsync(CenterPathPicking);
-                    }
-                    break;
-                case CenterPathPicking:
-                    if (!drive.isBusy()) {
-                        currentState = AutoTrajectoryRight.CenterPathPlacing2;
-                        drive.followTrajectorySequenceAsync(CenterPathPlacing2);
-                    }
-                    break;
-                case CenterPathPlacing2:
-                    if (!drive.isBusy()) {
-                        currentState = AutoTrajectoryRight.AutoTrajectoryRightYellow2;
-                        drive.followTrajectorySequenceAsync(AutoTrajectoryRightYellow2);
-                    }
-                    break;
-                case AutoTrajectoryRightYellow2:
-                    if (!drive.isBusy()) {
-                        currentState = AutoTrajectoryRight.ParkingOut;
-                        drive.followTrajectorySequenceAsync(ParkingOut);
-                    }
-                    break;
-                case ParkingOut:
-                    if (!drive.isBusy()) {
+//                        currentState = AutoTrajectoryRight.CenterPathPicking;
                         currentState = AutoTrajectoryRight.IDLE;
+//                        drive.followTrajectorySequenceAsync(CenterPathPicking);
                     }
                     break;
+//                case CenterPathPicking:
+//                    if (!drive.isBusy()) {
+//                        currentState = AutoTrajectoryRight.CenterPathPlacing2;
+//                        drive.followTrajectorySequenceAsync(CenterPathPlacing2);
+//                    }
+//                    break;
+//                case CenterPathPlacing2:
+//                    if (!drive.isBusy()) {
+//                        currentState = AutoTrajectoryRight.AutoTrajectoryRightYellow2;
+//                        drive.followTrajectorySequenceAsync(AutoTrajectoryRightYellow2);
+//                    }
+//                    break;
+//                case AutoTrajectoryRightYellow2:
+//                    if (!drive.isBusy()) {
+//                        currentState = AutoTrajectoryRight.ParkingOut;
+//                        drive.followTrajectorySequenceAsync(ParkingOut);
+//                    }
+//                    break;
+//                case ParkingOut:
+//                    if (!drive.isBusy()) {
+//                        currentState = AutoTrajectoryRight.IDLE;
+//                    }
+//                    break;
                 case IDLE:
                     break;
             }
