@@ -137,6 +137,9 @@ public class MonelBotTest extends LinearOpMode {
                 Hanger.hangerServoOne.setPosition(hangerServoPos1);
                 Hanger.hangerServoTwo.setPosition(hangerServoPos2);
             }
+            if(currentGamepad2.y && !previousGamepad2.y) {
+                Intake.intakeArmServo.setPosition(intakeArmPosition);
+            }
 
 //            if (currentGamepad1.dpad_up){
 //                Hanger.LiftRobot();
