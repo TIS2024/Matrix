@@ -95,6 +95,7 @@ public class BlueFarAuto_1cycle extends LinearOpMode {
     AutoTrajectoryRight currentState = AutoTrajectoryRight.Start;
     AutoTrajectoryCenter currentState2 = AutoTrajectoryCenter.Start;
     AutoTrajectoryLeft currentState3 = AutoTrajectoryLeft.Start;
+    Pose2d currentPose, currentPose2;
     @Override
     public void runOpMode() throws InterruptedException {
         drive = new SampleMecanumDrive(hardwareMap);
@@ -105,6 +106,7 @@ public class BlueFarAuto_1cycle extends LinearOpMode {
 
         Pose2d startPose=new Pose2d(-39, 64, 0);
         drive.setPoseEstimate(startPose);
+        currentPose = startPose;
         initTfod();
 
 
@@ -117,7 +119,7 @@ public class BlueFarAuto_1cycle extends LinearOpMode {
                 .addTemporalMarker(()->{intake.setArm(0.5, 0.66);})
                 .build();
 
-        TrajectorySequence CenterPathPlacing = drive.trajectorySequenceBuilder(AutoTrajectoryRightPurple.end())
+        TrajectorySequence CenterPathPlacing = drive.trajectorySequenceBuilder(currentPose)//AutoTrajectoryRightPurple.end()
                 .lineToSplineHeading(new Pose2d(-34 , 12, -Math.PI))
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.67);Intake.intakeWristServo.setPosition(0.24);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
@@ -139,7 +141,7 @@ public class BlueFarAuto_1cycle extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(36,12),0) //28
                 .build();
 
-        TrajectorySequence AutoTrajectoryRightYellow = drive.trajectorySequenceBuilder(CenterPathPlacing.end())
+        TrajectorySequence AutoTrajectoryRightYellow = drive.trajectorySequenceBuilder(currentPose2) //CenterPathPlacing.end()
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(30, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(30))
                 .lineToConstantHeading(new Vector2d(50, 48))
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
@@ -312,18 +314,11 @@ public class BlueFarAuto_1cycle extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-//            if(propPosition  == "right"){
-//                drive.followTrajectorySequence(AutoTrajectoryRight);
-//            }
-//            if(propPosition == "center"){
-//                drive.followTrajectorySequence(AutoTrajectoryCenter);
-//            }
-//            if(propPosition == "left") {
-//                drive.followTrajectorySequence(AutoTrajectoryLeft);
-//            }
             switch (currentState){
                 case Start:
-                    if (gamepad1.b || propPosition == "right"){
+                    if (gamepad1.b ){ //|| propPosition == "right"
+                        currentPose = AutoTrajectoryRightPurple.end();
+                        currentPose2 = CenterPathPlacing.end();
                         if (!drive.isBusy()) {
                             currentState = AutoTrajectoryRight.AutoTrajectoryRightPurple;
                             drive.followTrajectorySequenceAsync(AutoTrajectoryRightPurple);
@@ -334,12 +329,14 @@ public class BlueFarAuto_1cycle extends LinearOpMode {
                     if (!drive.isBusy()) {
                         currentState = AutoTrajectoryRight.CenterPathPlacing;
                         drive.followTrajectorySequenceAsync(CenterPathPlacing);
+                        currentPose = CenterPathPlacing.end();
                     }
                     break;
                 case CenterPathPlacing:
                     if (!drive.isBusy()) {
                         currentState = AutoTrajectoryRight.AutoTrajectoryRightYellow;
                         drive.followTrajectorySequenceAsync(AutoTrajectoryRightYellow);
+                        currentPose = AutoTrajectoryRightYellow.end();
                     }
                     break;
                 case AutoTrajectoryRightYellow:
