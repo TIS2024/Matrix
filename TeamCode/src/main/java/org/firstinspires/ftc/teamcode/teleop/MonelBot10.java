@@ -437,24 +437,29 @@ public class MonelBot10 extends LinearOpMode {
                             ArmV2.DropPixel(0.5);
                             ArmV2.SetArmPosition(0.1, wristServoPos);
                             output_power = lifter_pid(kp, ki, kd, -10);
+                            if (output_power > 0.9) {
+                                output_power = 1;
+                            } else if (output_power < 0.2) {
+                                output_power = 0;
+                            }
                             slider.extendTo(-10, output_power);
                             Intake.IntakePixel(0.95);
                             if (inputTimer.milliseconds() >= 700) { // 350//500 //600
                                 output_power = lifter_pid(kp, ki, kd, 0);
                                 slider.extendTo(0, output_power);
                                 Intake.IntakePixel(0.8);
-                                ArmV2.SetArmPosition(0.15, wristServoPos);
-                                if (stackFlag) {
-                                    intakeCounter = 2;
-                                    stackFlag = false;
-                                } else {
-                                    intakeCounter = 1;
-                                }
-                                inputTimer.reset();
-                                outtakeCounter = 0;
-                                intake_stack_command = "GroundIntake";
-                                inputState = IntakeState.INTAKE_START;
                             }
+                            ArmV2.SetArmPosition(0.15, wristServoPos);
+                            if (stackFlag) {
+                                intakeCounter = 2;
+                                stackFlag = false;
+                            } else {
+                                intakeCounter = 1;
+                            }
+                            inputTimer.reset();
+                            outtakeCounter = 0;
+                            intake_stack_command = "GroundIntake";
+                            inputState = IntakeState.INTAKE_START;
                         }
                     }
                     break;
@@ -851,12 +856,6 @@ public class MonelBot10 extends LinearOpMode {
 
         errorprev = error_lifter;
         errorprevR = error_lifterR;
-
-        if (output_lifter > 0.9) {
-            output_lifter = 1;
-        } else if (output_lifter < 0.2) {
-            output_lifter = 0;
-        }
         return Math.abs(output_lifter);
     }
     public List<Double> servo_pid(double kp_servo, double ki_servo, double kd_servo, double targetOne, double targetTwo, double armOnePosition, double armTwoPosition)

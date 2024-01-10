@@ -52,8 +52,8 @@ public class BlueFarAutoTest extends LinearOpMode {
     public static Vector2d PurpleRight, YellowRight = new Vector2d(53.5,30.5), StackRight = new Vector2d(-51, 12.5);
 
 
-    public static Pose2d PurpleLeftPos = new Pose2d(-44,30, 0), YellowLeftPos, StackLeftPos = new Pose2d(-51 , 12, -Math.PI);
-    public static Vector2d PurpleLeft, YellowLeft = new Vector2d(51,48), StackLeft = new Vector2d(-51, 12);
+    public static Pose2d PurpleLeftPos = new Pose2d(-40,30, 0), YellowLeftPos, StackLeftPos = new Pose2d(-51 , 12, -Math.PI); //-44
+    public static Vector2d PurpleLeft, YellowLeft = new Vector2d(51,45), StackLeft = new Vector2d(-51, 12); //48
 
 
     public static Pose2d PurpleCenterPos = new Pose2d(-51,24, 0), YellowCenterPos, StackCenterPos = new Pose2d(-51 , 12, -Math.PI);
@@ -255,7 +255,7 @@ public class BlueFarAutoTest extends LinearOpMode {
 
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
                 .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.4);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.IntakePixel(1);})
                 .waitSeconds(0.2)
@@ -389,7 +389,7 @@ public class BlueFarAutoTest extends LinearOpMode {
 
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
                 .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.45);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.IntakePixel(1);})
                 .waitSeconds(0.2)
@@ -430,7 +430,7 @@ public class BlueFarAutoTest extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryLeftYellow = drive.trajectorySequenceBuilder(CenterPathPlacing_Left.end())
-                .lineToConstantHeading(new Vector2d(53.5 + 1, 40))
+                .lineToConstantHeading(new Vector2d(53.5 + 1, 30))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
