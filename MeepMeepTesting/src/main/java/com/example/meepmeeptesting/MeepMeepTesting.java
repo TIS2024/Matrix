@@ -111,43 +111,14 @@ public class MeepMeepTesting {
 //                                        .waitSeconds(1)
 
                                         //center 50 pts
-//                                        .lineToSplineHeading(new Pose2d(-51,24, 0))
-//                                        .lineToSplineHeading(new Pose2d(-51 , 12, -Math.PI))
-//                                        .setReversed(true)
-//                                        .splineToConstantHeading(new Vector2d(-34,12),0)
-//                                        .splineToConstantHeading(new Vector2d(28,12),0)
-//                                        .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
-//                                        .splineToConstantHeading(new Vector2d(50,38),0)
-//                                        .strafeLeft(12)
-//                                        .setReversed(false)
-//                                        .resetConstraints()
-//                                        //round1
-//                                        .splineToConstantHeading(new Vector2d(28, 12), -Math.PI)
-//                                        .splineToConstantHeading(new Vector2d(-34, 12), -Math.PI)
-//                                        .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
-//                                        .lineToConstantHeading(new Vector2d(-51, 12))
-//                                        .resetConstraints()
-//                                        .setReversed(true)
-//                                        .splineToConstantHeading(new Vector2d(-34,12),0)
-//                                        .splineToConstantHeading(new Vector2d(28,12),0)
-//                                        .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
-//                                        .splineToConstantHeading(new Vector2d(50,29),0)
-//                                        //parking
-//                                        .lineToSplineHeading(new Pose2d(50, 12, -Math.PI/2))
-//                                        .lineToConstantHeading(new Vector2d(60, 12))
-//                                        .resetConstraints()
-//                                        .setReversed(false)
-
-                                        //left
-                                        .lineToSplineHeading(new Pose2d(-44,30, 0))
-                                        .lineToSplineHeading(new Pose2d(-44 , 12, -Math.PI))
+                                        .lineToSplineHeading(new Pose2d(-51,24, 0))
                                         .lineToSplineHeading(new Pose2d(-51 , 12, -Math.PI))
                                         .setReversed(true)
                                         .splineToConstantHeading(new Vector2d(-34,12),0)
                                         .splineToConstantHeading(new Vector2d(28,12),0)
                                         .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
-                                        .splineToConstantHeading(new Vector2d(50,48),0) //52
-                                        .strafeLeft(15)
+                                        .splineToConstantHeading(new Vector2d(50,38),0)
+                                        .strafeLeft(12)
                                         .setReversed(false)
                                         .resetConstraints()
                                         //round1
@@ -161,10 +132,39 @@ public class MeepMeepTesting {
                                         .splineToConstantHeading(new Vector2d(28,12),0)
                                         .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
                                         .splineToConstantHeading(new Vector2d(50,29),0)
+                                        //parking
                                         .lineToSplineHeading(new Pose2d(50, 12, -Math.PI/2))
                                         .lineToConstantHeading(new Vector2d(60, 12))
                                         .resetConstraints()
                                         .setReversed(false)
+
+                                        //left
+//                                        .lineToSplineHeading(new Pose2d(-44,30, 0))
+//                                        .lineToSplineHeading(new Pose2d(-44 , 12, -Math.PI))
+//                                        .lineToSplineHeading(new Pose2d(-51 , 12, -Math.PI))
+//                                        .setReversed(true)
+//                                        .splineToConstantHeading(new Vector2d(-34,12),0)
+//                                        .splineToConstantHeading(new Vector2d(28,12),0)
+//                                        .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
+//                                        .splineToConstantHeading(new Vector2d(50,48),0) //52
+//                                        .strafeLeft(15)
+//                                        .setReversed(false)
+//                                        .resetConstraints()
+//                                        //round1
+//                                        .splineToConstantHeading(new Vector2d(28, 12), -Math.PI)
+//                                        .splineToConstantHeading(new Vector2d(-34, 12), -Math.PI)
+//                                        .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
+//                                        .lineToConstantHeading(new Vector2d(-51, 12))
+//                                        .resetConstraints()
+//                                        .setReversed(true)
+//                                        .splineToConstantHeading(new Vector2d(-34,12),0)
+//                                        .splineToConstantHeading(new Vector2d(28,12),0)
+//                                        .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
+//                                        .splineToConstantHeading(new Vector2d(50,29),0)
+//                                        .lineToSplineHeading(new Pose2d(50, 12, -Math.PI/2))
+//                                        .lineToConstantHeading(new Vector2d(60, 12))
+//                                        .resetConstraints()
+//                                        .setReversed(false)
 
                                         .build()
                 );

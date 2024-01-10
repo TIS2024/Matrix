@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name="RedAuto_2cycles", group = "Cycle_Autos")
 @Config
+@Disabled
 public class RedAuto_2cycles extends LinearOpMode {
     SampleMecanumDrive drive = null;
     Slider slider = null;
