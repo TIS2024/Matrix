@@ -53,11 +53,14 @@ public class BlueFarAutoTest extends LinearOpMode {
 
 
     public static Pose2d PurpleLeftPos = new Pose2d(-40,30, 0), YellowLeftPos, StackLeftPos = new Pose2d(-51 , 12, -Math.PI); //-44
-    public static Vector2d PurpleLeft, YellowLeft = new Vector2d(51,45), StackLeft = new Vector2d(-51, 12); //48
+    public static Vector2d PurpleLeft, YellowLeft = new Vector2d(51,42), StackLeft = new Vector2d(-51, 12); //48
 
 
-    public static Pose2d PurpleCenterPos = new Pose2d(-51,24, 0), YellowCenterPos, StackCenterPos = new Pose2d(-51 , 12, -Math.PI);
-    public static Vector2d PurpleCenter, YellowCenter = new Vector2d(51,38), StackCenter = new Vector2d(-51, 12);
+    public static Pose2d PurpleCenterPos = new Pose2d(-49,24, 0), YellowCenterPos, StackCenterPos = new Pose2d(-51 , 12, -Math.PI); //51
+    public static Vector2d PurpleCenter, YellowCenter = new Vector2d(51,36), StackCenter = new Vector2d(-51, 12); //38
+
+
+    public static double wristPlay1 = -0.01, wristPlay2 = 0.00;
 
 
     public enum AutoTrajectoryRight {
@@ -124,7 +127,7 @@ public class BlueFarAutoTest extends LinearOpMode {
         TrajectorySequence CenterPathPlacing = drive.trajectorySequenceBuilder(AutoTrajectoryRightPurple.end())
                 .lineToSplineHeading(new Pose2d(-34 , 12, -Math.PI))
 
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.67);Intake.intakeWristServo.setPosition(0.24 + 0.01);})
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.67);Intake.intakeWristServo.setPosition(0.24 + wristPlay1);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
 
@@ -184,10 +187,10 @@ public class BlueFarAutoTest extends LinearOpMode {
                 .build();
 
         TrajectorySequence CenterPathPlacing2 = drive.trajectorySequenceBuilder(CenterPathPicking.end())
-                .lineToConstantHeading(new Vector2d(-34, 12))
+                .lineToConstantHeading(new Vector2d(-34, 12.5))
 
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.37);})
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.37 + wristPlay2);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
 
@@ -223,8 +226,12 @@ public class BlueFarAutoTest extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.53, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
                 .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.68);})
+                .waitSeconds(0.1)
+                .addTemporalMarker(()->{arm.setArmPos(0.53, 0.68);})
+                .waitSeconds(0.1)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.3) //start
+                .waitSeconds(0.1) //start
                 .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeArmServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.175);})
@@ -255,7 +262,7 @@ public class BlueFarAutoTest extends LinearOpMode {
 
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
                 .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.4);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.IntakePixel(1);})
                 .waitSeconds(0.2)
@@ -264,9 +271,9 @@ public class BlueFarAutoTest extends LinearOpMode {
                 .build();
 
         TrajectorySequence CenterPathPlacing_Center = drive.trajectorySequenceBuilder(AutoTrajectoryCenterPurple.end())
-                .lineToSplineHeading(new Pose2d(-34 , 12, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-34 - 1, 12, -Math.PI))
 
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.67);Intake.intakeWristServo.setPosition(0.24 + 0.01);})
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.67);Intake.intakeWristServo.setPosition(0.24 + wristPlay1);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
 
@@ -296,7 +303,7 @@ public class BlueFarAutoTest extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryCenterYellow = drive.trajectorySequenceBuilder(CenterPathPlacing_Center.end())
-                .lineToConstantHeading(new Vector2d(53.5 + 1, 40))
+                .lineToConstantHeading(new Vector2d(53.5 + 1, 32)) //43.5
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
@@ -326,12 +333,12 @@ public class BlueFarAutoTest extends LinearOpMode {
                 .build();
 
         TrajectorySequence CenterPathPlacing_Center2 = drive.trajectorySequenceBuilder(CenterPathPicking_Center.end())
-                .lineToConstantHeading(new Vector2d(-34, 12))
+                .lineToConstantHeading(new Vector2d(-34, 12.5))
 
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.37);})
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.37 + wristPlay2);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
-                .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.45);}) //0.5
 
                 .lineToSplineHeading(StackRightPos)
 
@@ -358,15 +365,19 @@ public class BlueFarAutoTest extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryCenterYellow2 = drive.trajectorySequenceBuilder(CenterPathPlacing_Center2.end())
-                .splineToConstantHeading(new Vector2d(53.5, 40), 0)
-                .lineToConstantHeading(new Vector2d(54, 40))
+                .splineToConstantHeading(new Vector2d(53.5, 32), 0)
+                .lineToConstantHeading(new Vector2d(54, 32))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.53, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.53, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
                 .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.68);})
+                .waitSeconds(0.1)
+                .addTemporalMarker(()->{arm.setArmPos(0.53, 0.68);})
+                .waitSeconds(0.1)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.3) //start
+                .waitSeconds(0.1) //start
                 .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeArmServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.175);})
@@ -389,7 +400,7 @@ public class BlueFarAutoTest extends LinearOpMode {
 
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
                 .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.45);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.IntakePixel(1);})
                 .waitSeconds(0.2)
@@ -400,7 +411,7 @@ public class BlueFarAutoTest extends LinearOpMode {
         TrajectorySequence CenterPathPlacing_Left = drive.trajectorySequenceBuilder(AutoTrajectoryLeftPurple.end())
                 .lineToSplineHeading(new Pose2d(-34 , 12, -Math.PI))
 
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.67);Intake.intakeWristServo.setPosition(0.24 + 0.01);})
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.67);Intake.intakeWristServo.setPosition(0.24 + wristPlay1);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
 
@@ -440,7 +451,7 @@ public class BlueFarAutoTest extends LinearOpMode {
 
                 .lineToConstantHeading(YellowLeft)
 
-                .addTemporalMarker(()->{arm.setArmPos(0.53,0.68);})
+                .addTemporalMarker(()->{arm.setArmPos(0.53 + 0.01,0.68);})
                 .waitSeconds(0.1)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.3)
@@ -460,10 +471,10 @@ public class BlueFarAutoTest extends LinearOpMode {
                 .build();
 
         TrajectorySequence CenterPathPlacing_Left2 = drive.trajectorySequenceBuilder(CenterPathPicking_Left.end())
-                .lineToConstantHeading(new Vector2d(-34, 12))
+                .lineToConstantHeading(new Vector2d(-34, 12.5))
 
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.37);})
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.37 + wristPlay2);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
 
@@ -492,15 +503,19 @@ public class BlueFarAutoTest extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryLeftYellow2 = drive.trajectorySequenceBuilder(CenterPathPlacing_Left2.end())
-                .splineToConstantHeading(new Vector2d(53.5, 40), 0)
-                .lineToConstantHeading(new Vector2d(54, 40))
+                .splineToConstantHeading(new Vector2d(53.5, 30), 0)
+                .lineToConstantHeading(new Vector2d(54, 30))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.53, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.53, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
                 .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.68);})
+                .waitSeconds(0.1)
+                .addTemporalMarker(()->{arm.setArmPos(0.53, 0.68);})
+                .waitSeconds(0.1)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.3) //start
+                .waitSeconds(0.1) //start
                 .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeArmServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.175);})
@@ -569,7 +584,7 @@ public class BlueFarAutoTest extends LinearOpMode {
         while (opModeIsActive()) {
             switch (currentState){
                 case Start:
-                    if (gamepad1.b){ // || propPosition == "right"
+                    if (gamepad1.b || propPosition == "right"){ //
                         if (!drive.isBusy()) {
                             currentState = AutoTrajectoryRight.AutoTrajectoryRightPurple;
                             drive.followTrajectorySequenceAsync(AutoTrajectoryRightPurple);
@@ -623,7 +638,7 @@ public class BlueFarAutoTest extends LinearOpMode {
 
             switch (currentState2){
                 case Start:
-                    if (gamepad1.y){ // || propPosition == "center"
+                    if (gamepad1.y || propPosition == "center"){ //
                         if (!drive.isBusy()) {
                             currentState2 = AutoTrajectoryCenter.AutoTrajectoryCenterPurple;
                             drive.followTrajectorySequenceAsync(AutoTrajectoryCenterPurple);
@@ -678,7 +693,7 @@ public class BlueFarAutoTest extends LinearOpMode {
 
             switch (currentState3){
                 case Start:
-                    if (gamepad1.x){ // || propPosition == "left"
+                    if (gamepad1.x || propPosition == "left"){ //
                         if (!drive.isBusy()) {
                             currentState3 = AutoTrajectoryLeft.AutoTrajectoryLeftPurple;
                             drive.followTrajectorySequenceAsync(AutoTrajectoryLeftPurple);
