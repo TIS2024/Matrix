@@ -51,14 +51,14 @@ public class RedFarAuto extends LinearOpMode {
     public static Pose2d PurpleRightPos = new Pose2d(-38,-32, -Math.PI), YellowRightPos, StackRightPos = new Pose2d(-52 , -12 + stackDiff, -Math.PI);
     public static Vector2d PurpleRight, YellowRight = new Vector2d(53.5,-43), StackRight = new Vector2d(-51, -12.5);
 
-    public static Pose2d PurpleLeftPos = new Pose2d(-40,-30, 0), YellowLeftPos, StackLeftPos = new Pose2d(-51 , -12.5, -Math.PI); //-44
+    public static Pose2d PurpleLeftPos = new Pose2d(-40,-30, 0), YellowLeftPos, StackLeftPos = new Pose2d(-51 , -12, -Math.PI); //-44
     public static Vector2d PurpleLeft, YellowLeft = new Vector2d(53.5,-28.5), StackLeft = new Vector2d(-51, -12); //48
 
     public static Pose2d PurpleCenterPos = new Pose2d(-53,-24, 0), YellowCenterPos, StackCenterPos = new Pose2d(-51 , -12, -Math.PI); //51
     public static Vector2d PurpleCenter, YellowCenter = new Vector2d(53.5,-33), StackCenter = new Vector2d(-51, -12); //38
 
 
-    public static double wristPlay1 = 0.00, wristPlay2 = 0.01;
+    public static double wristPlay1 = -0.01, wristPlay2 = -0.001;
 
 
     public enum AutoTrajectoryRight {
@@ -161,7 +161,7 @@ public class RedFarAuto extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.50, 0.68);}) //50
+                .addTemporalMarker(()->{arm.setArmPos(0.48, 0.68);}) //50
 
                 .lineToConstantHeading(YellowLeft)
 
@@ -186,7 +186,7 @@ public class RedFarAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence CenterPathPlacing_Left2 = drive.trajectorySequenceBuilder(CenterPathPicking_Left.end())
-                .lineToConstantHeading(new Vector2d(-34, -12))
+                .lineToConstantHeading(new Vector2d(-34, -10))
 
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.37 + wristPlay2);})
@@ -339,7 +339,7 @@ public class RedFarAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence CenterPathPlacing_Center2 = drive.trajectorySequenceBuilder(CenterPathPicking_Center.end())
-                .lineToConstantHeading(new Vector2d(-34, -12))
+                .lineToConstantHeading(new Vector2d(-34, -10))
 
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.37 + wristPlay2);})
@@ -792,7 +792,7 @@ public class RedFarAuto extends LinearOpMode {
 
 
         VisionPortal.Builder builder = new VisionPortal.Builder();
-        builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
+        builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 2"));
 
 
         // Choose a camera resolution. Not all cameras support all resolutions.

@@ -364,7 +364,6 @@ public class MonelBot10 extends LinearOpMode {
                             }
                         }
                     }
-                    // TODO: DO THIS MANUALLY ON R3
                     if (beamBreaker.getState() && inputTimer.milliseconds() >= 5000) {
                         TrajectorySequence CancelIntakePixel = drive.trajectorySequenceBuilder(startPose)
                                 .addTemporalMarker(() -> {
