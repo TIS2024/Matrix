@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Slider;
 
 @TeleOp(group = "Robot Main")
 @Config
-public class MonelBotTest extends LinearOpMode {
+public class MatrixTest extends LinearOpMode {
     SampleMecanumDrive drive = null;
     Slider slider = null;
     ArmV2 arm = null;
