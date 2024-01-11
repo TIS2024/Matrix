@@ -58,7 +58,7 @@ public class RedFarAuto extends LinearOpMode {
     public static Vector2d PurpleCenter, YellowCenter = new Vector2d(53.5,-33), StackCenter = new Vector2d(-51, -12); //38
 
 
-    public static double wristPlay1 = -0.01, wristPlay2 = -0.001;
+    public static double wristPlay1 = -0.01, wristPlay2 = -0.01;
 
 
     public enum AutoTrajectoryRight {

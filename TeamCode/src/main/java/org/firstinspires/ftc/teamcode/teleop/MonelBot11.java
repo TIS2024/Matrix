@@ -21,7 +21,9 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.angle_pid.Drivetrain;
 import org.firstinspires.ftc.teamcode.angle_pid.PIDConstants;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
@@ -238,7 +240,13 @@ public class MonelBot11 extends LinearOpMode {
 
             //TODO: SPEED THIS UP, PID TUNING
             if (currentGamepad1.dpad_left && !previousGamepad1.dpad_left ) {
-                drive.turn(turnStack);
+                TrajectorySequence turnStackTraj = drive.trajectorySequenceBuilder(startPose)
+                        .setConstraints(SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                        .turn(turnStack)
+                        .resetConstraints()
+                        .build();
+                drive.followTrajectorySequence(turnStackTraj);
+//                drive.turn(turnStack);
             }
             if (currentGamepad1.dpad_right && !previousGamepad1.dpad_right){
                 drive.turn(turnBackDrop);
