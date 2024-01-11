@@ -48,17 +48,17 @@ public class RedFarAuto extends LinearOpMode {
     public static double kp = 4, ki, kd = 1.7;
 
     public static double stackDiff = 0;
-    public static Pose2d PurpleRightPos = new Pose2d(-35,-32, -Math.PI), YellowRightPos, StackRightPos = new Pose2d(-51 , -12 + stackDiff, -Math.PI);
-    public static Vector2d PurpleRight, YellowRight = new Vector2d(53.5,-30.5), StackRight = new Vector2d(-51, -12.5);
+    public static Pose2d PurpleRightPos = new Pose2d(-38,-32, -Math.PI), YellowRightPos, StackRightPos = new Pose2d(-52 , -12 + stackDiff, -Math.PI);
+    public static Vector2d PurpleRight, YellowRight = new Vector2d(53.5,-43), StackRight = new Vector2d(-51, -12.5);
 
-    public static Pose2d PurpleLeftPos = new Pose2d(-40,30, 0), YellowLeftPos, StackLeftPos = new Pose2d(-51 , 12, -Math.PI); //-44
-    public static Vector2d PurpleLeft, YellowLeft = new Vector2d(51,43), StackLeft = new Vector2d(-51, 12); //48
+    public static Pose2d PurpleLeftPos = new Pose2d(-40,-30, 0), YellowLeftPos, StackLeftPos = new Pose2d(-51 , -12.5, -Math.PI); //-44
+    public static Vector2d PurpleLeft, YellowLeft = new Vector2d(53.5,-28.5), StackLeft = new Vector2d(-51, -12); //48
 
-    public static Pose2d PurpleCenterPos = new Pose2d(-51,-24, 0), YellowCenterPos, StackCenterPos = new Pose2d(-51 , -12, -Math.PI); //51
-    public static Vector2d PurpleCenter, YellowCenter = new Vector2d(51,-36), StackCenter = new Vector2d(-51, -12); //38
+    public static Pose2d PurpleCenterPos = new Pose2d(-53,-24, 0), YellowCenterPos, StackCenterPos = new Pose2d(-51 , -12, -Math.PI); //51
+    public static Vector2d PurpleCenter, YellowCenter = new Vector2d(53.5,-33), StackCenter = new Vector2d(-51, -12); //38
 
 
-    public static double wristPlay1 = -0.01, wristPlay2 = -0.01;
+    public static double wristPlay1 = 0.00, wristPlay2 = 0.01;
 
 
     public enum AutoTrajectoryRight {
@@ -127,7 +127,7 @@ public class RedFarAuto extends LinearOpMode {
 
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.67);Intake.intakeWristServo.setPosition(0.24 + wristPlay1);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
-                .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
 
                 .lineToSplineHeading(StackRightPos)
 
@@ -155,20 +155,21 @@ public class RedFarAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryLeftYellow = drive.trajectorySequenceBuilder(CenterPathPlacing_Left.end())
-                .lineToConstantHeading(new Vector2d(53.5 + 1, -40))
+                .lineToConstantHeading(new Vector2d(53.5, -40))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.68);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.50, 0.68);}) //50
 
-                .lineToConstantHeading(YellowRight)
+                .lineToConstantHeading(YellowLeft)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.53,0.68);})
                 .waitSeconds(0.1)
+//                .UNSTABLE_addTemporalMarkerOffset(-0.1, ()->{ArmV2.DropPixel(1);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.3)
+                .waitSeconds(0.4)
                 .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeArmServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.175);})
@@ -180,20 +181,21 @@ public class RedFarAuto extends LinearOpMode {
 
         TrajectorySequence CenterPathPicking_Left = drive.trajectorySequenceBuilder(AutoTrajectoryLeftYellow.end())
                 //round1
-                .splineToConstantHeading(new Vector2d(28, -12), -Math.PI)
-                .splineToConstantHeading(new Vector2d(-33, -12), -Math.PI)
+                .splineToConstantHeading(new Vector2d(28, -7), -Math.PI)
+                .splineToConstantHeading(new Vector2d(-33, -7), -Math.PI)
                 .build();
 
         TrajectorySequence CenterPathPlacing_Left2 = drive.trajectorySequenceBuilder(CenterPathPicking_Left.end())
-                .lineToConstantHeading(new Vector2d(-34, -12.5))
+                .lineToConstantHeading(new Vector2d(-34, -12))
 
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.37 + wristPlay2);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
-                .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
 
-                .lineToSplineHeading(StackRightPos)
+                .lineToSplineHeading(StackLeftPos)
 
+                .waitSeconds(0.1)
                 .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{intake.setArm(0.55, 0.4);})
@@ -255,6 +257,7 @@ public class RedFarAuto extends LinearOpMode {
 
 
 
+
         //TODO Center Trajectories
         TrajectorySequence AutoTrajectoryCenterPurple = drive.trajectorySequenceBuilder(startPose)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
@@ -269,15 +272,15 @@ public class RedFarAuto extends LinearOpMode {
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
                 .addTemporalMarker(()->{intake.setArm(0.5, 0.66);})
-                .lineToConstantHeading(new Vector2d(-53, 18))
+                .lineToConstantHeading(new Vector2d(-55, -18))
                 .build();
 
         TrajectorySequence CenterPathPlacing_Center = drive.trajectorySequenceBuilder(AutoTrajectoryCenterPurple.end())
-                .lineToSplineHeading(new Pose2d(-34, 12, -Math.PI))
+                .lineToSplineHeading(new Pose2d(-34 , -12, -Math.PI))
 
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.67);Intake.intakeWristServo.setPosition(0.24 + wristPlay1);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
-                .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
 
                 .lineToSplineHeading(StackRightPos)
 
@@ -287,7 +290,7 @@ public class RedFarAuto extends LinearOpMode {
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
                 .setReversed(true)
 
-                .splineToConstantHeading(new Vector2d(-34,12),0)
+                .splineToConstantHeading(new Vector2d(-34,-12),0)
 
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);Intake.IntakePixel(0.77);})
                 .waitSeconds(0.2)//0.3
@@ -301,24 +304,25 @@ public class RedFarAuto extends LinearOpMode {
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{slider.extendTo(0, 1);})
 
-                .splineToConstantHeading(new Vector2d(36,12),0) //28
+                .splineToConstantHeading(new Vector2d(36,-12),0) //28
                 .build();
 
         TrajectorySequence AutoTrajectoryCenterYellow = drive.trajectorySequenceBuilder(CenterPathPlacing_Center.end())
-                .lineToConstantHeading(new Vector2d(53.5 + 1, 32)) //43.5
+                .lineToConstantHeading(new Vector2d(53.5, -40))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.68);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.50, 0.68);}) //50
 
                 .lineToConstantHeading(YellowCenter)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.53,0.68);})
                 .waitSeconds(0.1)
+//                .UNSTABLE_addTemporalMarkerOffset(-0.1, ()->{ArmV2.DropPixel(1);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.4)//0.3
+                .waitSeconds(0.4)
                 .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeArmServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.175);})
@@ -330,20 +334,21 @@ public class RedFarAuto extends LinearOpMode {
 
         TrajectorySequence CenterPathPicking_Center = drive.trajectorySequenceBuilder(AutoTrajectoryCenterYellow.end())
                 //round1
-                .splineToConstantHeading(new Vector2d(28, 12), -Math.PI)
-                .splineToConstantHeading(new Vector2d(-33, 12), -Math.PI)
+                .splineToConstantHeading(new Vector2d(28, -7), -Math.PI)
+                .splineToConstantHeading(new Vector2d(-33, -7), -Math.PI)
                 .build();
 
         TrajectorySequence CenterPathPlacing_Center2 = drive.trajectorySequenceBuilder(CenterPathPicking_Center.end())
-                .lineToConstantHeading(new Vector2d(-34, 12.5))
+                .lineToConstantHeading(new Vector2d(-34, -12))
 
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.37 + wristPlay2);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
-                .addTemporalMarker(()->{Intake.CrankPosition(0.45);}) //0.5
+                .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
 
-                .lineToSplineHeading(StackRightPos)
+                .lineToSplineHeading(StackLeftPos)
 
+                .waitSeconds(0.1)
                 .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{intake.setArm(0.55, 0.4);})
@@ -351,13 +356,13 @@ public class RedFarAuto extends LinearOpMode {
                 .setReversed(true)
                 .resetConstraints()
 
-                .splineToConstantHeading(new Vector2d(-34,12),0)
+                .splineToConstantHeading(new Vector2d(-34,-12),0)
 
                 .UNSTABLE_addTemporalMarkerOffset(0.0, ()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.66);Intake.IntakePixel(0.77);})
                 .UNSTABLE_addTemporalMarkerOffset(0.3, ()->{Intake.intakeArmServo.setPosition(0.75);Intake.IntakePixel(0.77);})
                 .UNSTABLE_addTemporalMarkerOffset(0.7, ()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);Intake.IntakePixel(0.77);})
 
-                .splineToConstantHeading(new Vector2d(36,12),0) //28
+                .splineToConstantHeading(new Vector2d(36,-12),0) //28
 
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.165);})
                 .waitSeconds(0.2)
@@ -367,8 +372,8 @@ public class RedFarAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryCenterYellow2 = drive.trajectorySequenceBuilder(CenterPathPlacing_Center2.end())
-                .splineToConstantHeading(new Vector2d(53.5, 32), 0)
-                .lineToConstantHeading(new Vector2d(54, 32))
+                .splineToConstantHeading(new Vector2d(53.5, -32), 0)
+                .lineToConstantHeading(new Vector2d(54, -32))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.53, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.53, 0.68);})
@@ -415,7 +420,7 @@ public class RedFarAuto extends LinearOpMode {
 
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.67);Intake.intakeWristServo.setPosition(0.24 + wristPlay1);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
-                .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
 
                 .lineToSplineHeading(StackRightPos)
 
@@ -443,24 +448,24 @@ public class RedFarAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryRightYellow = drive.trajectorySequenceBuilder(CenterPathPlacing.end())
-                .lineToConstantHeading(new Vector2d(53.5 + 1, -30))
+                .lineToConstantHeading(new Vector2d(53.5, -32))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.68);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.50, 0.68);}) //50
 
-                .lineToConstantHeading(YellowLeft)
+                .lineToConstantHeading(YellowRight)
 
-                .addTemporalMarker(()->{arm.setArmPos(0.54,0.68);})
+                .addTemporalMarker(()->{arm.setArmPos(0.53,0.68);})
                 .waitSeconds(0.1)
+//                .UNSTABLE_addTemporalMarkerOffset(-0.1, ()->{ArmV2.DropPixel(1);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.4) //0.3
-                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.68);})
+                .waitSeconds(0.4)
                 .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeArmServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
-                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.175);})
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.175);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.175);})
@@ -469,20 +474,21 @@ public class RedFarAuto extends LinearOpMode {
 
         TrajectorySequence CenterPathPicking = drive.trajectorySequenceBuilder(AutoTrajectoryRightYellow.end())
                 //round1
-                .splineToConstantHeading(new Vector2d(28, -12), -Math.PI)
-                .splineToConstantHeading(new Vector2d(-33, -12), -Math.PI)
+                .splineToConstantHeading(new Vector2d(28, -7), -Math.PI)
+                .splineToConstantHeading(new Vector2d(-33, -7), -Math.PI)
                 .build();
 
         TrajectorySequence CenterPathPlacing2 = drive.trajectorySequenceBuilder(CenterPathPicking.end())
-                .lineToConstantHeading(new Vector2d(-34, -12.5))
+                .lineToConstantHeading(new Vector2d(-34, -10))
 
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.37 + wristPlay2);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
-                .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
 
-                .lineToSplineHeading(StackRightPos)
+                .lineToSplineHeading(StackLeftPos)
 
+                .waitSeconds(0.1)
                 .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{intake.setArm(0.55, 0.4);})
@@ -506,19 +512,19 @@ public class RedFarAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryRightYellow2 = drive.trajectorySequenceBuilder(CenterPathPlacing2.end())
-                .splineToConstantHeading(new Vector2d(53.5, -30), 0)
-                .lineToConstantHeading(new Vector2d(54, -30))
+                .splineToConstantHeading(new Vector2d(53.5, -40), 0)
+                .lineToConstantHeading(new Vector2d(54, -40))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.53, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.53, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.51, 0.68);})
-                .waitSeconds(0.2)//0.1
+                .waitSeconds(0.1)
                 .addTemporalMarker(()->{arm.setArmPos(0.53, 0.68);})
-                .waitSeconds(0.2)//0.1
+                .waitSeconds(0.1)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.3) //0.2
+                .waitSeconds(0.2) //start
                 .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeArmServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .addTemporalMarker(()->{arm.setArmPos(0.51, 0.175);})
