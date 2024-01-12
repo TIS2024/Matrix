@@ -777,16 +777,17 @@ public class MatrixFinal extends LinearOpMode {
                         .build();
                 drive.followTrajectorySequenceAsync(replunge);
             }
-            if(currentGamepad2.b && !previousGamepad2.b){
-//                TrajectorySequence rePush = drive.trajectorySequenceBuilder(startPose)
+
+//            if(currentGamepad2.b && !previousGamepad2.b){
+//                TrajectorySequence armReset = drive.trajectorySequenceBuilder(startPose)
 //                        .addTemporalMarker(()->{Intake.crankServo.setPosition(0.69);})
 //                        .addTemporalMarker(()->{arm.setArmPos(0.1, wristServoPos);})
 //                        .addTemporalMarker(()->{slider.extendTo(-10, output_power);})
 //                        .waitSeconds(0.2)
 //                        .addTemporalMarker(()->{slider.extendTo(0, output_power);arm.setArmPos(0.15, wristServoPos);})
 //                        .build();
-//                drive.followTrajectorySequenceAsync(rePush);
-            }
+//                drive.followTrajectorySequenceAsync(armReset);
+//            }
 
             if (currentGamepad2.right_trigger>0.5 && !(previousGamepad2.right_trigger >0.5 )){
                 crankToggle = !crankToggle;
@@ -798,6 +799,7 @@ public class MatrixFinal extends LinearOpMode {
                             .waitSeconds(0.3)
                             .build();
                     drive.followTrajectorySequenceAsync(openCrank);
+                    inputState = IntakeState.INTAKE_START;
                 }
                 else
                 {
@@ -809,6 +811,7 @@ public class MatrixFinal extends LinearOpMode {
                             .addTemporalMarker(()->{arm.setArmPos(0.15, wristServoPos);})
                             .build();
                     drive.followTrajectorySequenceAsync(closeCrank);
+                    inputState = IntakeState.INTAKE_START;
                 }
             }
 
