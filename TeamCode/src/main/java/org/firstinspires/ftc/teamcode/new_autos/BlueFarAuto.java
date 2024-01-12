@@ -758,6 +758,9 @@ public class BlueFarAuto extends LinearOpMode {
             telemetry.addData("RightFrontCurrent", drive.getMotorCurrent().get(1));
             telemetry.addData("LeftRearCurrent", drive.getMotorCurrent().get(2));
             telemetry.addData("RightRearCurrent", drive.getMotorCurrent().get(3));
+            telemetry.addData("X-Pos", drive.getPoseEstimate().getX());
+            telemetry.addData("YPos", drive.getPoseEstimate().getY());
+            telemetry.addData("heading", drive.getPoseEstimate().getHeading());
             telemetry.addData("position",propPosition);
             drive.update();
             telemetry.update();
