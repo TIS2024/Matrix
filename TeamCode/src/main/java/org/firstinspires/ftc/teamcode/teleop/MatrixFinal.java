@@ -306,6 +306,21 @@ public class MatrixFinal extends LinearOpMode {
                     }
                     break;
                 case INTAKE_GRIP:
+                    if (intake_stack_command == "GroundIntake")
+                    {
+                        Intake.intakeArmServo.setPosition(0.4);
+                        Intake.intakeWristServo.setPosition(0.48);
+                    }
+                    if (intake_stack_command == "ThreeStackGo")
+                    {
+                        Intake.intakeArmServo.setPosition(0.53);
+                        Intake.intakeWristServo.setPosition(0.365);//0.375
+                    }
+                    if (intake_stack_command == "FiveStackGo")
+                    {
+                        Intake.intakeArmServo.setPosition(0.650);
+                        Intake.intakeWristServo.setPosition(0.23);//0.24
+                    }
                     if (!intakeToggle) {
                         if (!beamBreaker.getState()) {
                             if (intake_stack_command == "GroundIntake")
@@ -374,30 +389,26 @@ public class MatrixFinal extends LinearOpMode {
                             }
                         }
                     }
-                    if (beamBreaker.getState() && inputTimer.milliseconds() >= 5000) {
-                        TrajectorySequence CancelIntakePixel = drive.trajectorySequenceBuilder(startPose)
-                                .addTemporalMarker(() -> {
-                                    Intake.intakeArmServo.setPosition(0.5);
-                                    Intake.intakeWristServo.setPosition(0.66);
-                                })
-                                .waitSeconds(0.2)
-                                .addTemporalMarker(() -> {
-                                    Intake.CrankPosition(0.69);
-                                })
-                                .waitSeconds(0.3)
-                                .addTemporalMarker(() -> {
-                                    arm.setArmPos(0.15, wristServoPos);
-                                })
+//                    if (beamBreaker.getState() && inputTimer.milliseconds() >= 5000) {
+//                        TrajectorySequence CancelIntakePixel = drive.trajectorySequenceBuilder(startPose)
+//                                .addTemporalMarker(() -> {
+//                                    Intake.intakeArmServo.setPosition(0.5);
+//                                    Intake.intakeWristServo.setPosition(0.66);
+//                                })
+//                                .waitSeconds(0.2)
+//                                .addTemporalMarker(() -> {
+//                                    Intake.CrankPosition(0.69);
+//                                })
 //                                .waitSeconds(0.3)
-                                .build();
-                        drive.followTrajectorySequence(CancelIntakePixel);
-                        intakeCounter = 0;
-                        intake_stack_command = "GroundIntake";
-                        inputState = IntakeState.INTAKE_START;
-//                        if (inputTimer.milliseconds() > 6000) {
-//                            inputState = IntakeState.INTAKE_START;
-//                        }
-                    }
+//                                .addTemporalMarker(() -> {
+//                                    arm.setArmPos(0.15, wristServoPos);
+//                                })
+//                                .build();
+//                        drive.followTrajectorySequence(CancelIntakePixel);
+//                        intakeCounter = 0;
+//                        intake_stack_command = "GroundIntake";
+//                        inputState = IntakeState.INTAKE_START;
+//                    }
                     if (resetIntakeFlag){
                         TrajectorySequence CancelIntakePixel = drive.trajectorySequenceBuilder(startPose)
                                 .addTemporalMarker(() -> {Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})

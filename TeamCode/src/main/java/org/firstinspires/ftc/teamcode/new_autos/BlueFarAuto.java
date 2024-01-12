@@ -173,7 +173,7 @@ public class BlueFarAuto extends LinearOpMode {
                 .waitSeconds(0.1)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.3)
-                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeArmServo.setPosition(0.38);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.175);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
@@ -234,7 +234,7 @@ public class BlueFarAuto extends LinearOpMode {
                 .waitSeconds(0.1)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.2) //start
-                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeArmServo.setPosition(0.38);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .addTemporalMarker(()->{arm.setArmPos(0.51, 0.175);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
@@ -320,7 +320,7 @@ public class BlueFarAuto extends LinearOpMode {
                 .waitSeconds(0.1)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.4)//0.3
-                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeArmServo.setPosition(0.38);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.175);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
@@ -381,7 +381,7 @@ public class BlueFarAuto extends LinearOpMode {
                 .waitSeconds(0.1)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.2) //start
-                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeArmServo.setPosition(0.38);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .addTemporalMarker(()->{arm.setArmPos(0.51, 0.175);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
@@ -459,7 +459,7 @@ public class BlueFarAuto extends LinearOpMode {
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.4) //0.3
                 .addTemporalMarker(()->{arm.setArmPos(0.51, 0.68);})
-                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeArmServo.setPosition(0.38);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .addTemporalMarker(()->{arm.setArmPos(0.51, 0.175);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
@@ -520,7 +520,7 @@ public class BlueFarAuto extends LinearOpMode {
                 .waitSeconds(0.2)//0.1
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.3) //0.2
-                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeArmServo.setPosition(0.38);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .addTemporalMarker(()->{arm.setArmPos(0.51, 0.175);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
