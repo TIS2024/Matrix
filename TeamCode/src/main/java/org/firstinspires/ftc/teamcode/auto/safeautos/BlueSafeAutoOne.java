@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.safeautos;
+package org.firstinspires.ftc.teamcode.auto.safeautos;
 
 import android.util.Size;
 
@@ -205,18 +205,18 @@ public class BlueSafeAutoOne extends LinearOpMode {
                 if(objectFound){
 
 //                    Adjust values according to your bot and camera position
-//                    if(x>=800 && x<=1100){
-//                        propPosition  = "left";
-//                        drive.followTrajectorySequence(AutoTrajectoryLeft);
-//                    }
-//                    else if(x>=500 && x<=790){
-//                        propPosition = "center";
-//                        drive.followTrajectorySequence(AutoTrajectoryCenter);
-//                    }
-//                    else if(x>=200 && x<=490) {
-//                        propPosition = "right";
-//                        drive.followTrajectorySequence(AutoTrajectoryRight);
-//                    }
+                    if(x>=800 && x<=1100){
+                        propPosition  = "left";
+                        drive.followTrajectorySequence(AutoTrajectoryLeft);
+                    }
+                    else if(x>=500 && x<=790){
+                        propPosition = "center";
+                        drive.followTrajectorySequence(AutoTrajectoryCenter);
+                    }
+                    else if(x>=200 && x<=490) {
+                        propPosition = "right";
+                        drive.followTrajectorySequence(AutoTrajectoryRight);
+                    }
 
 
                 }

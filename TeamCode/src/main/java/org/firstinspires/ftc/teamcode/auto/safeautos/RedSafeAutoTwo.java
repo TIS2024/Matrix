@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.safeautos;
+package org.firstinspires.ftc.teamcode.auto.safeautos;
 
 import android.util.Size;
 

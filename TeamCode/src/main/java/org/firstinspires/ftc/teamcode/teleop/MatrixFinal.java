@@ -252,10 +252,8 @@ public class MatrixFinal extends LinearOpMode {
             //Intake Sequence
             switch (inputState) {
                 case INTAKE_START:
-                    //waiting for input
                     if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 0)) {
                         ArmV2.wristServo.setPosition(wristServoPos);
-//                        ArmV2.SetArm(0.20);
                         ArmV2.SetArm(0.25);
                         ArmV2.DropPixel(0.95);
                         if (ArmV2.armServoTwo.getPosition() == 0.25 && intake_stack_command == "GroundIntake"){
@@ -265,8 +263,7 @@ public class MatrixFinal extends LinearOpMode {
                             inputTimer.reset();
                             inputState = IntakeState.INTAKE_EXTEND;
                         }
-                        if(intake_stack_command == "FiveStackGo")
-                        {
+                        if(intake_stack_command == "FiveStackGo") {
                             Intake.intakeArmServo.setPosition(0.650);
                             Intake.intakeWristServo.setPosition(0.23); //0.24
                             Intake.IntakePixel(1);
@@ -285,7 +282,6 @@ public class MatrixFinal extends LinearOpMode {
                     }
                     if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 2)) {
                         Intake.IntakePixel(1);
-//                        ArmV2.SetArm(0.20);
                         ArmV2.wristServo.setPosition(wristServoPos);
                         ArmV2.SetArm(0.25);
                         ArmV2.DropPixel(0.75);

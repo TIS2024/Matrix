@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.new_autos;
+package org.firstinspires.ftc.teamcode.auto.new_autos;
 
 import android.util.Size;
 
@@ -23,7 +23,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
 
-@Autonomous(name = "RedNearAuto_1Cycle", group = "Cycle_Autos")
+@Autonomous(name = "RedNearAuto_2Cycle", group = "Cycle_Autos")
 //@Disabled
 public class RedNearAuto extends LinearOpMode {
     SampleMecanumDrive drive = null;
@@ -53,6 +53,11 @@ public class RedNearAuto extends LinearOpMode {
     public static Pose2d PurpleLeftPos, YellowLeftPos, StackLeftPos = new Pose2d(-53.5 , -10, -Math.PI); //-51,-12
     public static Vector2d PurpleLeft = new Vector2d(16 , -29), YellowLeft = new Vector2d(50,-26), StackLeft; //25
 
+    public static Pose2d PurpleCenterPos, YellowCenterPos, StackCenterPos;
+    public static Vector2d PurpleCenter = new Vector2d(25 , -21), YellowCenter = new Vector2d(53,-35), StackCenter;
+
+    public static Pose2d PurpleRightPos, YellowRightPos, StackRightPos;
+    public static Vector2d PurpleRight = new Vector2d(35 , -30), YellowRight = new Vector2d(52,-41), StackRight;
 
     public static double wristPlay1 = 0.00, wristPlay2 = 0.00;
 
@@ -279,26 +284,27 @@ public class RedNearAuto extends LinearOpMode {
         TrajectorySequence AutoTrajectoryCenter_Purple_Yellow = drive.trajectorySequenceBuilder(startPose)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.5);})
 
-                .lineToConstantHeading(new Vector2d(25 , -21))
+                .lineToConstantHeading(PurpleCenter)
 
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, ()->{arm.setArmPos(0.4, 0.16);})
                 .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
-                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.IntakePixel(1);})
-                .addTemporalMarker(()->{arm.setArmPos(0.4, 0.16);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
-                .waitSeconds(0.5)
+                .addTemporalMarker(()->{Intake.IntakePixel(1);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.66);})
+                .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
 
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(53,-35), 0)
+                .splineToConstantHeading(YellowCenter, 0)
 
-                .waitSeconds(1)
-                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(1)
-                .resetConstraints()
-                .addTemporalMarker(() -> {arm.setArmPos(0.4, 0.16);})
+                .UNSTABLE_addTemporalMarkerOffset(-0.3,()->{ArmV2.DropPixel(1);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0, ()->{Intake.intakeArmServo.setPosition(0.636);Intake.intakeWristServo.setPosition(0.262 + wristPlay1);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(() -> {arm.setArmPos(0.3, 0.175);})
                 .waitSeconds(0.2)
-                .addTemporalMarker(() -> {arm.setArmPos(0.15, 0.16);})
+                .addTemporalMarker(() -> {arm.setArmPos(0.15, 0.175);})
+                .setReversed(false)
+                .resetConstraints()
                 .build();
 
         TrajectorySequence CenterPathPicking_Center = drive.trajectorySequenceBuilder(AutoTrajectoryCenter_Purple_Yellow.end())
@@ -321,24 +327,24 @@ public class RedNearAuto extends LinearOpMode {
         TrajectorySequence AutoTrajectoryRight_Purple_Yellow = drive.trajectorySequenceBuilder(startPose)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.5);})
 
-                .lineToConstantHeading(new Vector2d(35 , -30))
+                .lineToConstantHeading(PurpleRight)
 
-                .waitSeconds(0.5)
                 .addTemporalMarker(()->{Intake.IntakePixel(1);})
                 .addTemporalMarker(()->{arm.setArmPos(0.4, 0.16);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
 
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(52,-41), 0)
+                .splineToConstantHeading(YellowRight, 0)
 
-                .waitSeconds(1)
-                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(1)//0.55
+                .UNSTABLE_addTemporalMarkerOffset(-0.3,()->{ArmV2.DropPixel(1);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0, ()->{Intake.intakeArmServo.setPosition(0.636);Intake.intakeWristServo.setPosition(0.262 + wristPlay1);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(() -> {arm.setArmPos(0.3, 0.175);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(() -> {arm.setArmPos(0.15, 0.175);})
+                .setReversed(false)
                 .resetConstraints()
-                .addTemporalMarker(() -> {arm.setArmPos(0.4, 0.16);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(() -> {arm.setArmPos(0.15, 0.16);})
                 .build();
 
         TrajectorySequence CenterPathPicking_Right = drive.trajectorySequenceBuilder(AutoTrajectoryRight_Purple_Yellow.end())
@@ -477,129 +483,129 @@ public class RedNearAuto extends LinearOpMode {
 
 
             //CENTER TRAJECTORY
-            switch (currentCenterState){
-                case Start:
-                    if (gamepad1.y || propPosition == "center"){
-                        if(!drive.isBusy()){
-                            currentCenterState = AutoTrajectoryCenter.AutoTrajectoryCenter_Purple_Yellow;
-                            drive.followTrajectorySequenceAsync(AutoTrajectoryCenter_Purple_Yellow);
-                        }
-                    }
-                    break;
-                case AutoTrajectoryCenter_Purple_Yellow:
-                    if(!drive.isBusy()){
-                        currentCenterState = AutoTrajectoryCenter.CenterPathPicking_Center;
-                        drive.followTrajectorySequenceAsync(CenterPathPicking_Center);
-                    }
-                    break;
-                case CenterPathPicking_Center:
-                    if(!drive.isBusy()){
-                        currentCenterState = AutoTrajectoryCenter.CenterPathPlacing_Center;
-                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Center);
-                    }
-                    break;
-                case CenterPathPlacing_Center:
-                    if(!drive.isBusy()){
-                        currentCenterState = AutoTrajectoryCenter.WhiteDrop_Center;
-                        drive.followTrajectorySequenceAsync(WhiteDrop_Center);
-                    }
-                    break;
-                case WhiteDrop_Center:
-                    if(!drive.isBusy()){
-                        currentCenterState = AutoTrajectoryCenter.CenterPathPicking2_Center;
-                        drive.followTrajectorySequenceAsync(CenterPathPicking2_Center);
-                    }
-                    break;
-                case CenterPathPicking2_Center:
-                    if(!drive.isBusy()){
-                        currentCenterState = AutoTrajectoryCenter.CenterPathPlacing2_Center;
-                        drive.followTrajectorySequenceAsync(CenterPathPlacing2_Center);
-                    }
-                    break;
-                case CenterPathPlacing2_Center:
-                    if(!drive.isBusy()){
-                        currentCenterState = AutoTrajectoryCenter.WhiteDrop2_Center;
-                        drive.followTrajectorySequenceAsync(WhiteDrop2_Center);
-                    }
-                    break;
-                case WhiteDrop2_Center:
-                    if(!drive.isBusy()){
-                        currentCenterState = AutoTrajectoryCenter.ParkingIn;
-//                        drive.followTrajectorySequenceAsync(ParkingIn);
-                    }
-                    break;
-                case ParkingIn:
-                    if(!drive.isBusy()){
-                        currentCenterState = AutoTrajectoryCenter.IDLE;
-                    }
-                    break;
-                case IDLE:
-                    break;
-            }
+//            switch (currentCenterState){
+//                case Start:
+//                    if (gamepad1.y || propPosition == "center"){
+//                        if(!drive.isBusy()){
+//                            currentCenterState = AutoTrajectoryCenter.AutoTrajectoryCenter_Purple_Yellow;
+//                            drive.followTrajectorySequenceAsync(AutoTrajectoryCenter_Purple_Yellow);
+//                        }
+//                    }
+//                    break;
+//                case AutoTrajectoryCenter_Purple_Yellow:
+//                    if(!drive.isBusy()){
+//                        currentCenterState = AutoTrajectoryCenter.CenterPathPicking_Center;
+//                        drive.followTrajectorySequenceAsync(CenterPathPicking_Center);
+//                    }
+//                    break;
+//                case CenterPathPicking_Center:
+//                    if(!drive.isBusy()){
+//                        currentCenterState = AutoTrajectoryCenter.CenterPathPlacing_Center;
+//                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Center);
+//                    }
+//                    break;
+//                case CenterPathPlacing_Center:
+//                    if(!drive.isBusy()){
+//                        currentCenterState = AutoTrajectoryCenter.WhiteDrop_Center;
+//                        drive.followTrajectorySequenceAsync(WhiteDrop_Center);
+//                    }
+//                    break;
+//                case WhiteDrop_Center:
+//                    if(!drive.isBusy()){
+//                        currentCenterState = AutoTrajectoryCenter.CenterPathPicking2_Center;
+//                        drive.followTrajectorySequenceAsync(CenterPathPicking2_Center);
+//                    }
+//                    break;
+//                case CenterPathPicking2_Center:
+//                    if(!drive.isBusy()){
+//                        currentCenterState = AutoTrajectoryCenter.CenterPathPlacing2_Center;
+//                        drive.followTrajectorySequenceAsync(CenterPathPlacing2_Center);
+//                    }
+//                    break;
+//                case CenterPathPlacing2_Center:
+//                    if(!drive.isBusy()){
+//                        currentCenterState = AutoTrajectoryCenter.WhiteDrop2_Center;
+//                        drive.followTrajectorySequenceAsync(WhiteDrop2_Center);
+//                    }
+//                    break;
+//                case WhiteDrop2_Center:
+//                    if(!drive.isBusy()){
+//                        currentCenterState = AutoTrajectoryCenter.ParkingIn;
+////                        drive.followTrajectorySequenceAsync(ParkingIn);
+//                    }
+//                    break;
+//                case ParkingIn:
+//                    if(!drive.isBusy()){
+//                        currentCenterState = AutoTrajectoryCenter.IDLE;
+//                    }
+//                    break;
+//                case IDLE:
+//                    break;
+//            }
 
 
 
 
             //RIGHT TRAJECTORY
-            switch (currentRightState){
-                case Start:
-                    if (gamepad1.b || propPosition == "right"){
-                        if(!drive.isBusy()){
-                            currentRightState = AutoTrajectoryRight.AutoTrajectoryRight_Purple_Yellow;
-                            drive.followTrajectorySequenceAsync(AutoTrajectoryRight_Purple_Yellow);
-                        }
-                    }
-                    break;
-                case AutoTrajectoryRight_Purple_Yellow:
-                    if(!drive.isBusy()){
-                        currentRightState = AutoTrajectoryRight.CenterPathPicking_Right;
-                        drive.followTrajectorySequenceAsync(CenterPathPicking_Right);
-                    }
-                    break;
-                case CenterPathPicking_Right:
-                    if(!drive.isBusy()){
-                        currentRightState = AutoTrajectoryRight.CenterPathPlacing_Right;
-                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Right);
-                    }
-                    break;
-                case CenterPathPlacing_Right:
-                    if(!drive.isBusy()){
-                        currentRightState = AutoTrajectoryRight.WhiteDrop_Right;
-                        drive.followTrajectorySequenceAsync(WhiteDrop_Right);
-                    }
-                    break;
-                case WhiteDrop_Right:
-                    if(!drive.isBusy()){
-                        currentRightState = AutoTrajectoryRight.CenterPathPicking2_Right;
-                        drive.followTrajectorySequenceAsync(CenterPathPicking2_Right);
-                    }
-                    break;
-                case CenterPathPicking2_Right:
-                    if(!drive.isBusy()){
-                        currentRightState = AutoTrajectoryRight.CenterPathPlacing2_Right;
-                        drive.followTrajectorySequenceAsync(CenterPathPlacing2_Right);
-                    }
-                    break;
-                case CenterPathPlacing2_Right:
-                    if(!drive.isBusy()){
-                        currentRightState = AutoTrajectoryRight.WhiteDrop2_Right;
-                        drive.followTrajectorySequenceAsync(WhiteDrop2_Right);
-                    }
-                    break;
-                case WhiteDrop2_Right:
-                    if(!drive.isBusy()){
-                        currentRightState = AutoTrajectoryRight.ParkingIn;
-//                        drive.followTrajectorySequenceAsync(ParkingIn);
-                    }
-                    break;
-                case ParkingIn:
-                    if(!drive.isBusy()){
-                        currentRightState = AutoTrajectoryRight.IDLE;
-                    }
-                    break;
-                case IDLE:
-                    break;
-            }
+//            switch (currentRightState){
+//                case Start:
+//                    if (gamepad1.b || propPosition == "right"){
+//                        if(!drive.isBusy()){
+//                            currentRightState = AutoTrajectoryRight.AutoTrajectoryRight_Purple_Yellow;
+//                            drive.followTrajectorySequenceAsync(AutoTrajectoryRight_Purple_Yellow);
+//                        }
+//                    }
+//                    break;
+//                case AutoTrajectoryRight_Purple_Yellow:
+//                    if(!drive.isBusy()){
+//                        currentRightState = AutoTrajectoryRight.CenterPathPicking_Right;
+//                        drive.followTrajectorySequenceAsync(CenterPathPicking_Right);
+//                    }
+//                    break;
+//                case CenterPathPicking_Right:
+//                    if(!drive.isBusy()){
+//                        currentRightState = AutoTrajectoryRight.CenterPathPlacing_Right;
+//                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Right);
+//                    }
+//                    break;
+//                case CenterPathPlacing_Right:
+//                    if(!drive.isBusy()){
+//                        currentRightState = AutoTrajectoryRight.WhiteDrop_Right;
+//                        drive.followTrajectorySequenceAsync(WhiteDrop_Right);
+//                    }
+//                    break;
+//                case WhiteDrop_Right:
+//                    if(!drive.isBusy()){
+//                        currentRightState = AutoTrajectoryRight.CenterPathPicking2_Right;
+//                        drive.followTrajectorySequenceAsync(CenterPathPicking2_Right);
+//                    }
+//                    break;
+//                case CenterPathPicking2_Right:
+//                    if(!drive.isBusy()){
+//                        currentRightState = AutoTrajectoryRight.CenterPathPlacing2_Right;
+//                        drive.followTrajectorySequenceAsync(CenterPathPlacing2_Right);
+//                    }
+//                    break;
+//                case CenterPathPlacing2_Right:
+//                    if(!drive.isBusy()){
+//                        currentRightState = AutoTrajectoryRight.WhiteDrop2_Right;
+//                        drive.followTrajectorySequenceAsync(WhiteDrop2_Right);
+//                    }
+//                    break;
+//                case WhiteDrop2_Right:
+//                    if(!drive.isBusy()){
+//                        currentRightState = AutoTrajectoryRight.ParkingIn;
+////                        drive.followTrajectorySequenceAsync(ParkingIn);
+//                    }
+//                    break;
+//                case ParkingIn:
+//                    if(!drive.isBusy()){
+//                        currentRightState = AutoTrajectoryRight.IDLE;
+//                    }
+//                    break;
+//                case IDLE:
+//                    break;
+//            }
 
 
             telemetry.addData("LeftFrontCurrent", drive.getMotorCurrent().get(0));

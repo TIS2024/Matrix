@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Hanger;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Slider;
 
-@TeleOp(group = "Robot Main")
+@TeleOp(group = "Robot Practice")
 @Config
 public class MatrixTest extends LinearOpMode {
     SampleMecanumDrive drive = null;

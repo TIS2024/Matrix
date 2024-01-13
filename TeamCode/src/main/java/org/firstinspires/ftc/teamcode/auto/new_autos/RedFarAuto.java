@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.new_autos;
+package org.firstinspires.ftc.teamcode.auto.new_autos;
 
 import android.util.Size;
 
@@ -314,7 +314,7 @@ public class RedFarAuto extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.50, 0.68);}) //50
+                .addTemporalMarker(()->{arm.setArmPos(0.49, 0.68);}) //50
 
                 .lineToConstantHeading(YellowCenter)
 
@@ -454,7 +454,7 @@ public class RedFarAuto extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
                 .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.50, 0.68);}) //50
+                .addTemporalMarker(()->{arm.setArmPos(0.49, 0.68);}) //50
 
                 .lineToConstantHeading(YellowRight)
 

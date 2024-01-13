@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.new_autos;
+package org.firstinspires.ftc.teamcode.auto.new_autos;
 
 import android.util.Size;
 
@@ -159,15 +159,16 @@ public class BlueFarAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryRightYellow = drive.trajectorySequenceBuilder(CenterPathPlacing.end())
-                .lineToConstantHeading(new Vector2d(53.5 + 1, 40))
+                .lineToConstantHeading(new Vector2d(53.5, 40))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
                 .waitSeconds(0.2)
-                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.68);})
+                .addTemporalMarker(()->{arm.setArmPos(0.49, 0.68);}) //0.51
 
                 .lineToConstantHeading(YellowRight)
+                .waitSeconds(0.1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.53,0.68);})
                 .waitSeconds(0.1)
@@ -312,10 +313,10 @@ public class BlueFarAuto extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
                 .waitSeconds(0.2)
-                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.68);})
+                .addTemporalMarker(()->{arm.setArmPos(0.49, 0.68);}) //0.51
 
                 .lineToConstantHeading(YellowCenter)
-
+                .waitSeconds(0.1)
                 .addTemporalMarker(()->{arm.setArmPos(0.53,0.68);})
                 .waitSeconds(0.1)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
@@ -450,9 +451,10 @@ public class BlueFarAuto extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
                 .waitSeconds(0.2)
-                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.68);})
+                .addTemporalMarker(()->{arm.setArmPos(0.49, 0.68);})
 
                 .lineToConstantHeading(YellowLeft)
+                .waitSeconds(0.1)
 
                 .addTemporalMarker(()->{arm.setArmPos(0.54,0.68);})
                 .waitSeconds(0.1)
