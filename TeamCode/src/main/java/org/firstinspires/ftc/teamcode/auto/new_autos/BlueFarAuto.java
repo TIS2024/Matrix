@@ -52,15 +52,15 @@ public class BlueFarAuto extends LinearOpMode {
 
     public static double stackDiff = 0;
     public static Pose2d PurpleRightPos = new Pose2d(-35,32, -Math.PI), YellowRightPos, StackRightPos = new Pose2d(-51.5 , 12 - stackDiff, -Math.PI); //-51
-    public static Vector2d PurpleRight, YellowRight = new Vector2d(54,30.5), StackRight = new Vector2d(-51, 12.5); //53.5
+    public static Vector2d PurpleRight, YellowRight = new Vector2d(54 + 1,30.5), StackRight = new Vector2d(-51, 12.5); //53.5
 
 
     public static Pose2d PurpleLeftPos = new Pose2d(-40,30, 0), YellowLeftPos, StackLeftPos = new Pose2d(-51 , 12, -Math.PI); //-44
-    public static Vector2d PurpleLeft, YellowLeft = new Vector2d(51,43), StackLeft = new Vector2d(-51, 12); //48
+    public static Vector2d PurpleLeft, YellowLeft = new Vector2d(54 + 1,43), StackLeft = new Vector2d(-51, 12); //48
 
 
     public static Pose2d PurpleCenterPos = new Pose2d(-51,24, 0), YellowCenterPos, StackCenterPos = new Pose2d(-51 , 12, -Math.PI); //51
-    public static Vector2d PurpleCenter, YellowCenter = new Vector2d(51,36), StackCenter = new Vector2d(-51, 12); //38
+    public static Vector2d PurpleCenter, YellowCenter = new Vector2d(54 + 1,36), StackCenter = new Vector2d(-51, 12); //38
 
 
     public static double wristPlay1 = -0.01, wristPlay2 = 0.00;
@@ -365,7 +365,7 @@ public class BlueFarAuto extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.3, ()->{Intake.intakeArmServo.setPosition(0.75);Intake.IntakePixel(0.77);})
                 .UNSTABLE_addTemporalMarkerOffset(0.7, ()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);Intake.IntakePixel(0.77);})
 
-                .splineToConstantHeading(new Vector2d(36,12),0) //28
+                .splineToConstantHeading(new Vector2d(40,12),0) //36
 
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.165);})
                 .waitSeconds(0.2)
@@ -375,8 +375,8 @@ public class BlueFarAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryCenterYellow2 = drive.trajectorySequenceBuilder(CenterPathPlacing_Center2.end()) //53.5, 32/54,32
-                .splineToConstantHeading(new Vector2d(53.5, 45), 0)
-                .lineToConstantHeading(new Vector2d(54, 45))
+                .splineToConstantHeading(new Vector2d(53.5, 32), 0)
+                .lineToConstantHeading(new Vector2d(54, 32))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.53, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.1,()->{arm.setArmPos(0.53, 0.68);})
@@ -506,7 +506,7 @@ public class BlueFarAuto extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.3, ()->{Intake.intakeArmServo.setPosition(0.75);Intake.IntakePixel(0.77);})
                 .UNSTABLE_addTemporalMarkerOffset(0.7, ()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);Intake.IntakePixel(0.77);})
 
-                .splineToConstantHeading(new Vector2d(36,12),0) //28
+                .splineToConstantHeading(new Vector2d(40,12),0) //36
 
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.165);})
                 .waitSeconds(0.2)
@@ -516,8 +516,8 @@ public class BlueFarAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryLeftYellow2 = drive.trajectorySequenceBuilder(CenterPathPlacing_Left2.end()) //53.5, 30/54, 30
-                .splineToConstantHeading(new Vector2d(53.5, 45), 0)
-                .lineToConstantHeading(new Vector2d(54, 45))
+                .splineToConstantHeading(new Vector2d(53.5, 32), 0)
+                .lineToConstantHeading(new Vector2d(54, 32))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.53, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.1,()->{arm.setArmPos(0.53, 0.68);})
@@ -587,7 +587,6 @@ public class BlueFarAuto extends LinearOpMode {
                     telemetry.addLine("Don't see the beacon :(");
                 }
                 telemetry.addData("position", propPosition);
-                telemetry.update();
                 telemetry.update();
             }
         }

@@ -5,6 +5,7 @@ import android.util.Size;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -43,6 +44,8 @@ public class BlueFar_Akshay extends LinearOpMode {
             lifter_posL = 0, lifter_posR = 0, error_lifter, error_diff, error_int, error_lifterR, error_diffR, error_intR, errorprev, errorprevR, output_lifter, output_lifterR, output_power, target, dropVal;
 
     public static double kp = 4, ki, kd = 1.7;
+
+    private DistanceSensor sensorDistance, sensorDistance2, sensorDistance3;
 
     public static double stackDiff = 0;
     public static Pose2d PurpleRightPos = new Pose2d(-35,32, -Math.PI), YellowRightPos, StackRightPos = new Pose2d(-51.5 , 12 - stackDiff, -Math.PI); //-51
@@ -107,6 +110,10 @@ public class BlueFar_Akshay extends LinearOpMode {
         Pose2d startPose=new Pose2d(-39, 64, 0);
         drive.setPoseEstimate(startPose);
         initTfod();
+
+        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_distance");
+        sensorDistance2 = hardwareMap.get(DistanceSensor.class, "sensor_distance2");
+        sensorDistance3 = hardwareMap.get(DistanceSensor.class, "sensor_distance3");
 
 
         // TODO Right Trajectories

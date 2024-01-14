@@ -10,4 +10,10 @@ public class TeleOpConstants {
         public static double deliveryInPos = 0.95, deliveryOutPos = 0.5, deliveryOnePixelPos = 0.84, deliveryHoldOnePixel = 0.75;
         public static double armSliderClosePos = 0.95;
     }
+    public static class intakeArmConstants{
+        public static double gripperHoldPos = 0.8, gripperOpenPos = 1, gripperPressPos = 0.77;
+        public static double intakeArmInitPos = 0.5, intakeWristInitPos = 0.66;
+        public static double intakeArmGripPos = 0.45, intakeWristGripPos = 0.495;
+        public static double intakeArm5stack = 0.65, intakeWrist5stack = 0.23;
+    }
 }

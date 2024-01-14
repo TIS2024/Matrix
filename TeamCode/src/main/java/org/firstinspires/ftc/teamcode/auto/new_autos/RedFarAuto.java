@@ -22,7 +22,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
 
-@Autonomous(name="RedFarAuto_1Cycle", group = "Cycle_Autos")
+@Autonomous(name="RedFarAuto1Cycle", group = "Cycle_Autos")//(name="RedFarAuto_1Cycle", group = "Cycle_Autos")
 @Config
 public class RedFarAuto extends LinearOpMode {
     SampleMecanumDrive drive = null;
@@ -51,14 +51,14 @@ public class RedFarAuto extends LinearOpMode {
     public static Pose2d PurpleRightPos = new Pose2d(-38,-32, -Math.PI), YellowRightPos, StackRightPos = new Pose2d(-52 , -12 + stackDiff, -Math.PI);
     public static Vector2d PurpleRight, YellowRight = new Vector2d(53.5,-43), StackRight = new Vector2d(-51, -12.5);
 
-    public static Pose2d PurpleLeftPos = new Pose2d(-40,-30, 0), YellowLeftPos, StackLeftPos = new Pose2d(-51 , -12, -Math.PI); //-44
+    public static Pose2d PurpleLeftPos = new Pose2d(-40,-30, 0), YellowLeftPos, StackLeftPos = new Pose2d(-52.5 , -12, -Math.PI); //-44
     public static Vector2d PurpleLeft, YellowLeft = new Vector2d(53.5,-28.5), StackLeft = new Vector2d(-51, -12); //48
 
     public static Pose2d PurpleCenterPos = new Pose2d(-53,-24, 0), YellowCenterPos, StackCenterPos = new Pose2d(-51 , -12, -Math.PI); //51
     public static Vector2d PurpleCenter, YellowCenter = new Vector2d(53.5,-33), StackCenter = new Vector2d(-51, -12); //38
 
 
-    public static double wristPlay1 = -0.01, wristPlay2 = -0.01;
+    public static double wristPlay1 = -0.02, wristPlay2 = 0.00;
 
 
     public enum AutoTrajectoryRight {
@@ -609,9 +609,10 @@ public class RedFarAuto extends LinearOpMode {
                 }
                 telemetry.addData("position", propPosition);
                 telemetry.update();
-                telemetry.update();
             }
+            sleep(20);
         }
+        visionPortal.close();
 
         waitForStart();
 
