@@ -139,17 +139,24 @@ public class RedFarAuto extends LinearOpMode {
 
                 .splineToConstantHeading(new Vector2d(-34,-12),0)
 
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);Intake.IntakePixel(0.77);})
-                .waitSeconds(0.2)//0.3
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.75);Intake.IntakePixel(0.77);})
-                .waitSeconds(0.2)//0.4
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);Intake.IntakePixel(0.77);})
-                .waitSeconds(0.1)//0.3
-                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.165);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.IntakePixel(1);ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.155);slider.extendTo(-10, 1);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{slider.extendTo(0, 1);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0, ()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
+                .UNSTABLE_addTemporalMarkerOffset(0.3, ()->{Intake.intakeArmServo.setPosition(0.75);})
+                .UNSTABLE_addTemporalMarkerOffset(0.7, ()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);})
+                .UNSTABLE_addTemporalMarkerOffset(1, ()->{arm.setArmPos(0.15, 0.165);})
+                .UNSTABLE_addTemporalMarkerOffset(1.2,()->{Intake.IntakePixel(1);ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.155);slider.extendTo(-10, 1);})
+                .UNSTABLE_addTemporalMarkerOffset(1.4, ()->{slider.extendTo(0, 1);})
+
+//                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);Intake.IntakePixel(0.77);})
+//                .waitSeconds(0.2)//0.3
+//                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.75);Intake.IntakePixel(0.77);})
+//                .waitSeconds(0.2)//0.4
+//                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);Intake.IntakePixel(0.77);})
+//                .waitSeconds(0.1)//0.3
+//                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.165);})
+//                .waitSeconds(0.2)
+//                .addTemporalMarker(()->{Intake.IntakePixel(1);ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.155);slider.extendTo(-10, 1);})
+//                .waitSeconds(0.2)
+//                .addTemporalMarker(()->{slider.extendTo(0, 1);})
 
                 .splineToConstantHeading(new Vector2d(36,-12),0) //28
                 .build();
@@ -160,20 +167,25 @@ public class RedFarAuto extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
-                .waitSeconds(0.3)
+                .waitSeconds(0.2)
                 .addTemporalMarker(()->{arm.setArmPos(0.48, 0.68);}) //50
+                .waitSeconds(0.1)
+                .UNSTABLE_addTemporalMarkerOffset(0.1, ()->{arm.setArmPos(0.50,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.2, ()->{arm.setArmPos(0.51,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.3, ()->{arm.setArmPos(0.52,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.4, ()->{arm.setArmPos(0.53,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.5, ()->{arm.setArmPos(0.54,0.68);})
 
                 .lineToConstantHeading(YellowLeft)
 
-                .addTemporalMarker(()->{arm.setArmPos(0.53,0.68);})
                 .waitSeconds(0.1)
-//                .UNSTABLE_addTemporalMarkerOffset(-0.1, ()->{ArmV2.DropPixel(1);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.4)
+                .waitSeconds(0.3)
                 .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
-                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.175);})
-                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
+                .addTemporalMarker(()->{arm.setArmPos(0.49, 0.68);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{arm.setArmPos(0.4, 0.175);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.175);})
                 .resetConstraints()
@@ -189,13 +201,13 @@ public class RedFarAuto extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(-34, -10))
 
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.37 + wristPlay2);})
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.38 + wristPlay2);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
 
                 .lineToSplineHeading(StackLeftPos)
 
-                .waitSeconds(0.1)
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.35 + wristPlay2);})
                 .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{intake.setArm(0.55, 0.4);})
@@ -223,19 +235,19 @@ public class RedFarAuto extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(54, -40))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.53, 0.175);})
-                .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.53, 0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(-0.1,()->{arm.setArmPos(0.53, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.51, 0.68);})
-                .waitSeconds(0.1)
+                .waitSeconds(0.2)//0.1
                 .addTemporalMarker(()->{arm.setArmPos(0.53, 0.68);})
-                .waitSeconds(0.1)
+                .waitSeconds(0.2)//0.1
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.2) //start
                 .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
-                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.175);})
-                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
+                .addTemporalMarker(()->{arm.setArmPos(0.50, 0.68);})
+                .addTemporalMarker(()->{arm.setArmPos(0.4, 0.175);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.175);})
                 .resetConstraints()
@@ -292,17 +304,24 @@ public class RedFarAuto extends LinearOpMode {
 
                 .splineToConstantHeading(new Vector2d(-34,-12),0)
 
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);Intake.IntakePixel(0.77);})
-                .waitSeconds(0.2)//0.3
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.75);Intake.IntakePixel(0.77);})
-                .waitSeconds(0.2)//0.4
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);Intake.IntakePixel(0.77);})
-                .waitSeconds(0.1)//0.3
-                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.165);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.IntakePixel(1);ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.155);slider.extendTo(-10, 1);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{slider.extendTo(0, 1);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0, ()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
+                .UNSTABLE_addTemporalMarkerOffset(0.3, ()->{Intake.intakeArmServo.setPosition(0.75);})
+                .UNSTABLE_addTemporalMarkerOffset(0.7, ()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);})
+                .UNSTABLE_addTemporalMarkerOffset(1, ()->{arm.setArmPos(0.15, 0.165);})
+                .UNSTABLE_addTemporalMarkerOffset(1.2,()->{Intake.IntakePixel(1);ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.155);slider.extendTo(-10, 1);})
+                .UNSTABLE_addTemporalMarkerOffset(1.4, ()->{slider.extendTo(0, 1);})
+
+//                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);Intake.IntakePixel(0.77);})
+//                .waitSeconds(0.2)//0.3
+//                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.75);Intake.IntakePixel(0.77);})
+//                .waitSeconds(0.2)//0.4
+//                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);Intake.IntakePixel(0.77);})
+//                .waitSeconds(0.1)//0.3
+//                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.165);})
+//                .waitSeconds(0.2)
+//                .addTemporalMarker(()->{Intake.IntakePixel(1);ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.155);slider.extendTo(-10, 1);})
+//                .waitSeconds(0.2)
+//                .addTemporalMarker(()->{slider.extendTo(0, 1);})
 
                 .splineToConstantHeading(new Vector2d(36,-12),0) //28
                 .build();
@@ -313,20 +332,26 @@ public class RedFarAuto extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
-                .waitSeconds(0.3)
+                .waitSeconds(0.2)
                 .addTemporalMarker(()->{arm.setArmPos(0.49, 0.68);}) //50
+                .waitSeconds(0.1)
+                .UNSTABLE_addTemporalMarkerOffset(0.1, ()->{arm.setArmPos(0.50,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.2, ()->{arm.setArmPos(0.51,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.3, ()->{arm.setArmPos(0.52,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.4, ()->{arm.setArmPos(0.53,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.5, ()->{arm.setArmPos(0.54,0.68);})
+
 
                 .lineToConstantHeading(YellowCenter)
 
-                .addTemporalMarker(()->{arm.setArmPos(0.53,0.68);})
                 .waitSeconds(0.1)
-//                .UNSTABLE_addTemporalMarkerOffset(-0.1, ()->{ArmV2.DropPixel(1);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.4)
+                .waitSeconds(0.3)
                 .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
-                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.175);})
-                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
+                .addTemporalMarker(()->{arm.setArmPos(0.49, 0.68);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{arm.setArmPos(0.4, 0.175);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.175);})
                 .resetConstraints()
@@ -342,13 +367,13 @@ public class RedFarAuto extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(-34, -10))
 
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.37 + wristPlay2);})
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.38 + wristPlay2);})
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
                 .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
 
                 .lineToSplineHeading(StackLeftPos)
 
-                .waitSeconds(0.1)
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.35 + wristPlay2);})
                 .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{intake.setArm(0.55, 0.4);})
@@ -376,19 +401,19 @@ public class RedFarAuto extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(54, -32))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.53, 0.175);})
-                .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.53, 0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(-0.1,()->{arm.setArmPos(0.53, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.51, 0.68);})
-                .waitSeconds(0.1)
+                .waitSeconds(0.2)//0.1
                 .addTemporalMarker(()->{arm.setArmPos(0.53, 0.68);})
-                .waitSeconds(0.1)
+                .waitSeconds(0.2)//0.1
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.2) //start
                 .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
-                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.175);})
-                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
+                .addTemporalMarker(()->{arm.setArmPos(0.50, 0.68);})
+                .addTemporalMarker(()->{arm.setArmPos(0.4, 0.175);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.175);})
                 .resetConstraints()
@@ -432,17 +457,12 @@ public class RedFarAuto extends LinearOpMode {
 
                 .splineToConstantHeading(new Vector2d(-34,-12),0)
 
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);Intake.IntakePixel(0.77);})
-                .waitSeconds(0.2)//0.3
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.75);Intake.IntakePixel(0.77);})
-                .waitSeconds(0.2)//0.4
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);Intake.IntakePixel(0.77);})
-                .waitSeconds(0.1)//0.3
-                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.165);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.IntakePixel(1);ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.155);slider.extendTo(-10, 1);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{slider.extendTo(0, 1);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0, ()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
+                .UNSTABLE_addTemporalMarkerOffset(0.3, ()->{Intake.intakeArmServo.setPosition(0.75);})
+                .UNSTABLE_addTemporalMarkerOffset(0.7, ()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);})
+                .UNSTABLE_addTemporalMarkerOffset(1, ()->{arm.setArmPos(0.15, 0.165);})
+                .UNSTABLE_addTemporalMarkerOffset(1.2,()->{Intake.IntakePixel(1);ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.155);slider.extendTo(-10, 1);})
+                .UNSTABLE_addTemporalMarkerOffset(1.4, ()->{slider.extendTo(0, 1);})
 
                 .splineToConstantHeading(new Vector2d(36,-12),0) //28
                 .build();
@@ -453,20 +473,25 @@ public class RedFarAuto extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.49, 0.68);}) //50
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{arm.setArmPos(0.49, 0.68);}) //0.51
+                .waitSeconds(0.1)
+                .UNSTABLE_addTemporalMarkerOffset(0.1, ()->{arm.setArmPos(0.50,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.2, ()->{arm.setArmPos(0.51,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.3, ()->{arm.setArmPos(0.52,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.4, ()->{arm.setArmPos(0.53,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.5, ()->{arm.setArmPos(0.54,0.68);})
 
                 .lineToConstantHeading(YellowRight)
 
-                .addTemporalMarker(()->{arm.setArmPos(0.53,0.68);})
                 .waitSeconds(0.1)
-//                .UNSTABLE_addTemporalMarkerOffset(-0.1, ()->{ArmV2.DropPixel(1);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.4)
-                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeArmServo.setPosition(0.38);})
+                .waitSeconds(0.3)
+                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
-                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.175);})
-                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
+                .addTemporalMarker(()->{arm.setArmPos(0.49, 0.68);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{arm.setArmPos(0.4, 0.175);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.175);})
                 .resetConstraints()
@@ -488,7 +513,7 @@ public class RedFarAuto extends LinearOpMode {
 
                 .lineToSplineHeading(StackLeftPos)
 
-                .waitSeconds(0.1)
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.55);Intake.intakeWristServo.setPosition(0.35 + wristPlay2);})
                 .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{intake.setArm(0.55, 0.4);})
@@ -516,19 +541,19 @@ public class RedFarAuto extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(54, -40))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.53, 0.175);})
-                .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.53, 0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(-0.1,()->{arm.setArmPos(0.53, 0.68);})
                 .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.51, 0.68);})
-                .waitSeconds(0.1)
+                .waitSeconds(0.2)//0.1
                 .addTemporalMarker(()->{arm.setArmPos(0.53, 0.68);})
-                .waitSeconds(0.1)
+                .waitSeconds(0.2)//0.1
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.2) //start
                 .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
-                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.175);})
-                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
+                .addTemporalMarker(()->{arm.setArmPos(0.50, 0.68);})
+                .addTemporalMarker(()->{arm.setArmPos(0.4, 0.175);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{arm.setArmPos(0.15, 0.175);})
                 .resetConstraints()
