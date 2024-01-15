@@ -24,7 +24,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import java.util.List;
 
 @Autonomous(name = "REDNearAuto_2Cycle", group = "Cycle_Autos")
-//@Disabled
+@Disabled
 public class RedNearAuto extends LinearOpMode {
     SampleMecanumDrive drive = null;
     Slider slider = null;

@@ -197,13 +197,178 @@ public class BlueInAutoTwo extends LinearOpMode {
                 .build();
 
 
-//        TrajectorySequence AutoTrajectoryRight = drive.trajectorySequenceBuilder(startPose)
+
+
+        //TODO Center Trajectories
+        TrajectorySequence AutoTrajectoryCenterPurple = drive.trajectorySequenceBuilder(startPose)
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
+
+                .lineToSplineHeading(PurpleCenterPos)
+
+                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{Intake.IntakePixel(1);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+                .addTemporalMarker(()->{intake.setArm(0.5, 0.66);})
+                .build();
+
+        TrajectorySequence CenterPathPlacing_Center = drive.trajectorySequenceBuilder(AutoTrajectoryCenterPurple.end())
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.67);Intake.intakeWristServo.setPosition(0.24 + wristPlay1);})
+                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
+
+                .lineToSplineHeading(StackRightPos)
+
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.45);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{intake.setArm(0.69, 0.4);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+                .setReversed(true)
+
+                .lineToConstantHeading(new Vector2d(-40,60))
+
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);Intake.IntakePixel(0.77);})
+                .waitSeconds(0.2)//0.3
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.75);Intake.IntakePixel(0.77);})
+                .waitSeconds(0.2)//0.4
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);Intake.IntakePixel(0.77);})
+                .waitSeconds(0.1)//0.3
+                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.165);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{Intake.IntakePixel(1);ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.155);slider.extendTo(-10, 1);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{slider.extendTo(0, 1);})
+
+                .lineToConstantHeading(new Vector2d(30,60))
+                .build();
+
+        TrajectorySequence AutoTrajectoryCenterYellow = drive.trajectorySequenceBuilder(CenterPathPlacing_Center.end()) //53.5+1,32
+                .lineToConstantHeading(new Vector2d(53.5, 32))
+
+                .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
+                .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
+                .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{arm.setArmPos(0.49, 0.68);}) //0.51
+                .waitSeconds(0.1)
+                .UNSTABLE_addTemporalMarkerOffset(0.1, ()->{arm.setArmPos(0.50,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.2, ()->{arm.setArmPos(0.51,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.3, ()->{arm.setArmPos(0.52,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.4, ()->{arm.setArmPos(0.53,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.5, ()->{arm.setArmPos(0.54,0.68);})
+
+                .lineToConstantHeading(YellowCenter)
+
+                .waitSeconds(0.1)
+                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
+                .waitSeconds(0.3)
+                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
+                .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
+                .addTemporalMarker(()->{arm.setArmPos(0.49, 0.68);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{arm.setArmPos(0.4, 0.175);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.175);})
+                .resetConstraints()
+                .build();
+
+
+
+
+
+        //TODO Left Trajectories
+        TrajectorySequence AutoTrajectoryLeftPurple = drive.trajectorySequenceBuilder(startPose)
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
+
+                .lineToSplineHeading(PurpleLeftPos)
+
+                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{Intake.IntakePixel(1);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+                .addTemporalMarker(()->{intake.setArm(0.5, 0.66);})
+                .build();
+
+
+        TrajectorySequence CenterPathPlacing_Left = drive.trajectorySequenceBuilder(AutoTrajectoryLeftPurple.end())
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.67);Intake.intakeWristServo.setPosition(0.24 + wristPlay1);})
+                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
+
+                .lineToSplineHeading(StackRightPos)
+
+                .waitSeconds(0.5)
+                .addTemporalMarker(()->{Intake.CrankPosition(0.45);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{intake.setArm(0.69, 0.4);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+                .setReversed(true)
+
+                .lineToConstantHeading(new Vector2d(-40,60))
+
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);Intake.IntakePixel(0.77);})
+                .waitSeconds(0.2)//0.3
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.75);Intake.IntakePixel(0.77);})
+                .waitSeconds(0.2)//0.4
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);Intake.IntakePixel(0.77);})
+                .waitSeconds(0.1)//0.3
+                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.165);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{Intake.IntakePixel(1);ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.155);slider.extendTo(-10, 1);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{slider.extendTo(0, 1);})
+
+                .lineToConstantHeading(new Vector2d(30,60))
+                .build();
+
+        TrajectorySequence AutoTrajectoryLeftYellow = drive.trajectorySequenceBuilder(CenterPathPlacing_Left.end()) //53.5+1, 30
+                .lineToConstantHeading(new Vector2d(53.5, 40))
+
+                .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
+                .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
+                .addTemporalMarker(()->{ArmV2.DropPixel(0.84);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{arm.setArmPos(0.49, 0.68);}) //0.51
+                .waitSeconds(0.1)
+                .UNSTABLE_addTemporalMarkerOffset(0.1, ()->{arm.setArmPos(0.50,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.2, ()->{arm.setArmPos(0.51,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.3, ()->{arm.setArmPos(0.52,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.4, ()->{arm.setArmPos(0.53,0.68);})
+                .UNSTABLE_addTemporalMarkerOffset(0.5, ()->{arm.setArmPos(0.54,0.68);})
+
+                .lineToConstantHeading(YellowLeft)
+
+                .waitSeconds(0.1)
+                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
+                .waitSeconds(0.3)
+                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
+                .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
+                .addTemporalMarker(()->{arm.setArmPos(0.49, 0.68);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{arm.setArmPos(0.4, 0.175);})
+                .waitSeconds(0.2)
+                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.175);})
+                .resetConstraints()
+                .build();
+
+
+//        TrajectorySequence AutoTrajectoryCenter = drive.trajectorySequenceBuilder(startPose)
 //                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
 //                // right line
-//                .lineToSplineHeading(new Pose2d(-46,46, -Math.PI/2))
+//
+//                .lineToSplineHeading(new Pose2d(-51,23, 0))
 //                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
 //                .waitSeconds(0.3)
-//                .addTemporalMarker(()->{Intake.CrankPosition(0.4);})
+//                .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
 //                .waitSeconds(0.5)
 //                .addTemporalMarker(()->{Intake.IntakePixel(1);})
 //                .waitSeconds(0.5)
@@ -212,7 +377,7 @@ public class BlueInAutoTwo extends LinearOpMode {
 //                //   towards pixel stack
 //                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
 //
-//                .lineToSplineHeading(new Pose2d(-51,37,-Math.PI))
+//                .lineToSplineHeading(new Pose2d(-51 , 37, -Math.PI))
 //
 //                .waitSeconds(0.2)
 //                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
@@ -231,7 +396,7 @@ public class BlueInAutoTwo extends LinearOpMode {
 //                .lineToConstantHeading(new Vector2d(-40,60))
 //                .lineToConstantHeading(new Vector2d(30,60))
 //                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-//                .splineToConstantHeading(new Vector2d(53,28), 0)
+//                .splineToConstantHeading(new Vector2d(54,36), 0)
 //                .waitSeconds(1)
 //
 //                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
@@ -271,7 +436,7 @@ public class BlueInAutoTwo extends LinearOpMode {
 //                .waitSeconds(0.3)
 //                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
 //                .waitSeconds(0.5)
-//                .strafeRight(12)
+//                .strafeRight(10)
 //                .waitSeconds(0.2)
 //                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
 //                .waitSeconds(0.5)
@@ -290,196 +455,102 @@ public class BlueInAutoTwo extends LinearOpMode {
 //                .setReversed(false)
 //                .build();
 
-        TrajectorySequence AutoTrajectoryCenter = drive.trajectorySequenceBuilder(startPose)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
-                // right line
-
-                .lineToSplineHeading(new Pose2d(-51,23, 0))
-                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.IntakePixel(1);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
-
-                //   towards pixel stack
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
-
-                .lineToSplineHeading(new Pose2d(-51 , 37, -Math.PI))
-
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.66);Intake.intakeArmServo.setPosition(0.4);})
-                .waitSeconds(0.4)
-                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                .waitSeconds(0.3)
-                .setReversed(true)
-
-                //   towards backdrop
-                .lineToConstantHeading(new Vector2d(-40,60))
-                .lineToConstantHeading(new Vector2d(30,60))
-                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(54,36), 0)
-                .waitSeconds(1)
-
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
-                .waitSeconds(0.8)
-                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.7)
-                .addTemporalMarker(()->{arm.setArmPos(0.4, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.75);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                .waitSeconds(0.8)
-                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, -10);if (output_power > 0.9) {
-                    output_power = 1;
-                } else if (output_power < 0.2) {
-                    output_power = 0;
-                }})
-                .addTemporalMarker(()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.16);slider.extendTo(-10, output_power);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 0);if (output_power > 0.9) {
-                    output_power = 1;
-                } else if (output_power < 0.2) {
-                    output_power = 0;
-                }})
-                .addTemporalMarker(()->{Intake.IntakePixel(1);slider.extendTo(0, output_power);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 200);if (output_power > 0.9) {
-                    output_power = 1;
-                } else if (output_power < 0.2) {
-                    output_power = 0;
-                }})
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(200, output_power);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
-                .waitSeconds(0.5)
-                .strafeRight(10)
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(0, output_power);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                .resetConstraints()
-                //right side parking
-//                .lineToSplineHeading(new Pose2d(50, 10, -Math.PI/2))
-//                .lineToConstantHeading(new Vector2d(60, 10))
-                //left side parking
-                .lineToConstantHeading(new Vector2d(50, 60))
-                .turn(Math.PI/2)
-                .setReversed(false)
-                .build();
-
-        TrajectorySequence AutoTrajectoryLeft = drive.trajectorySequenceBuilder(startPose)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
-                // right line
-                .lineToSplineHeading(new Pose2d(-44,32, 0))
-                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.42);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.IntakePixel(1);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
-
-                //   towards pixel stack
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
-
-                .lineToSplineHeading(new Pose2d(-50,37,-Math.PI))
-
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(this::telem)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.66);Intake.intakeArmServo.setPosition(0.4);})
-                .waitSeconds(0.4)
-                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                .waitSeconds(0.3)
-                .setReversed(true)
-
-                //   towards backdrop
-                .lineToConstantHeading(new Vector2d(-40,60))
-                .lineToConstantHeading(new Vector2d(30,60))
-                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(52,41), 0)
-                .waitSeconds(1)
-
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
-                .waitSeconds(0.8)
-                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.7)
-                .addTemporalMarker(()->{arm.setArmPos(0.4, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.75);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                .waitSeconds(0.8)
-                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, -10);if (output_power > 0.9) {
-                    output_power = 1;
-                } else if (output_power < 0.2) {
-                    output_power = 0;
-                }})
-                .addTemporalMarker(()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.16);slider.extendTo(-10, output_power);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 0);if (output_power > 0.9) {
-                    output_power = 1;
-                } else if (output_power < 0.2) {
-                    output_power = 0;
-                }})
-                .addTemporalMarker(()->{Intake.IntakePixel(1);slider.extendTo(0, output_power);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 200);if (output_power > 0.9) {
-                    output_power = 1;
-                } else if (output_power < 0.2) {
-                    output_power = 0;
-                }})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(200, output_power);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
-                .waitSeconds(0.5)
-                .strafeLeft(15)
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.7)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66); slider.extendTo(0, output_power);})
-                .waitSeconds(0.2)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
-                .resetConstraints()
-                //right side parking
-//                .lineToSplineHeading(new Pose2d(50, 10, -Math.PI/2))
-//                .lineToConstantHeading(new Vector2d(60, 10))
-                //left side parking
-                .lineToConstantHeading(new Vector2d(50, 60))
-                .turn(Math.PI/2)
-                .setReversed(false)
-                .build();
+//        TrajectorySequence AutoTrajectoryLeft = drive.trajectorySequenceBuilder(startPose)
+//                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.55);})
+//                // right line
+//                .lineToSplineHeading(new Pose2d(-44,32, 0))
+//                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
+//                .waitSeconds(0.3)
+//                .addTemporalMarker(()->{Intake.CrankPosition(0.42);})
+//                .waitSeconds(0.5)
+//                .addTemporalMarker(()->{Intake.IntakePixel(1);})
+//                .waitSeconds(0.5)
+//                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+//
+//                //   towards pixel stack
+//                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.637);Intake.intakeWristServo.setPosition(0.30);})
+//
+//                .lineToSplineHeading(new Pose2d(-50,37,-Math.PI))
+//
+//                .waitSeconds(0.2)
+//                .addTemporalMarker(()->{Intake.CrankPosition(0.35);arm.setArmPos(0.3, 0.16);})
+//                .waitSeconds(0.5)
+//                .addTemporalMarker(()->{Intake.IntakePixel(0.8);})
+//                .waitSeconds(0.5)
+//                .addTemporalMarker(this::telem)
+//                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+//                .waitSeconds(0.2)
+//                .addTemporalMarker(()->{Intake.intakeWristServo.setPosition(0.66);Intake.intakeArmServo.setPosition(0.4);})
+//                .waitSeconds(0.4)
+//                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
+//                .waitSeconds(0.3)
+//                .setReversed(true)
+//
+//                //   towards backdrop
+//                .lineToConstantHeading(new Vector2d(-40,60))
+//                .lineToConstantHeading(new Vector2d(30,60))
+//                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
+//                .splineToConstantHeading(new Vector2d(52,41), 0)
+//                .waitSeconds(1)
+//
+//                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
+//                .waitSeconds(0.3)
+//                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
+//                .waitSeconds(0.8)
+//                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
+//                .waitSeconds(0.7)
+//                .addTemporalMarker(()->{arm.setArmPos(0.4, 0.16);})
+//                .waitSeconds(0.3)
+//                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.75);})
+//                .waitSeconds(0.3)
+//                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(1);Intake.intakeWristServo.setPosition(0.45);})
+//                .waitSeconds(0.5)
+//                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
+//                .waitSeconds(0.8)
+//                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, -10);if (output_power > 0.9) {
+//                    output_power = 1;
+//                } else if (output_power < 0.2) {
+//                    output_power = 0;
+//                }})
+//                .addTemporalMarker(()->{ArmV2.DropPixel(0.5);arm.setArmPos(0.1, 0.16);slider.extendTo(-10, output_power);})
+//                .waitSeconds(0.3)
+//                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 0);if (output_power > 0.9) {
+//                    output_power = 1;
+//                } else if (output_power < 0.2) {
+//                    output_power = 0;
+//                }})
+//                .addTemporalMarker(()->{Intake.IntakePixel(1);slider.extendTo(0, output_power);})
+//                .waitSeconds(0.5)
+//                .addTemporalMarker(()->{output_power = lifter_pid(kp, ki, kd, 200);if (output_power > 0.9) {
+//                    output_power = 1;
+//                } else if (output_power < 0.2) {
+//                    output_power = 0;
+//                }})
+//                .waitSeconds(0.5)
+//                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);slider.extendTo(200, output_power);})
+//                .waitSeconds(0.3)
+//                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
+//                .waitSeconds(0.5)
+//                .strafeLeft(15)
+//                .waitSeconds(0.5)
+//                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
+//                .waitSeconds(0.7)
+//                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66); slider.extendTo(0, output_power);})
+//                .waitSeconds(0.2)
+//                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.16);})
+//                .waitSeconds(0.3)
+//                .addTemporalMarker(()->{arm.setArmPos(0.3, 0.16);})
+//                .waitSeconds(0.3)
+//                .addTemporalMarker(()->{arm.setArmPos(0.15, 0.16);})
+//                .resetConstraints()
+//                //right side parking
+////                .lineToSplineHeading(new Pose2d(50, 10, -Math.PI/2))
+////                .lineToConstantHeading(new Vector2d(60, 10))
+//                //left side parking
+//                .lineToConstantHeading(new Vector2d(50, 60))
+//                .turn(Math.PI/2)
+//                .setReversed(false)
+//                .build();
 
 
 
@@ -575,124 +646,89 @@ public class BlueInAutoTwo extends LinearOpMode {
             }
 
 
-//            //CENTER TRAJECTORY
-//            switch (currentState2){
-//                case Start:
-//                    if (gamepad1.y || propPosition == "center"){ //
-//                        if (!drive.isBusy()) {
-//                            currentState2 = BlueFarAuto.AutoTrajectoryCenter.AutoTrajectoryCenterPurple;
-//                            drive.followTrajectorySequenceAsync(AutoTrajectoryCenterPurple);
-//                        }
-//                    }
-//                    break;
-//                case AutoTrajectoryCenterPurple:
-//                    if (!drive.isBusy()) {
-//                        currentState2 = BlueFarAuto.AutoTrajectoryCenter.CenterPathPlacing_Center;
-//                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Center);
-//                    }
-//                    break;
-//                case CenterPathPlacing_Center:
-//                    if (!drive.isBusy()) {
-//                        currentState2 = BlueFarAuto.AutoTrajectoryCenter.AutoTrajectoryCenterYellow;
-//                        drive.followTrajectorySequenceAsync(AutoTrajectoryCenterYellow);
-//                    }
-//                    break;
-//                case AutoTrajectoryCenterYellow:
-//                    if (!drive.isBusy()) {
-//                        currentState2 = BlueFarAuto.AutoTrajectoryCenter.CenterPathPicking_Center;
-//                        drive.followTrajectorySequenceAsync(CenterPathPicking_Center);
-//                    }
-//                    break;
-//                case CenterPathPicking_Center:
-//                    if (!drive.isBusy()) {
-//                        currentState2 = BlueFarAuto.AutoTrajectoryCenter.CenterPathPlacing_Center2;
-//                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Center2);
-//                    }
-//                    break;
-//                case CenterPathPlacing_Center2:
-//                    if (!drive.isBusy()) {
-//                        currentState2 = BlueFarAuto.AutoTrajectoryCenter.AutoTrajectoryCenterYellow2;
-//                        drive.followTrajectorySequenceAsync(AutoTrajectoryCenterYellow2);
-//                    }
-//                    break;
-//                case AutoTrajectoryCenterYellow2:
-//                    if (!drive.isBusy()) {
-//                        currentState2 = BlueFarAuto.AutoTrajectoryCenter.ParkingOut;
-////                        drive.followTrajectorySequenceAsync(ParkingOut);
-//                    }
-//                    break;
-//                case ParkingOut:
-//                    if (!drive.isBusy()) {
-//                        currentState2 = BlueFarAuto.AutoTrajectoryCenter.IDLE;
-//                    }
-//                    break;
-//                case IDLE:
-//                    break;
-//            }
-//
-//
-//            //LEFT TRAJECTORY
-//            switch (currentState3){
-//                case Start:
-//                    if (gamepad1.x || propPosition == "left"){ //
-//                        if (!drive.isBusy()) {
-//                            currentState3 = BlueFarAuto.AutoTrajectoryLeft.AutoTrajectoryLeftPurple;
-//                            drive.followTrajectorySequenceAsync(AutoTrajectoryLeftPurple);
-//                        }
-//                    }
-//                    break;
-//                case AutoTrajectoryLeftPurple:
-//                    if (!drive.isBusy()) {
-//                        currentState3 = BlueFarAuto.AutoTrajectoryLeft.CenterPathPlacing_Left;
-//                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Left);
-//                    }
-//                    break;
-//                case CenterPathPlacing_Left:
-//                    if (!drive.isBusy()) {
-//                        currentState3 = BlueFarAuto.AutoTrajectoryLeft.AutoTrajectoryLeftYellow;
-//                        drive.followTrajectorySequenceAsync(AutoTrajectoryLeftYellow);
-//                    }
-//                    break;
-//                case AutoTrajectoryLeftYellow:
-//                    if (!drive.isBusy()) {
-//                        currentState3 = BlueFarAuto.AutoTrajectoryLeft.CenterPathPicking_Left;
-//                        drive.followTrajectorySequenceAsync(CenterPathPicking_Left);
-//                    }
-//                    break;
-//                case CenterPathPicking_Left:
-//                    if (!drive.isBusy()) {
-//                        currentState3 = BlueFarAuto.AutoTrajectoryLeft.CenterPathPlacing_Left2;
-//                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Left2);
-//                    }
-//                    break;
-//                case CenterPathPlacing_Left2:
-//                    if (!drive.isBusy()) {
-//                        currentState3 = BlueFarAuto.AutoTrajectoryLeft.AutoTrajectoryLeftYellow2;
-//                        drive.followTrajectorySequenceAsync(AutoTrajectoryLeftYellow2);
-//                    }
-//                    break;
-//                case AutoTrajectoryLeftYellow2:
-//                    if (!drive.isBusy()) {
-//                        currentState3 = BlueFarAuto.AutoTrajectoryLeft.ParkingOut;
-////                        drive.followTrajectorySequenceAsync(ParkingOut);
-////                        currentState3 = AutoTrajectoryLeft.IDLE;
-//                    }
-//                    break;
-//                case ParkingOut:
-//                    if (!drive.isBusy()) {
-//                        currentState3 = BlueFarAuto.AutoTrajectoryLeft.IDLE;
-//                    }
-//                    break;
-//                case IDLE:
-//                    break;
-//            }
+            //CENTER TRAJECTORY
+            switch (currentState2){
+                case Start:
+                    if (gamepad1.y || propPosition == "center"){ //
+                        if (!drive.isBusy()) {
+                            currentState2 = AutoTrajectoryCenter.AutoTrajectoryCenterPurple;
+                            drive.followTrajectorySequenceAsync(AutoTrajectoryCenterPurple);
+                        }
+                    }
+                    break;
+                case AutoTrajectoryCenterPurple:
+                    if (!drive.isBusy()) {
+                        currentState2 = AutoTrajectoryCenter.CenterPathPlacing_Center;
+                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Center);
+                    }
+                    break;
+                case CenterPathPlacing_Center:
+                    if (!drive.isBusy()) {
+                        currentState2 = AutoTrajectoryCenter.AutoTrajectoryCenterYellow;
+                        drive.followTrajectorySequenceAsync(AutoTrajectoryCenterYellow);
+                    }
+                    break;
+                case AutoTrajectoryCenterYellow:
+                    if (!drive.isBusy()) {
+                        currentState2 = AutoTrajectoryCenter.ParkingOut;
+                        drive.followTrajectorySequenceAsync(ParkingOut);
+                    }
+                    break;
+                case ParkingOut:
+                    if (!drive.isBusy()) {
+                        currentState2 = AutoTrajectoryCenter.IDLE;
+                    }
+                    break;
+                case IDLE:
+                    break;
+            }
+
+
+            //LEFT TRAJECTORY
+            switch (currentState3){
+                case Start:
+                    if (gamepad1.x || propPosition == "left"){ //
+                        if (!drive.isBusy()) {
+                            currentState3 = AutoTrajectoryLeft.AutoTrajectoryLeftPurple;
+                            drive.followTrajectorySequenceAsync(AutoTrajectoryLeftPurple);
+                        }
+                    }
+                    break;
+                case AutoTrajectoryLeftPurple:
+                    if (!drive.isBusy()) {
+                        currentState3 = AutoTrajectoryLeft.CenterPathPlacing_Left;
+                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Left);
+                    }
+                    break;
+                case CenterPathPlacing_Left:
+                    if (!drive.isBusy()) {
+                        currentState3 = AutoTrajectoryLeft.AutoTrajectoryLeftYellow;
+                        drive.followTrajectorySequenceAsync(AutoTrajectoryLeftYellow);
+                    }
+                    break;
+                case AutoTrajectoryLeftYellow:
+                    if (!drive.isBusy()) {
+                        currentState3 = AutoTrajectoryLeft.ParkingOut;
+                        drive.followTrajectorySequenceAsync(ParkingOut);
+                    }
+                    break;
+                case ParkingOut:
+                    if (!drive.isBusy()) {
+                        currentState3 = AutoTrajectoryLeft.IDLE;
+                    }
+                    break;
+                case IDLE:
+                    break;
+            }
             telemetry.addData("LeftFrontCurrent", drive.getMotorCurrent().get(0));
             telemetry.addData("RightFrontCurrent", drive.getMotorCurrent().get(1));
             telemetry.addData("LeftRearCurrent", drive.getMotorCurrent().get(2));
             telemetry.addData("RightRearCurrent", drive.getMotorCurrent().get(3));
+
             telemetry.addData("X-Pos", drive.getPoseEstimate().getX());
             telemetry.addData("YPos", drive.getPoseEstimate().getY());
             telemetry.addData("heading", drive.getPoseEstimate().getHeading());
+
             telemetry.addData("position",propPosition);
             drive.update();
             telemetry.update();
