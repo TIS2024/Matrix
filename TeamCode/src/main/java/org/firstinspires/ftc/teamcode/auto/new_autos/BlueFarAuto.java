@@ -25,7 +25,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
 
-@Autonomous(name="BlueFarAuto_1Cycle", group = "Cycle_Autos")
+@Autonomous(name="BLUEFarAuto_1Cycle", group = "Cycle_Autos")
 @Config
 public class BlueFarAuto extends LinearOpMode {
     SampleMecanumDrive drive = null;

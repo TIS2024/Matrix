@@ -23,7 +23,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
 
-@Autonomous(name = "RedNearAuto_2Cycle", group = "Cycle_Autos")
+@Autonomous(name = "REDNearAuto_2Cycle", group = "Cycle_Autos")
 //@Disabled
 public class RedNearAuto extends LinearOpMode {
     SampleMecanumDrive drive = null;

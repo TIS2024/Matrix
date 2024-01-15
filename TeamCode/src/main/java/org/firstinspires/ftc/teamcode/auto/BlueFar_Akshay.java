@@ -1,14 +1,16 @@
-package org.firstinspires.ftc.teamcode.auto.new_autos;
+package org.firstinspires.ftc.teamcode.auto;
 
 import android.util.Size;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
@@ -22,6 +24,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
 
+@Autonomous
 public class BlueFar_Akshay extends LinearOpMode {
     SampleMecanumDrive drive = null;
     Slider slider = null;
@@ -67,6 +70,7 @@ public class BlueFar_Akshay extends LinearOpMode {
         Start,
         AutoTrajectoryRightPurple,
         CenterPathPlacing,
+        PoseCorrection,
         AutoTrajectoryRightYellow,
         CenterPathPicking,
         CenterPathPlacing2,
@@ -615,6 +619,13 @@ public class BlueFar_Akshay extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            double backDropDistance = sensorDistance3.getDistance(DistanceUnit.INCH);
+            double error = backDropDistance - (YellowRight.getX() - drive.getPoseEstimate().getX());
+            double factor = 1;
+
+            double x = drive.getPoseEstimate().getX() + (error * factor);
+            double y = drive.getPoseEstimate().getY();
+            double heading = drive.getPoseEstimate().getHeading();
 
             //RIGHT TRAJECTORY
             switch (currentState){
@@ -634,8 +645,16 @@ public class BlueFar_Akshay extends LinearOpMode {
                     break;
                 case CenterPathPlacing:
                     if (!drive.isBusy()) {
-                        currentState = AutoTrajectoryRight.AutoTrajectoryRightYellow;
+                        currentState = AutoTrajectoryRight.PoseCorrection;
                         drive.followTrajectorySequenceAsync(AutoTrajectoryRightYellow);
+                    }
+                    break;
+                case PoseCorrection:
+                    if (!drive.isBusy()) {
+                        drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate())
+                                .lineTo(new Vector2d(x, y))
+                                .build());
+                        currentState = AutoTrajectoryRight.AutoTrajectoryRightYellow;
                     }
                     break;
                 case AutoTrajectoryRightYellow:
@@ -783,12 +802,24 @@ public class BlueFar_Akshay extends LinearOpMode {
                 case IDLE:
                     break;
             }
+
+            telemetry.addData("range1", String.format("%.01f mm", sensorDistance.getDistance(DistanceUnit.MM)));
+            telemetry.addData("range1", String.format("%.01f in", sensorDistance.getDistance(DistanceUnit.INCH)));
+
+            telemetry.addData("range2", String.format("%.01f mm", sensorDistance2.getDistance(DistanceUnit.MM)));
+            telemetry.addData("range2", String.format("%.01f in", sensorDistance2.getDistance(DistanceUnit.INCH)));
+
+            telemetry.addData("range3", String.format("%.01f mm", sensorDistance3.getDistance(DistanceUnit.MM)));
+            telemetry.addData("range3", String.format("%.01f in", sensorDistance3.getDistance(DistanceUnit.INCH)));
+
             telemetry.addData("LeftFrontCurrent", drive.getMotorCurrent().get(0));
             telemetry.addData("RightFrontCurrent", drive.getMotorCurrent().get(1));
             telemetry.addData("LeftRearCurrent", drive.getMotorCurrent().get(2));
             telemetry.addData("RightRearCurrent", drive.getMotorCurrent().get(3));
+
             telemetry.addData("X-Pos", drive.getPoseEstimate().getX());
             telemetry.addData("YPos", drive.getPoseEstimate().getY());
+
             telemetry.addData("heading", drive.getPoseEstimate().getHeading());
             telemetry.addData("position",propPosition);
             drive.update();
@@ -892,4 +923,5 @@ public class BlueFar_Akshay extends LinearOpMode {
 
         return;
     }
+
 }

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.ArmV2;
 import org.firstinspires.ftc.teamcode.subsystems.Hanger;
@@ -22,6 +23,13 @@ public class DistanceSenAuto extends LinearOpMode {
     Hanger hanger = null;
     Intake intake = null;
     private DistanceSensor sensorDistance, sensorDistance2, sensorDistance3;
+    enum Traj {
+        Start,
+        first,
+        poseCorrection,
+        IDLE
+    }
+    Traj currentState = Traj.Start;
     @Override
     public void runOpMode() throws InterruptedException {
         drive = new SampleMecanumDrive(hardwareMap);
@@ -30,42 +38,59 @@ public class DistanceSenAuto extends LinearOpMode {
         sensorDistance2 = hardwareMap.get(DistanceSensor.class, "sensor_distance2");
         sensorDistance3 = hardwareMap.get(DistanceSensor.class, "sensor_distance3");
 
-        Pose2d startPose=new Pose2d(-39, -64, 0);
+        Pose2d startPose=new Pose2d(0, 0, 0);
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence first = drive.trajectorySequenceBuilder(startPose)
-                .lineToSplineHeading(new Pose2d(-51,-24, 0))
-                .lineToSplineHeading(new Pose2d(-51 , -12, -Math.PI))
-                .setReversed(true)
-                .splineToConstantHeading(new Vector2d(-34,-12),0)
-                .splineToConstantHeading(new Vector2d(36,-12),0)
-                .addTemporalMarker(()->{
-                    if(sensorDistance.getDistance(DistanceUnit.INCH) < 10) {drive.setMotorPowers(0, 0,0,0);}})
-                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), 12.4), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(53,-38),0)
-                .setReversed(false)
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(15, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(15))
+                .back(24)
                 .resetConstraints()
                 .build();
 
         while (opModeInInit()){
-////            slider.extendToHome();
-//            ArmV2.SetArmPosition(0.15, 0.16);
-//            Intake.SetArmPosition(0.5, 0.66);
-//            Intake.IntakePixel(0.8);
-//            ArmV2.DropPixel(0.8);
-//            Intake.CrankPosition(0.69);
-//            ArmV2.SliderLink(0.95);
         }
 
+        double errorPose = 0;
+
         waitForStart();
-        drive.followTrajectorySequence(first);
-        drive.update();
         while(opModeIsActive()){
-            telemetry.addData("Xpose", drive.getPoseEstimate());
-            telemetry.addData("deviceName", sensorDistance.getDeviceName() );
+            double reqDist = 5;
+            double backDropDistance = sensorDistance3.getDistance(DistanceUnit.INCH);
+            double error = backDropDistance - reqDist;
+            double factor = 1.17;
+
+            double x = drive.getPoseEstimate().getX() + (error * factor);
+            double y = drive.getPoseEstimate().getY();
+            double heading = drive.getPoseEstimate().getHeading();
+
+            switch (currentState){
+                case Start:
+                    if (gamepad1.y){
+                        if(!drive.isBusy()){
+                            drive.followTrajectorySequenceAsync(first);
+                            currentState = Traj.poseCorrection;
+                        }
+                    }
+                    break;
+                case poseCorrection:
+                    if (!drive.isBusy()) {
+                        drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate())
+                                        .back(error * factor)
+                                .build());
+                        errorPose = error*factor;
+                        currentState = Traj.IDLE;
+                    }
+                    break;
+                case IDLE:
+                    break;
+            }
+
+            telemetry.addData("pose", drive.getPoseEstimate());
+
+            telemetry.addData("error", error);
+            telemetry.addData("errorPose", errorPose);
+
             telemetry.addData("range1", String.format("%.01f mm", sensorDistance.getDistance(DistanceUnit.MM)));
-//            telemetry.addData("range", String.format("%.01f cm", sensorDistance.getDistance(DistanceUnit.CM)));
-//            telemetry.addData("range", String.format("%.01f m", sensorDistance.getDistance(DistanceUnit.METER)));
             telemetry.addData("range1", String.format("%.01f in", sensorDistance.getDistance(DistanceUnit.INCH)));
 
             telemetry.addData("range2", String.format("%.01f mm", sensorDistance2.getDistance(DistanceUnit.MM)));
@@ -73,6 +98,7 @@ public class DistanceSenAuto extends LinearOpMode {
 
             telemetry.addData("range3", String.format("%.01f mm", sensorDistance3.getDistance(DistanceUnit.MM)));
             telemetry.addData("range3", String.format("%.01f in", sensorDistance3.getDistance(DistanceUnit.INCH)));
+            drive.update();
             telemetry.update();
         }
     }
