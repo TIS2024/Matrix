@@ -25,6 +25,7 @@ import org.firstinspires.ftc.teamcode.angle_pid.PIDConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
+import org.firstinspires.ftc.teamcode.robot_constants.TeleOpConstants;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.ArmV2;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
@@ -49,6 +50,8 @@ public class MatrixPracticeCode extends LinearOpMode {
     Hanger hanger = null;
     Intake intake = null;
     Drone drone = null;
+    TeleOpConstants.armConstants armConstants = null;
+    TeleOpConstants.intakeConstants intakeConstants = null;
     public static DcMotorEx leftFront, leftRear, rightFront, rightRear;
     ElapsedTime inputTimer, outputTimer, angle_timer, dropTimer, gripTimer;
     public static double
@@ -162,20 +165,22 @@ public class MatrixPracticeCode extends LinearOpMode {
         myLocalizer.setPoseEstimate(PoseStorage.currentPose);
 
         while (opModeInInit()){
-            ArmV2.SetArmPosition(0.15,wristServoPos);
-            Intake.crankServo.setPosition(0.69);
-            Intake.intakeArmServo.setPosition(0.5);
-            Intake.intakeWristServo.setPosition(0.66);
-            ArmV2.DropPixel(0.95);
+            ArmV2.SetArmPosition(armConstants.armInPos, armConstants.wristInPos);
+            Intake.crankServo.setPosition(intakeConstants.crankRetactPos);
+            Intake.intakeArmServo.setPosition(intakeConstants.intakeArmInitPos);
+            Intake.intakeWristServo.setPosition(intakeConstants.intakeWristInitPos);
+            ArmV2.DropPixel(armConstants.deliveryInPos);
             Drone.initialPos();
             Hanger.hangerServoOne.setPosition(0.75);
             Hanger.hangerServoTwo.setPosition(0.25);
             Intake.gripperServo.setPosition(1);
-            ArmV2.SliderLink(0.95);
+            ArmV2.SliderLink(armConstants.armSliderClosePos);
+
             inputTimer.reset();
             outputTimer.reset();
             dropTimer.reset();
             gripTimer.reset();
+
             intakeCounter = 0;
             sliderCounter = 0;
             outtakeCounter = 0;
@@ -262,28 +267,26 @@ public class MatrixPracticeCode extends LinearOpMode {
             switch (inputState) {
                 case INTAKE_START:
                     if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 0) && !onlyGripToggle && !crankToggle) {
-                        ArmV2.SetArmPosition(0.25, wristServoPos);
-//                        ArmV2.wristServo.setPosition(wristServoPos);
-//                        ArmV2.SetArm(0.25);
-                        ArmV2.DropPixel(0.95);
+                        ArmV2.SetArmPosition(armConstants.armUpPos, armConstants.wristInPos);//0.25
+                        ArmV2.DropPixel(armConstants.deliveryInPos);
                         if (ArmV2.armServoTwo.getPosition() == 0.25 && Objects.equals(intake_stack_command, "GroundIntake")){
-                            Intake.intakeArmServo.setPosition(0.4);
-                            Intake.intakeWristServo.setPosition(0.495);
-                            Intake.IntakePixel(1);
+                            Intake.intakeArmServo.setPosition(intakeConstants.intakeArmGripPos); //0.4
+                            Intake.intakeWristServo.setPosition(intakeConstants.intakeWristGripPos);
+                            Intake.IntakePixel(intakeConstants.gripperOpenPos);
                             inputTimer.reset();
                             inputState = IntakeState.INTAKE_EXTEND;
                         }
                         if(Objects.equals(intake_stack_command, "FiveStackGo")) {
-                            Intake.intakeArmServo.setPosition(0.650);
-                            Intake.intakeWristServo.setPosition(0.23); //0.24
-                            Intake.IntakePixel(1);
+                            Intake.intakeArmServo.setPosition(intakeConstants.intakeArm5stack);
+                            Intake.intakeWristServo.setPosition(intakeConstants.intakeWrist5stack);
+                            Intake.IntakePixel(intakeConstants.gripperOpenPos);
                             inputTimer.reset();
                             inputState = IntakeState.INTAKE_EXTEND;
                         }
                         if (Objects.equals(intake_stack_command, "ThreeStackGo")) {
-                            Intake.intakeArmServo.setPosition(0.520);
-                            Intake.intakeWristServo.setPosition(0.365); //0.375
-                            Intake.IntakePixel(1);
+                            Intake.intakeArmServo.setPosition(intakeConstants.intakeArm3stack);
+                            Intake.intakeWristServo.setPosition(intakeConstants.intakeWrist3stack); //0.375
+                            Intake.IntakePixel(intakeConstants.gripperOpenPos);
                             inputTimer.reset();
                             inputState = IntakeState.INTAKE_EXTEND;
                         }
@@ -305,7 +308,7 @@ public class MatrixPracticeCode extends LinearOpMode {
 //                    }
                     break;
                 case INTAKE_EXTEND:
-                    Intake.CrankPosition(0.45);
+                    Intake.CrankPosition(intakeConstants.crankGripPos); //0.45
                     if (Intake.crankServo.getPosition() == 0.45) { //inputTimer.milliseconds() >= 200
                         inputTimer.reset();
                         inputState = IntakeState.INTAKE_GRIP;
@@ -313,16 +316,16 @@ public class MatrixPracticeCode extends LinearOpMode {
                     break;
                 case INTAKE_GRIP:
                     if (Objects.equals(intake_stack_command, "GroundIntake")) {
-                        Intake.intakeArmServo.setPosition(0.4);
-                        Intake.intakeWristServo.setPosition(0.48);
+                        Intake.intakeArmServo.setPosition(intakeConstants.intakeArmGripPos);
+                        Intake.intakeWristServo.setPosition(intakeConstants.intakeWristGrippingPos);
                     }
                     if (Objects.equals(intake_stack_command, "ThreeStackGo")) {
-                        Intake.intakeArmServo.setPosition(0.53);
-                        Intake.intakeWristServo.setPosition(0.365);//0.375
+                        Intake.intakeArmServo.setPosition(intakeConstants.intakeArm3stack);
+                        Intake.intakeWristServo.setPosition(intakeConstants.intakeWrist3stack);
                     }
                     if (Objects.equals(intake_stack_command, "FiveStackGo")) {
-                        Intake.intakeArmServo.setPosition(0.650);
-                        Intake.intakeWristServo.setPosition(0.23);//0.24
+                        Intake.intakeArmServo.setPosition(intakeConstants.intakeArm5stack);
+                        Intake.intakeWristServo.setPosition(intakeConstants.intakeWrist5stack);
                     }
                     if (!intakeToggle) {
                         if (!beamBreaker.getState()) {
@@ -343,10 +346,10 @@ public class MatrixPracticeCode extends LinearOpMode {
 //                            }
                             TrajectorySequence IntakePixel = drive.trajectorySequenceBuilder(startPose)
                                     .addTemporalMarker(() -> {
-                                        Intake.CrankPosition(0.35);
+                                        Intake.CrankPosition(intakeConstants.crankOpenPos);
                                     })
                                     .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-                                        Intake.IntakePixel(0.8);
+                                        Intake.IntakePixel(intakeConstants.gripperHoldPos);
                                     })
                                     .waitSeconds(0.3)
                                     .build();
@@ -361,23 +364,23 @@ public class MatrixPracticeCode extends LinearOpMode {
                     if (intakeToggle) {
                         if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
                             if (intake_stack_command == "GroundIntake") {
-                                Intake.intakeArmServo.setPosition(0.4);
-                                Intake.intakeWristServo.setPosition(0.48);
+                                Intake.intakeArmServo.setPosition(intakeConstants.intakeArmGripPos);//0.4
+                                Intake.intakeWristServo.setPosition(intakeConstants.intakeWristGrippingPos);
                             }
                             if (intake_stack_command == "FiveStackGo") {
-                                Intake.intakeArmServo.setPosition(0.65);
-                                Intake.intakeWristServo.setPosition(0.23);
+                                Intake.intakeArmServo.setPosition(intakeConstants.intakeArm5stack);
+                                Intake.intakeWristServo.setPosition(intakeConstants.intakeWrist5stack);
                             }
                             if (intake_stack_command == "ThreeStackGo") {
-                                Intake.intakeArmServo.setPosition(0.53);
-                                Intake.intakeWristServo.setPosition(0.365);
+                                Intake.intakeArmServo.setPosition(intakeConstants.intakeArm3stack);
+                                Intake.intakeWristServo.setPosition(intakeConstants.intakeWrist3stack);
                             }
                             TrajectorySequence IntakePixel = drive.trajectorySequenceBuilder(startPose)
                                     .addTemporalMarker(() -> {
-                                        Intake.CrankPosition(0.35);
+                                        Intake.CrankPosition(intakeConstants.crankOpenPos);
                                     })
                                     .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-                                        Intake.IntakePixel(0.8);
+                                        Intake.IntakePixel(intakeConstants.gripperHoldPos);
                                     })
                                     .waitSeconds(0.3)
                                     .build();
