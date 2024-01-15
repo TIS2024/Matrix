@@ -70,11 +70,11 @@ public class RedSafeAutoOne extends LinearOpMode {
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{Intake.IntakePixel(1);})
                 .addTemporalMarker(()->{arm.setArmPos(0.4, 0.16);})
-                .waitSeconds(0.3)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
                 .addTemporalMarker(this::telem)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(52,-41), 0)
+                .splineToConstantHeading(new Vector2d(51,-41), 0)
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .waitSeconds(1)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(1)//0.55
@@ -82,12 +82,14 @@ public class RedSafeAutoOne extends LinearOpMode {
                 .resetConstraints()
 
                 //pixel intake // round 1
+                .addTemporalMarker(() -> {arm.setArmPos(0.49, 0.68);})
+                .waitSeconds(0.2)
                 .addTemporalMarker(() -> {arm.setArmPos(0.4, 0.16);})
-                .waitSeconds(0.5)
+                .waitSeconds(0.2)
                 .addTemporalMarker(() -> {arm.setArmPos(0.15, 0.16);})
-                .waitSeconds(0.5)
+                .waitSeconds(0.2)
                 .lineToConstantHeading(new Vector2d(48, -60))
-                .turn(-Math.PI/2)
+//                .turn(-Math.PI/2)
                 .setReversed(false)
                 .build();
 
@@ -100,24 +102,27 @@ public class RedSafeAutoOne extends LinearOpMode {
                 .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
                 .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.IntakePixel(1);})
                 .addTemporalMarker(()->{arm.setArmPos(0.4, 0.16);})
-                .waitSeconds(0.5)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
+//                .waitSeconds(0.5)
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
                 .addTemporalMarker(this::telem)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(53,-35), 0)
+                .splineToConstantHeading(new Vector2d(49,-35.5), 0)
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .waitSeconds(1)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(1)
                 .addTemporalMarker(this::telem)
                 .resetConstraints()
+                .addTemporalMarker(() -> {arm.setArmPos(0.49, 0.68);})
+                .waitSeconds(0.2)
                 .addTemporalMarker(() -> {arm.setArmPos(0.4, 0.16);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(() -> {arm.setArmPos(0.15, 0.16);})
                 .waitSeconds(0.1)
                 .lineToConstantHeading(new Vector2d(48, -60))
-                .turn(-Math.PI/2)
+//                .turn(-Math.PI/2)
                 .setReversed(false)
                 .build();
 
@@ -133,22 +138,27 @@ public class RedSafeAutoOne extends LinearOpMode {
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{Intake.IntakePixel(1);})
                 .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.69);arm.setArmPos(0.5, 0.66);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(50,-25), 0)
-                .UNSTABLE_addTemporalMarkerOffset(-0.5,()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.2)//0.55
+                .splineToConstantHeading(new Vector2d(51,-26.5), 0)
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
+                .waitSeconds(0.1)
+                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
+                .waitSeconds(0.3)
                 .addTemporalMarker(this::telem)
                 .resetConstraints()
 //                .setReversed(false)
 
                 //pixel intake // round 1
+                .addTemporalMarker(() -> {arm.setArmPos(0.49, 0.68);})
+                .waitSeconds(0.2)
                 .addTemporalMarker(() -> {arm.setArmPos(0.4, 0.16);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(() -> {arm.setArmPos(0.15, 0.16);})
                 .waitSeconds(0.1)
                 .lineToConstantHeading(new Vector2d(48, -60))
-                .turn(-Math.PI/2)
+//                .turn(-Math.PI/2)
                 .setReversed(false)
                 .build();
 
@@ -185,12 +195,12 @@ public class RedSafeAutoOne extends LinearOpMode {
                 if (objectFound) {
 
 //                    Adjust values according to your bot and camera position
-                    if (x >= 800 && x <= 1100) {
-                        propPosition = "right";
-                    } else if (x >= 500 && x <= 790) {
+                    if (x >= 720 && x <= 1100) {
+                        propPosition = "left";
+                    } else if (x >= 500 && x <= 700) {
                         propPosition = "center";
                     } else if (x >= 200 && x <= 490) {
-                        propPosition = "left";
+                        propPosition = "right";
                     }
 
                 } else {
@@ -200,64 +210,22 @@ public class RedSafeAutoOne extends LinearOpMode {
                 telemetry.update();
             }
         }
+        sleep(20);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            List<Recognition> currentRecognitions = tfod.getRecognitions();
-            telemetry.addData("# Objects Detected", currentRecognitions.size());
-
-            if (currentRecognitions.size() != 0) {
-
-                boolean objectFound = false;
-
-                for (Recognition recognition : currentRecognitions) {
-                    x = (recognition.getLeft() + recognition.getRight()) / 2;
-                    y = (recognition.getTop() + recognition.getBottom()) / 2;
-
-                    objectFound = true;
-
-                    telemetry.addLine("Beacon");
-                    telemetry.addData("", " ");
-                    telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-                    telemetry.addData("- Position", "%.0f / %.0f", x, y);
-                    telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
-                    telemetry.update();
-
-                    break;
-                }
-
-                if(objectFound){
-
-//                    Adjust values according to your bot and camera position
-                    if( x>=800 && x<=1100){
-                        propPosition  = "left";
-                        drive.followTrajectorySequence(AutoTrajectoryLeft);
-                    }
-                    else if(x>=500 && x<=790){
-                        propPosition = "center";
-                        drive.followTrajectorySequence(AutoTrajectoryCenter);
-                    }
-                    else if(x>=200 && x<=490) {
-                        propPosition = "right";
-                        drive.followTrajectorySequence(AutoTrajectoryRight);
-                    }
-                }
-                else{
-                    telemetry.addLine("Don't see the beacon :(");
-                }
-            }
-            else{
-                telemetry.addLine("Don't see the beacon :(");
-            }
-            if (gamepad1.b){
+            if (gamepad1.b || propPosition=="right"){
                 drive.followTrajectorySequence(AutoTrajectoryRight);
+                propPosition = " ";
             }
-            if (gamepad1.y){
+            if (gamepad1.y || propPosition=="center"){
                 drive.followTrajectorySequence(AutoTrajectoryCenter);
+                propPosition = " ";
             }
-            if (gamepad1.x){
+            if (gamepad1.x || propPosition=="left"){
                 drive.followTrajectorySequence(AutoTrajectoryLeft);
+                propPosition = " ";
             }
             telemetry.addData("LeftFrontCurrent", drive.getMotorCurrent().get(0));
             telemetry.addData("RightFrontCurrent", drive.getMotorCurrent().get(1));
@@ -265,7 +233,7 @@ public class RedSafeAutoOne extends LinearOpMode {
             telemetry.addData("RightRearCurrent", drive.getMotorCurrent().get(3));
             visionPortal.close();
             telemetry.addData("position", propPosition);
-            sleep(500);
+            sleep(50);
             drive.update();
             telemetry.update();
         }

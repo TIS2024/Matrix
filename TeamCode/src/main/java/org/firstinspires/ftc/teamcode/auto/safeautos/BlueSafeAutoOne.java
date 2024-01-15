@@ -61,16 +61,6 @@ public class BlueSafeAutoOne extends LinearOpMode {
         drive.setPoseEstimate(startPose);
         initTfod();
 
-        while (opModeInInit()){
-            slider.extendToHome();
-            ArmV2.SetArmPosition(0.15, 0.16);
-            Intake.SetArmPosition(0.5,0.66);
-            Intake.IntakePixel(0.8);
-            ArmV2.DropPixel(0.5);
-            Intake.CrankPosition(0.69);
-            ArmV2.SliderLink(0.95);
-        }
-
         TrajectorySequence AutoTrajectoryRight = drive.trajectorySequenceBuilder(startPose)
                 .addTemporalMarker(this::telem)
                 .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.4);Intake.intakeWristServo.setPosition(0.5);})
@@ -84,22 +74,27 @@ public class BlueSafeAutoOne extends LinearOpMode {
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{Intake.IntakePixel(1);})
                 .waitSeconds(0.5)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.69);arm.setArmPos(0.5, 0.66);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
 
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .lineToConstantHeading(new Vector2d(52,27))
-                .UNSTABLE_addTemporalMarkerOffset(-0.5,()->{ArmV2.DropPixel(1);})
-                .waitSeconds(0.2)//0.55
+                .lineToConstantHeading(new Vector2d(51,27))
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
+                .waitSeconds(0.1)
+                .addTemporalMarker(()->{ArmV2.DropPixel(1);})
+                .waitSeconds(0.3)//0.55
                 .addTemporalMarker(this::telem)
                 .resetConstraints()
 
                 //pixel intake // round 1
+                .addTemporalMarker(() -> {arm.setArmPos(0.50, 0.68);})
+                .waitSeconds(0.2)
                 .addTemporalMarker(() -> {arm.setArmPos(0.4, 0.16);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(() -> {arm.setArmPos(0.15, 0.16);})
                 .waitSeconds(0.1)
                 .lineToConstantHeading(new Vector2d(51, 60))
-                .turn(Math.PI/2)
+//                .turn(Math.PI/2)
                 .setReversed(false)
                 .build();
 
@@ -112,14 +107,16 @@ public class BlueSafeAutoOne extends LinearOpMode {
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{arm.setArmPos(0.4, 0.16);})
                 .waitSeconds(0.5)
-                .addTemporalMarker(()->{arm.setArmPos(0.51, 0.66);})
+//                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .addTemporalMarker(this::telem)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.5);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.45);})
                 .addTemporalMarker(()->{Intake.IntakePixel(1);})
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(50,36), 0)
+                .splineToConstantHeading(new Vector2d(49,35.5), 0)
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.59, 0.68);})
                 .waitSeconds(1)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(1)//0.55
@@ -128,12 +125,14 @@ public class BlueSafeAutoOne extends LinearOpMode {
 //                .setReversed(false)
 
                 //pixel intake // round 1
+                .addTemporalMarker(() -> {arm.setArmPos(0.49, 0.68);})
+                .waitSeconds(0.2)
                 .addTemporalMarker(() -> {arm.setArmPos(0.4, 0.16);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(() -> {arm.setArmPos(0.15, 0.16);})
                 .waitSeconds(0.1)
                 .lineToConstantHeading(new Vector2d(50, 60))
-                .turn(Math.PI/2)
+//                .turn(Math.PI/2)
 //                .strafeRight(10)
                 .setReversed(false)
                 .build();
@@ -150,10 +149,12 @@ public class BlueSafeAutoOne extends LinearOpMode {
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{arm.setArmPos(0.4, 0.16);})
                 .waitSeconds(0.5)
-                .addTemporalMarker(()->{arm.setArmPos(0.5, 0.66);})
+//                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .addTemporalMarker(this::telem)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(51.5,43), 0)
+                .splineToConstantHeading(new Vector2d(51,43), 0)
+                .waitSeconds(0.3)
+                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .waitSeconds(1)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(1)//0.55
@@ -162,12 +163,14 @@ public class BlueSafeAutoOne extends LinearOpMode {
 //                .setReversed(false)
 
                 //pixel intake // round 1
+                .addTemporalMarker(() -> {arm.setArmPos(0.49, 0.68);})
+                .waitSeconds(0.2)
                 .addTemporalMarker(() -> {arm.setArmPos(0.4, 0.16);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(() -> {arm.setArmPos(0.15, 0.16);})
                 .waitSeconds(0.1)
                 .lineToConstantHeading(new Vector2d(50.5, 60))
-                .turn(Math.PI/2)
+//                .turn(Math.PI/2)
 //                .strafeRight(6)
                 .setReversed(false)
                 //pixel intake // round 2------------------------------------------------------------
@@ -175,10 +178,15 @@ public class BlueSafeAutoOne extends LinearOpMode {
                 .build();
 
 
+        while (opModeInInit()){
+            slider.extendToHome();
+            ArmV2.SetArmPosition(0.15, 0.16);
+            Intake.SetArmPosition(0.5,0.66);
+            Intake.IntakePixel(0.8);
+            ArmV2.DropPixel(0.5);
+            Intake.CrankPosition(0.69);
+            ArmV2.SliderLink(0.95);
 
-        waitForStart();
-
-        while (opModeIsActive()) {
             List<Recognition> currentRecognitions = tfod.getRecognitions();
             telemetry.addData("# Objects Detected", currentRecognitions.size());
 
@@ -207,15 +215,12 @@ public class BlueSafeAutoOne extends LinearOpMode {
 //                    Adjust values according to your bot and camera position
                     if(x>=800 && x<=1100){
                         propPosition  = "left";
-                        drive.followTrajectorySequence(AutoTrajectoryLeft);
                     }
                     else if(x>=500 && x<=790){
                         propPosition = "center";
-                        drive.followTrajectorySequence(AutoTrajectoryCenter);
                     }
                     else if(x>=200 && x<=490) {
                         propPosition = "right";
-                        drive.followTrajectorySequence(AutoTrajectoryRight);
                     }
 
 
@@ -227,14 +232,23 @@ public class BlueSafeAutoOne extends LinearOpMode {
             else{
                 telemetry.addLine("Don't see the beacon :(");
             }
-            if (gamepad1.b){
+            telemetry.update();
+        }
+        sleep(20);
+        waitForStart();
+
+        while (opModeIsActive()) {
+            if (gamepad1.b || propPosition == "right"){
                 drive.followTrajectorySequence(AutoTrajectoryRight);
+                propPosition = " ";
             }
-            if (gamepad1.y){
+            if (gamepad1.y || propPosition == "center"){
                 drive.followTrajectorySequence(AutoTrajectoryCenter);
+                propPosition = " ";
             }
-            if (gamepad1.x){
+            if (gamepad1.x || propPosition == "left"){
                 drive.followTrajectorySequence(AutoTrajectoryLeft);
+                propPosition = " ";
             }
             telemetry.addData("LeftFrontCurrent", drive.getMotorCurrent().get(0));
             telemetry.addData("RightFrontCurrent", drive.getMotorCurrent().get(1));
