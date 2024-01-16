@@ -51,14 +51,16 @@ public class RedInAutoTwo extends LinearOpMode {
 
     public static double kp = 4.5, ki, kd = 1;
     public static double stackDiff = 0;
+
+    public static double yellowDiff = 3;
     public static Pose2d PurpleRightPos = new Pose2d(-38,-32, -Math.PI), YellowRightPos, StackRightPos = new Pose2d(-50 - stackDiff, -36, -Math.PI);
-    public static Vector2d PurpleRight, YellowRight = new Vector2d(53.5,-41.5), StackRight;
+    public static Vector2d PurpleRight, YellowRight = new Vector2d(53.5 - yellowDiff,-41.5), StackRight;
 
     public static Pose2d PurpleLeftPos = new Pose2d(-48, -46, Math.PI / 2), YellowLeftPos, StackLeftPos; //-44
-    public static Vector2d PurpleLeft, YellowLeft = new Vector2d(53.5,-28.5), StackLeft; //48
+    public static Vector2d PurpleLeft, YellowLeft = new Vector2d(53.5 - yellowDiff,-28.5), StackLeft; //48
 
     public static Pose2d PurpleCenterPos = new Pose2d(-53,-24, 0), YellowCenterPos, StackCenterPos; //51
-    public static Vector2d PurpleCenter, YellowCenter = new Vector2d(53.5,-33), StackCenter; //38
+    public static Vector2d PurpleCenter, YellowCenter = new Vector2d(53.5 - yellowDiff,-33), StackCenter; //38
 
 
     public static double wristPlay1 = -0.01, wristPlay2 = 0.00;
@@ -157,7 +159,7 @@ public class RedInAutoTwo extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryRightYellow = drive.trajectorySequenceBuilder(CenterPathPlacing.end())
-                .lineToConstantHeading(new Vector2d(53.5, -32))
+                .lineToConstantHeading(new Vector2d(50.5, -32))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
@@ -208,7 +210,7 @@ public class RedInAutoTwo extends LinearOpMode {
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
                 .addTemporalMarker(()->{intake.setArm(0.5, 0.66);})
-                .lineToConstantHeading(new Vector2d(-55, -18))
+//                .lineToConstantHeading(new Vector2d(-55, -18))
                 .build();
 
         TrajectorySequence CenterPathPlacing_Center = drive.trajectorySequenceBuilder(AutoTrajectoryCenterPurple.end())
@@ -243,7 +245,7 @@ public class RedInAutoTwo extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryCenterYellow = drive.trajectorySequenceBuilder(CenterPathPlacing_Center.end())
-                .lineToConstantHeading(new Vector2d(53.5, -40))
+                .lineToConstantHeading(new Vector2d(50.5, -40))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
@@ -294,6 +296,7 @@ public class RedInAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{Intake.IntakePixel(1);})
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .build();
 
 
@@ -330,7 +333,7 @@ public class RedInAutoTwo extends LinearOpMode {
 
 
         TrajectorySequence AutoTrajectoryLeftYellow = drive.trajectorySequenceBuilder(CenterPathPlacing_Left.end())
-                .lineToConstantHeading(new Vector2d(53.5, -40))
+                .lineToConstantHeading(new Vector2d(50.5, -40))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
@@ -1101,7 +1104,7 @@ public class RedInAutoTwo extends LinearOpMode {
         telemetry.update();
 
         // Set confidence threshold for TFOD recognitions, at any time.
-        //tfod.setMinResultConfidence(0.75f);
+        tfod.setMinResultConfidence(0.92f);
 
         // Disable or re-enable the TFOD processor at any time.
         //visionPortal.setProcessorEnabled(tfod, true);

@@ -49,6 +49,7 @@ public class BlueSafeAutoOne extends LinearOpMode {
             lifter_posL = 0, lifter_posR = 0, error_lifter, error_diff, error_int, error_lifterR, error_diffR, error_intR, errorprev, errorprevR, output_lifter, output_lifterR, output_power, target, dropVal;
 
     public static double kp = 4, ki, kd = 1.7;
+    public static double yellowDiff = 2;
     @Override
     public void runOpMode() throws InterruptedException {
         drive = new SampleMecanumDrive(hardwareMap);
@@ -77,7 +78,7 @@ public class BlueSafeAutoOne extends LinearOpMode {
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
 
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .lineToConstantHeading(new Vector2d(51,27))
+                .lineToConstantHeading(new Vector2d(51 - yellowDiff,27))
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .waitSeconds(0.1)
@@ -114,7 +115,7 @@ public class BlueSafeAutoOne extends LinearOpMode {
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(49,35.5), 0)
+                .splineToConstantHeading(new Vector2d(49.5 - yellowDiff,35.5), 0)
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.59, 0.68);})
                 .waitSeconds(1)
@@ -152,7 +153,7 @@ public class BlueSafeAutoOne extends LinearOpMode {
 //                .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .addTemporalMarker(this::telem)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(51,43), 0)
+                .splineToConstantHeading(new Vector2d(51 - yellowDiff,43), 0)
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .waitSeconds(1)
@@ -232,12 +233,14 @@ public class BlueSafeAutoOne extends LinearOpMode {
             else{
                 telemetry.addLine("Don't see the beacon :(");
             }
+            telemetry.addData("position",propPosition);
             telemetry.update();
         }
         sleep(20);
         waitForStart();
 
         while (opModeIsActive()) {
+
             if (gamepad1.b || propPosition == "right"){
                 drive.followTrajectorySequence(AutoTrajectoryRight);
                 propPosition = " ";
@@ -309,7 +312,7 @@ public class BlueSafeAutoOne extends LinearOpMode {
         telemetry.update();
 
         // Set confidence threshold for TFOD recognitions, at any time.
-        //tfod.setMinResultConfidence(0.75f);
+        tfod.setMinResultConfidence(0.90f);
 
         // Disable or re-enable the TFOD processor at any time.
         //visionPortal.setProcessorEnabled(tfod, true);

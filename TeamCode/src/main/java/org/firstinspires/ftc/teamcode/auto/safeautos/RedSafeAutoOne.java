@@ -49,6 +49,7 @@ public class RedSafeAutoOne extends LinearOpMode {
             lifter_posL = 0, lifter_posR = 0, error_lifter, error_diff, error_int, error_lifterR, error_diffR, error_intR, errorprev, errorprevR, output_lifter, output_lifterR, output_power, target, dropVal;
 
     public static double kp = 4, ki, kd = 1.7;
+    public static double yellowDiff = 2;
     @Override
     public void runOpMode() throws InterruptedException {
         drive = new SampleMecanumDrive(hardwareMap);
@@ -72,7 +73,7 @@ public class RedSafeAutoOne extends LinearOpMode {
                 .addTemporalMarker(()->{arm.setArmPos(0.4, 0.16);})
                 .addTemporalMarker(this::telem)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(51,-41), 0)
+                .splineToConstantHeading(new Vector2d(51 - yellowDiff,-41), 0)
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .waitSeconds(1)
@@ -107,7 +108,7 @@ public class RedSafeAutoOne extends LinearOpMode {
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
                 .addTemporalMarker(this::telem)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(49,-35.5), 0)
+                .splineToConstantHeading(new Vector2d(49.5 - yellowDiff,-35.5), 0)
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .waitSeconds(1)
@@ -140,7 +141,7 @@ public class RedSafeAutoOne extends LinearOpMode {
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, Math.toRadians(136.52544), DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(35))
-                .splineToConstantHeading(new Vector2d(51,-26.5), 0)
+                .splineToConstantHeading(new Vector2d(51 - yellowDiff,-26.5), 0)
                 .waitSeconds(0.3)
                 .addTemporalMarker(()->{arm.setArmPos(0.54, 0.68);})
                 .waitSeconds(0.1)
@@ -170,6 +171,7 @@ public class RedSafeAutoOne extends LinearOpMode {
             ArmV2.DropPixel(0.5);
             Intake.CrankPosition(0.69);
             ArmV2.SliderLink(0.95);
+
             List<Recognition> currentRecognitions = tfod.getRecognitions();
             telemetry.addData("# Objects Detected", currentRecognitions.size());
             if (currentRecognitions.size() != 0) {
@@ -286,7 +288,7 @@ public class RedSafeAutoOne extends LinearOpMode {
         telemetry.update();
 
         // Set confidence threshold for TFOD recognitions, at any time.
-        //tfod.setMinResultConfidence(0.75f);
+        tfod.setMinResultConfidence(0.90f);
 
         // Disable or re-enable the TFOD processor at any time.
         //visionPortal.setProcessorEnabled(tfod, true);

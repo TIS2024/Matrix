@@ -50,8 +50,8 @@ public class MatrixPracticeCode extends LinearOpMode {
     Hanger hanger = null;
     Intake intake = null;
     Drone drone = null;
-    TeleOpConstants.armConstants armConstants = null;
-    TeleOpConstants.intakeConstants intakeConstants = null;
+    TeleOpConstants.armConstants armConstants;
+    TeleOpConstants.intakeConstants intakeConstants;
     public static DcMotorEx leftFront, leftRear, rightFront, rightRear;
     ElapsedTime inputTimer, outputTimer, angle_timer, dropTimer, gripTimer;
     public static double

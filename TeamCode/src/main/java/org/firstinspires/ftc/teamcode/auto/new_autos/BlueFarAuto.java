@@ -50,17 +50,18 @@ public class BlueFarAuto extends LinearOpMode {
 
     public static double kp = 4, ki, kd = 1.7;
 
-    public static double stackDiff = 0;
-    public static Pose2d PurpleRightPos = new Pose2d(-35,32, -Math.PI), YellowRightPos, StackRightPos = new Pose2d(-51.5 , 12 - stackDiff, -Math.PI); //-51
-    public static Vector2d PurpleRight, YellowRight = new Vector2d(54 + 1,30.5), StackRight = new Vector2d(-51, 12.5); //53.5
+    public static double stackDiff = 3;
+    public static double yellowDiff = 3;
+    public static Pose2d PurpleRightPos = new Pose2d(-35,32, -Math.PI), YellowRightPos, StackRightPos = new Pose2d(-51.5 , 12 + stackDiff, -Math.PI); //-51
+    public static Vector2d PurpleRight, YellowRight = new Vector2d(53.5 - yellowDiff,30.5), StackRight = new Vector2d(-51, 12.5); //53.5
 
 
-    public static Pose2d PurpleLeftPos = new Pose2d(-40,30, 0), YellowLeftPos, StackLeftPos = new Pose2d(-51 , 12, -Math.PI); //-44
-    public static Vector2d PurpleLeft, YellowLeft = new Vector2d(54 + 1,43), StackLeft = new Vector2d(-51, 12); //48
+    public static Pose2d PurpleLeftPos = new Pose2d(-40,30, 0), YellowLeftPos, StackLeftPos = new Pose2d(-51 , 13 + stackDiff, -Math.PI); //-44
+    public static Vector2d PurpleLeft, YellowLeft = new Vector2d(53.5 - yellowDiff,43), StackLeft = new Vector2d(-51, 12); //48
 
 
     public static Pose2d PurpleCenterPos = new Pose2d(-51,24, 0), YellowCenterPos, StackCenterPos = new Pose2d(-51 , 12, -Math.PI); //51
-    public static Vector2d PurpleCenter, YellowCenter = new Vector2d(54 + 1,36), StackCenter = new Vector2d(-51, 12); //38
+    public static Vector2d PurpleCenter, YellowCenter = new Vector2d(53.5 - yellowDiff,36), StackCenter = new Vector2d(-51, 12); //38
 
 
     public static double wristPlay1 = -0.01, wristPlay2 = 0.00;
@@ -156,7 +157,7 @@ public class BlueFarAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryRightYellow = drive.trajectorySequenceBuilder(CenterPathPlacing.end())
-                .lineToConstantHeading(new Vector2d(53.5, 40))
+                .lineToConstantHeading(new Vector2d(50.5, 40))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
@@ -175,7 +176,7 @@ public class BlueFarAuto extends LinearOpMode {
                 .waitSeconds(0.1)
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.3)
-                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.4);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .addTemporalMarker(()->{arm.setArmPos(0.49, 0.68);})
                 .waitSeconds(0.2)
@@ -225,8 +226,8 @@ public class BlueFarAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryRightYellow2 = drive.trajectorySequenceBuilder(CenterPathPlacing2.end())
-                .splineToConstantHeading(new Vector2d(53.5, 45), 0)
-                .lineToConstantHeading(new Vector2d(54, 45))
+                .splineToConstantHeading(new Vector2d(49.5, 45), 0)
+                .lineToConstantHeading(new Vector2d(50, 45))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.53, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.1,()->{arm.setArmPos(0.53, 0.68);})
@@ -268,7 +269,7 @@ public class BlueFarAuto extends LinearOpMode {
 
                 .addTemporalMarker(()->{arm.setArmPos(0.3, 0.175);})
                 .waitSeconds(0.2)
-                .addTemporalMarker(()->{Intake.CrankPosition(0.38);})
+                .addTemporalMarker(()->{Intake.CrankPosition(0.4);})
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.IntakePixel(1);})
                 .waitSeconds(0.2)
@@ -306,7 +307,7 @@ public class BlueFarAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryCenterYellow = drive.trajectorySequenceBuilder(CenterPathPlacing_Center.end()) //53.5+1,32
-                .lineToConstantHeading(new Vector2d(53.5, 32))
+                .lineToConstantHeading(new Vector2d(50.5, 32))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
@@ -375,8 +376,8 @@ public class BlueFarAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryCenterYellow2 = drive.trajectorySequenceBuilder(CenterPathPlacing_Center2.end()) //53.5, 32/54,32
-                .splineToConstantHeading(new Vector2d(53.5, 32), 0)
-                .lineToConstantHeading(new Vector2d(54, 32))
+                .splineToConstantHeading(new Vector2d(49.5, 32), 0)
+                .lineToConstantHeading(new Vector2d(50, 32))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.53, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.1,()->{arm.setArmPos(0.53, 0.68);})
@@ -388,7 +389,7 @@ public class BlueFarAuto extends LinearOpMode {
                 .waitSeconds(0.2)//0.1
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.2) //start
-                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.4);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .addTemporalMarker(()->{arm.setArmPos(0.50, 0.68);})
                 .addTemporalMarker(()->{arm.setArmPos(0.4, 0.175);})
@@ -447,7 +448,7 @@ public class BlueFarAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryLeftYellow = drive.trajectorySequenceBuilder(CenterPathPlacing_Left.end()) //53.5+1, 30
-                .lineToConstantHeading(new Vector2d(53.5, 40))
+                .lineToConstantHeading(new Vector2d(50.5, 40))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.54, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.4,()->{arm.setArmPos(0.54, 0.68);})
@@ -516,8 +517,8 @@ public class BlueFarAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence AutoTrajectoryLeftYellow2 = drive.trajectorySequenceBuilder(CenterPathPlacing_Left2.end()) //53.5, 30/54, 30
-                .splineToConstantHeading(new Vector2d(53.5, 32), 0)
-                .lineToConstantHeading(new Vector2d(54, 32))
+                .splineToConstantHeading(new Vector2d(49.5, 32), 0)
+                .lineToConstantHeading(new Vector2d(50, 32))
 
                 .UNSTABLE_addTemporalMarkerOffset(-1,()->{arm.setArmPos(0.53, 0.175);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.1,()->{arm.setArmPos(0.53, 0.68);})
@@ -529,7 +530,7 @@ public class BlueFarAuto extends LinearOpMode {
                 .waitSeconds(0.2)//0.1
                 .addTemporalMarker(()->{ArmV2.DropPixel(1);})
                 .waitSeconds(0.2) //start
-                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.38);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0,()->{Intake.intakeWristServo.setPosition(0.4);})
                 .UNSTABLE_addTemporalMarkerOffset(0.4,()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .addTemporalMarker(()->{arm.setArmPos(0.50, 0.68);})
                 .addTemporalMarker(()->{arm.setArmPos(0.4, 0.175);})
@@ -619,33 +620,33 @@ public class BlueFarAuto extends LinearOpMode {
                     break;
                 case AutoTrajectoryRightYellow:
                     if (!drive.isBusy()) {
-                        currentState = AutoTrajectoryRight.CenterPathPicking;
-                        drive.followTrajectorySequenceAsync(CenterPathPicking);
-                    }
-                    break;
-                case CenterPathPicking:
-                    if (!drive.isBusy()) {
-                        currentState = AutoTrajectoryRight.CenterPathPlacing2;
-                        drive.followTrajectorySequenceAsync(CenterPathPlacing2);
-                    }
-                    break;
-                case CenterPathPlacing2:
-                    if (!drive.isBusy()) {
-                        currentState = AutoTrajectoryRight.AutoTrajectoryRightYellow2;
-                        drive.followTrajectorySequenceAsync(AutoTrajectoryRightYellow2);
-                    }
-                    break;
-                case AutoTrajectoryRightYellow2:
-                    if (!drive.isBusy()) {
-                        currentState = AutoTrajectoryRight.ParkingOut;
-//                        drive.followTrajectorySequenceAsync(ParkingOut);
-                    }
-                    break;
-                case ParkingOut:
-                    if (!drive.isBusy()) {
                         currentState = AutoTrajectoryRight.IDLE;
+//                        drive.followTrajectorySequenceAsync(CenterPathPicking);
                     }
                     break;
+//                case CenterPathPicking:
+//                    if (!drive.isBusy()) {
+//                        currentState = AutoTrajectoryRight.CenterPathPlacing2;
+//                        drive.followTrajectorySequenceAsync(CenterPathPlacing2);
+//                    }
+//                    break;
+//                case CenterPathPlacing2:
+//                    if (!drive.isBusy()) {
+//                        currentState = AutoTrajectoryRight.AutoTrajectoryRightYellow2;
+//                        drive.followTrajectorySequenceAsync(AutoTrajectoryRightYellow2);
+//                    }
+//                    break;
+//                case AutoTrajectoryRightYellow2:
+//                    if (!drive.isBusy()) {
+//                        currentState = AutoTrajectoryRight.ParkingOut;
+////                        drive.followTrajectorySequenceAsync(ParkingOut);
+//                    }
+//                    break;
+//                case ParkingOut:
+//                    if (!drive.isBusy()) {
+//                        currentState = AutoTrajectoryRight.IDLE;
+//                    }
+//                    break;
                 case IDLE:
                     break;
             }
@@ -675,33 +676,33 @@ public class BlueFarAuto extends LinearOpMode {
                     break;
                 case AutoTrajectoryCenterYellow:
                     if (!drive.isBusy()) {
-                        currentState2 = AutoTrajectoryCenter.CenterPathPicking_Center;
-                        drive.followTrajectorySequenceAsync(CenterPathPicking_Center);
-                    }
-                    break;
-                case CenterPathPicking_Center:
-                    if (!drive.isBusy()) {
-                        currentState2 = AutoTrajectoryCenter.CenterPathPlacing_Center2;
-                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Center2);
-                    }
-                    break;
-                case CenterPathPlacing_Center2:
-                    if (!drive.isBusy()) {
-                        currentState2 = AutoTrajectoryCenter.AutoTrajectoryCenterYellow2;
-                        drive.followTrajectorySequenceAsync(AutoTrajectoryCenterYellow2);
-                    }
-                    break;
-                case AutoTrajectoryCenterYellow2:
-                    if (!drive.isBusy()) {
-                        currentState2 = AutoTrajectoryCenter.ParkingOut;
-//                        drive.followTrajectorySequenceAsync(ParkingOut);
-                    }
-                    break;
-                case ParkingOut:
-                    if (!drive.isBusy()) {
                         currentState2 = AutoTrajectoryCenter.IDLE;
+//                        drive.followTrajectorySequenceAsync(CenterPathPicking_Center);
                     }
                     break;
+//                case CenterPathPicking_Center:
+//                    if (!drive.isBusy()) {
+//                        currentState2 = AutoTrajectoryCenter.CenterPathPlacing_Center2;
+//                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Center2);
+//                    }
+//                    break;
+//                case CenterPathPlacing_Center2:
+//                    if (!drive.isBusy()) {
+//                        currentState2 = AutoTrajectoryCenter.AutoTrajectoryCenterYellow2;
+//                        drive.followTrajectorySequenceAsync(AutoTrajectoryCenterYellow2);
+//                    }
+//                    break;
+//                case AutoTrajectoryCenterYellow2:
+//                    if (!drive.isBusy()) {
+//                        currentState2 = AutoTrajectoryCenter.ParkingOut;
+////                        drive.followTrajectorySequenceAsync(ParkingOut);
+//                    }
+//                    break;
+//                case ParkingOut:
+//                    if (!drive.isBusy()) {
+//                        currentState2 = AutoTrajectoryCenter.IDLE;
+//                    }
+//                    break;
                 case IDLE:
                     break;
             }
@@ -731,34 +732,34 @@ public class BlueFarAuto extends LinearOpMode {
                     break;
                 case AutoTrajectoryLeftYellow:
                     if (!drive.isBusy()) {
-                        currentState3 = AutoTrajectoryLeft.CenterPathPicking_Left;
-                        drive.followTrajectorySequenceAsync(CenterPathPicking_Left);
-                    }
-                    break;
-                case CenterPathPicking_Left:
-                    if (!drive.isBusy()) {
-                        currentState3 = AutoTrajectoryLeft.CenterPathPlacing_Left2;
-                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Left2);
-                    }
-                    break;
-                case CenterPathPlacing_Left2:
-                    if (!drive.isBusy()) {
-                        currentState3 = AutoTrajectoryLeft.AutoTrajectoryLeftYellow2;
-                        drive.followTrajectorySequenceAsync(AutoTrajectoryLeftYellow2);
-                    }
-                    break;
-                case AutoTrajectoryLeftYellow2:
-                    if (!drive.isBusy()) {
-                        currentState3 = AutoTrajectoryLeft.ParkingOut;
-//                        drive.followTrajectorySequenceAsync(ParkingOut);
-//                        currentState3 = AutoTrajectoryLeft.IDLE;
-                    }
-                    break;
-                case ParkingOut:
-                    if (!drive.isBusy()) {
                         currentState3 = AutoTrajectoryLeft.IDLE;
+//                        drive.followTrajectorySequenceAsync(CenterPathPicking_Left);
                     }
                     break;
+//                case CenterPathPicking_Left:
+//                    if (!drive.isBusy()) {
+//                        currentState3 = AutoTrajectoryLeft.CenterPathPlacing_Left2;
+//                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Left2);
+//                    }
+//                    break;
+//                case CenterPathPlacing_Left2:
+//                    if (!drive.isBusy()) {
+//                        currentState3 = AutoTrajectoryLeft.AutoTrajectoryLeftYellow2;
+//                        drive.followTrajectorySequenceAsync(AutoTrajectoryLeftYellow2);
+//                    }
+//                    break;
+//                case AutoTrajectoryLeftYellow2:
+//                    if (!drive.isBusy()) {
+//                        currentState3 = AutoTrajectoryLeft.ParkingOut;
+////                        drive.followTrajectorySequenceAsync(ParkingOut);
+////                        currentState3 = AutoTrajectoryLeft.IDLE;
+//                    }
+//                    break;
+//                case ParkingOut:
+//                    if (!drive.isBusy()) {
+//                        currentState3 = AutoTrajectoryLeft.IDLE;
+//                    }
+//                    break;
                 case IDLE:
                     break;
             }

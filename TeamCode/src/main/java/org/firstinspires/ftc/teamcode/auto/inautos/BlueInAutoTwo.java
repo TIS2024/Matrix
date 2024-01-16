@@ -54,16 +54,17 @@ public class BlueInAutoTwo extends LinearOpMode {
     public static double kp = 4.5, ki, kd = 1;
 
     public static double stackDiff = 0;
+    public static double yellowDiff = 3;
     public static Pose2d PurpleRightPos = new Pose2d(-46,46, -Math.PI/2), YellowRightPos, StackRightPos = new Pose2d(-53 ,37 - stackDiff, -Math.PI); //-51
-    public static Vector2d PurpleRight, YellowRight = new Vector2d(54 + 1,30.5), StackRight; //53.5
+    public static Vector2d PurpleRight, YellowRight = new Vector2d(53.5 - yellowDiff,30.5), StackRight; //53.5
 
 
     public static Pose2d PurpleLeftPos = new Pose2d(-40,30, 0), YellowLeftPos, StackLeftPos; //-44
-    public static Vector2d PurpleLeft, YellowLeft = new Vector2d(54 + 1,43), StackLeft; //48
+    public static Vector2d PurpleLeft, YellowLeft = new Vector2d(53.5 - yellowDiff,43), StackLeft; //48
 
 
     public static Pose2d PurpleCenterPos = new Pose2d(-51,24, 0), YellowCenterPos, StackCenterPos; //51
-    public static Vector2d PurpleCenter, YellowCenter = new Vector2d(54 + 1,36), StackCenter; //38
+    public static Vector2d PurpleCenter, YellowCenter = new Vector2d(53.5 - yellowDiff,36), StackCenter; //38
 
 
     public static double wristPlay1 = -0.01, wristPlay2 = 0.00;
@@ -121,6 +122,7 @@ public class BlueInAutoTwo extends LinearOpMode {
                 .addTemporalMarker(()->{Intake.IntakePixel(1);})
                 .waitSeconds(0.5)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .build();
 
         TrajectorySequence CenterPathPlacing = drive.trajectorySequenceBuilder(AutoTrajectoryRightPurple.end())
@@ -295,6 +297,7 @@ public class BlueInAutoTwo extends LinearOpMode {
                 .waitSeconds(0.2)
                 .addTemporalMarker(()->{Intake.CrankPosition(0.69);})
                 .addTemporalMarker(()->{intake.setArm(0.5, 0.66);})
+                .addTemporalMarker(()->{Intake.intakeArmServo.setPosition(0.5);Intake.intakeWristServo.setPosition(0.66);})
                 .build();
 
 
@@ -783,7 +786,7 @@ public class BlueInAutoTwo extends LinearOpMode {
         telemetry.update();
 
         // Set confidence threshold for TFOD recognitions, at any time.
-        //tfod.setMinResultConfidence(0.75f);
+        tfod.setMinResultConfidence(0.92f);
 
         // Disable or re-enable the TFOD processor at any time.
         //visionPortal.setProcessorEnabled(tfod, true);
