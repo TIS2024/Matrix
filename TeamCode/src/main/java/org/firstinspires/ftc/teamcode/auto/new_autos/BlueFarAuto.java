@@ -25,7 +25,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
 
-@Autonomous(name="BLUEFarAuto_1Cycle", group = "Cycle_Autos")
+@Autonomous(name="BLUEFarAuto_1Cycle", group = "2Cycle_Autos")
 @Config
 public class BlueFarAuto extends LinearOpMode {
     SampleMecanumDrive drive = null;
@@ -620,33 +620,33 @@ public class BlueFarAuto extends LinearOpMode {
                     break;
                 case AutoTrajectoryRightYellow:
                     if (!drive.isBusy()) {
-                        currentState = AutoTrajectoryRight.IDLE;
-//                        drive.followTrajectorySequenceAsync(CenterPathPicking);
+                        currentState = AutoTrajectoryRight.CenterPathPicking;
+                        drive.followTrajectorySequenceAsync(CenterPathPicking);
                     }
                     break;
-//                case CenterPathPicking:
-//                    if (!drive.isBusy()) {
-//                        currentState = AutoTrajectoryRight.CenterPathPlacing2;
-//                        drive.followTrajectorySequenceAsync(CenterPathPlacing2);
-//                    }
-//                    break;
-//                case CenterPathPlacing2:
-//                    if (!drive.isBusy()) {
-//                        currentState = AutoTrajectoryRight.AutoTrajectoryRightYellow2;
-//                        drive.followTrajectorySequenceAsync(AutoTrajectoryRightYellow2);
-//                    }
-//                    break;
-//                case AutoTrajectoryRightYellow2:
-//                    if (!drive.isBusy()) {
-//                        currentState = AutoTrajectoryRight.ParkingOut;
-////                        drive.followTrajectorySequenceAsync(ParkingOut);
-//                    }
-//                    break;
-//                case ParkingOut:
-//                    if (!drive.isBusy()) {
-//                        currentState = AutoTrajectoryRight.IDLE;
-//                    }
-//                    break;
+                case CenterPathPicking:
+                    if (!drive.isBusy()) {
+                        currentState = AutoTrajectoryRight.CenterPathPlacing2;
+                        drive.followTrajectorySequenceAsync(CenterPathPlacing2);
+                    }
+                    break;
+                case CenterPathPlacing2:
+                    if (!drive.isBusy()) {
+                        currentState = AutoTrajectoryRight.AutoTrajectoryRightYellow2;
+                        drive.followTrajectorySequenceAsync(AutoTrajectoryRightYellow2);
+                    }
+                    break;
+                case AutoTrajectoryRightYellow2:
+                    if (!drive.isBusy()) {
+                        currentState = AutoTrajectoryRight.ParkingOut;
+//                        drive.followTrajectorySequenceAsync(ParkingOut);
+                    }
+                    break;
+                case ParkingOut:
+                    if (!drive.isBusy()) {
+                        currentState = AutoTrajectoryRight.IDLE;
+                    }
+                    break;
                 case IDLE:
                     break;
             }
@@ -676,33 +676,33 @@ public class BlueFarAuto extends LinearOpMode {
                     break;
                 case AutoTrajectoryCenterYellow:
                     if (!drive.isBusy()) {
-                        currentState2 = AutoTrajectoryCenter.IDLE;
-//                        drive.followTrajectorySequenceAsync(CenterPathPicking_Center);
+                        currentState2 = AutoTrajectoryCenter.CenterPathPicking_Center;
+                        drive.followTrajectorySequenceAsync(CenterPathPicking_Center);
                     }
                     break;
-//                case CenterPathPicking_Center:
-//                    if (!drive.isBusy()) {
-//                        currentState2 = AutoTrajectoryCenter.CenterPathPlacing_Center2;
-//                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Center2);
-//                    }
-//                    break;
-//                case CenterPathPlacing_Center2:
-//                    if (!drive.isBusy()) {
-//                        currentState2 = AutoTrajectoryCenter.AutoTrajectoryCenterYellow2;
-//                        drive.followTrajectorySequenceAsync(AutoTrajectoryCenterYellow2);
-//                    }
-//                    break;
-//                case AutoTrajectoryCenterYellow2:
-//                    if (!drive.isBusy()) {
-//                        currentState2 = AutoTrajectoryCenter.ParkingOut;
-////                        drive.followTrajectorySequenceAsync(ParkingOut);
-//                    }
-//                    break;
-//                case ParkingOut:
-//                    if (!drive.isBusy()) {
-//                        currentState2 = AutoTrajectoryCenter.IDLE;
-//                    }
-//                    break;
+                case CenterPathPicking_Center:
+                    if (!drive.isBusy()) {
+                        currentState2 = AutoTrajectoryCenter.CenterPathPlacing_Center2;
+                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Center2);
+                    }
+                    break;
+                case CenterPathPlacing_Center2:
+                    if (!drive.isBusy()) {
+                        currentState2 = AutoTrajectoryCenter.AutoTrajectoryCenterYellow2;
+                        drive.followTrajectorySequenceAsync(AutoTrajectoryCenterYellow2);
+                    }
+                    break;
+                case AutoTrajectoryCenterYellow2:
+                    if (!drive.isBusy()) {
+                        currentState2 = AutoTrajectoryCenter.ParkingOut;
+                        drive.followTrajectorySequenceAsync(ParkingOut);
+                    }
+                    break;
+                case ParkingOut:
+                    if (!drive.isBusy()) {
+                        currentState2 = AutoTrajectoryCenter.IDLE;
+                    }
+                    break;
                 case IDLE:
                     break;
             }
@@ -732,34 +732,33 @@ public class BlueFarAuto extends LinearOpMode {
                     break;
                 case AutoTrajectoryLeftYellow:
                     if (!drive.isBusy()) {
-                        currentState3 = AutoTrajectoryLeft.IDLE;
-//                        drive.followTrajectorySequenceAsync(CenterPathPicking_Left);
+                        currentState3 = AutoTrajectoryLeft.CenterPathPicking_Left;
+                        drive.followTrajectorySequenceAsync(CenterPathPicking_Left);
                     }
                     break;
-//                case CenterPathPicking_Left:
-//                    if (!drive.isBusy()) {
-//                        currentState3 = AutoTrajectoryLeft.CenterPathPlacing_Left2;
-//                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Left2);
-//                    }
-//                    break;
-//                case CenterPathPlacing_Left2:
-//                    if (!drive.isBusy()) {
-//                        currentState3 = AutoTrajectoryLeft.AutoTrajectoryLeftYellow2;
-//                        drive.followTrajectorySequenceAsync(AutoTrajectoryLeftYellow2);
-//                    }
-//                    break;
-//                case AutoTrajectoryLeftYellow2:
-//                    if (!drive.isBusy()) {
-//                        currentState3 = AutoTrajectoryLeft.ParkingOut;
-////                        drive.followTrajectorySequenceAsync(ParkingOut);
-////                        currentState3 = AutoTrajectoryLeft.IDLE;
-//                    }
-//                    break;
-//                case ParkingOut:
-//                    if (!drive.isBusy()) {
-//                        currentState3 = AutoTrajectoryLeft.IDLE;
-//                    }
-//                    break;
+                case CenterPathPicking_Left:
+                    if (!drive.isBusy()) {
+                        currentState3 = AutoTrajectoryLeft.CenterPathPlacing_Left2;
+                        drive.followTrajectorySequenceAsync(CenterPathPlacing_Left2);
+                    }
+                    break;
+                case CenterPathPlacing_Left2:
+                    if (!drive.isBusy()) {
+                        currentState3 = AutoTrajectoryLeft.AutoTrajectoryLeftYellow2;
+                        drive.followTrajectorySequenceAsync(AutoTrajectoryLeftYellow2);
+                    }
+                    break;
+                case AutoTrajectoryLeftYellow2:
+                    if (!drive.isBusy()) {
+                        currentState3 = AutoTrajectoryLeft.ParkingOut;
+                        drive.followTrajectorySequenceAsync(ParkingOut);
+                    }
+                    break;
+                case ParkingOut:
+                    if (!drive.isBusy()) {
+                        currentState3 = AutoTrajectoryLeft.IDLE;
+                    }
+                    break;
                 case IDLE:
                     break;
             }

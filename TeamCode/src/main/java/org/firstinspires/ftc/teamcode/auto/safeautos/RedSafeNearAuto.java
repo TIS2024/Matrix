@@ -24,8 +24,8 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import java.util.List;
 
 @Config
-@Autonomous(name = "REDNearAuto_Safe", group = "Safe_Autos")
-public class RedSafeAutoOne extends LinearOpMode {
+@Autonomous(name = "REDNearAuto_Safe", group = "1Safe_Autos")
+public class RedSafeNearAuto extends LinearOpMode {
     SampleMecanumDrive drive = null;
     Slider slider = null;
     ArmV2 arm = null;

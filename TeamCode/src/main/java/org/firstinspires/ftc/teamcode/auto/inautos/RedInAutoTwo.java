@@ -25,7 +25,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import java.util.List;
 
 @Config
-@Autonomous(name = "REDFarAuto_In", group = "Inside_Autos")
+@Autonomous(name = "REDFarAuto_In", group = "3Inside_Autos")
 public class RedInAutoTwo extends LinearOpMode {
     SampleMecanumDrive drive = null;
     Slider slider = null;
