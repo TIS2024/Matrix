@@ -96,21 +96,7 @@ public class MatrixTest extends LinearOpMode {
 
             //Arm
             if (currentGamepad1.x && !previousGamepad1.x){
-//                ArmV2.SetArmPosition(armServoPos,wristServoPos);
-                ArmV2.armServoOne.setPosition(armServoPos);
-                ArmV2.armServoTwo.setPosition(armServoPos2);
-                ArmV2.wristServo.setPosition(wristServoPos);
-            }
-            if (currentGamepad1.dpad_left && !previousGamepad1.dpad_left){
-//                ArmV2.SetArmPosition(armServoPos,wristServoPos);
-                ArmV2.armServoOne.setPosition(ArmV2.armServoOne.getPosition() + 0.1);
-                ArmV2.armServoTwo.setPosition(ArmV2.armServoTwo.getPosition() + 0.1);
-                ArmV2.wristServo.setPosition(wristServoPos);
-            }
-            if (currentGamepad1.dpad_right && !previousGamepad1.dpad_right){
-//                ArmV2.SetArmPosition(armServoPos,wristServoPos);
-                ArmV2.armServoOne.setPosition(ArmV2.armServoOne.getPosition() - 0.1);
-                ArmV2.armServoTwo.setPosition(ArmV2.armServoTwo.getPosition() - 0.1);
+                ArmV2.SetArm(armServoPos);
                 ArmV2.wristServo.setPosition(wristServoPos);
             }
             if(currentGamepad1.start && !previousGamepad1.start){

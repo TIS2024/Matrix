@@ -55,10 +55,13 @@ public class DistanceSenAuto extends LinearOpMode {
         double errorPose = 0;
 
         waitForStart();
+
         while(opModeIsActive()){
             double reqDist = 5;
-            double backDropDistance = sensorDistance3.getDistance(DistanceUnit.INCH);
-            double error = backDropDistance - reqDist;
+            double avgPos = ((sensorDistance.getDistance(DistanceUnit.INCH) + sensorDistance2.getDistance(DistanceUnit.INCH) + sensorDistance3.getDistance(DistanceUnit.INCH) / 3));
+            double error = avgPos - reqDist;
+
+
             double factor = 1.17;
 
             double x = drive.getPoseEstimate().getX() + (error * factor);

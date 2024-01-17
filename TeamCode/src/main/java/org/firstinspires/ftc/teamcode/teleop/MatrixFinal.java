@@ -252,7 +252,7 @@ public class MatrixFinal extends LinearOpMode {
             //Intake Sequence
             switch (inputState) {
                 case INTAKE_START:
-                    if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 0)) {
+                    if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper && (intakeCounter == 0) && !crankToggle) {
                         ArmV2.wristServo.setPosition(wristServoPos);
                         ArmV2.SetArm(0.25);
                         ArmV2.DropPixel(0.95);

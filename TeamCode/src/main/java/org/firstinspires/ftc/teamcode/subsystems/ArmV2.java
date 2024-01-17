@@ -22,8 +22,8 @@ public class ArmV2 {
     }
     public static void SetArmPosition(double armServoOnePos, double wristServoPos) throws InterruptedException {
         wristServo.setPosition(wristServoPos);
-        armServoOne.setPosition(1-armServoOnePos);
-        armServoTwo.setPosition(armServoOnePos);
+        armServoOne.setPosition(armServoOnePos);
+        armServoTwo.setPosition(1 - armServoOnePos);
 
     }
     public static void SetWiperPositionRight(){
@@ -37,8 +37,8 @@ public class ArmV2 {
     public void setArmPos(double armServoOnePos, double wristServoPos) {
         wristServo.setPosition(wristServoPos);
         if(wristServo.getPosition() == wristServoPos){
-            armServoOne.setPosition(1-armServoOnePos);
-            armServoTwo.setPosition(armServoOnePos);
+            armServoOne.setPosition(armServoOnePos);
+            armServoTwo.setPosition(1-armServoOnePos);
         }
     }
     public static void DropPixel(double deliveryServoPos){
@@ -49,8 +49,8 @@ public class ArmV2 {
     }
     public static void SetPower(double ServoPower){}
     public static void SetArm(double armServoOnePos) throws InterruptedException {
-            armServoOne.setPosition(1-armServoOnePos);
-            armServoTwo.setPosition(armServoOnePos);
+            armServoOne.setPosition(armServoOnePos);
+            armServoTwo.setPosition(1 - armServoOnePos);
     }
 
 }
